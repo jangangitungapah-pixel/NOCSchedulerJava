@@ -16,12 +16,12 @@
 | Current Phase | `WP-F00` — Repository & Toolchain Bootstrap |
 | Current Status | `PUSHED_UNVERIFIED` |
 | Last Accepted Phase | None — implementation has not started |
-| Last Implementation Commit | Pending — resolve latest pushed `main` commit on next assistant audit |
-| Active Generator | `scripts/wp-f00-bootstrap-toolchain.cjs` |
+| Last Implementation Commit | `4f07706a2224d9990d94027e7235a9703283970e` — bootstrap pushed; formatter repair based on remote checkpoint `7c2f78266272c2f3bc54873cf803db85875c130b` pending |
+| Active Generator | `scripts/wp-f00-repair-format-after-checkpoint.cjs` |
 | Active Execution Model | Downloadable `.cjs` generator → local write → dependency materialization → commit/push → QA |
 | Next Allowed Phase | `WP-F00` only |
 | Future Phases | `LOCKED` |
-| User Validation Pending | Yes — local quality gates must run after push |
+| User Validation Pending | Yes — formatter repair must be pushed, then full WP-F00 gates rerun |
 | Blocking Issue | None |
 | Package Manager Baseline | `npm` + npm workspaces + `package-lock.json` |
 | Runtime Baseline | Node.js 22 |
@@ -83,7 +83,7 @@ Direct GitHub writes remain acceptable only for controlled workflow/workplan/doc
 
 | Phase | Name | Status | Acceptance / Notes |
 |---|---|---|---|
-| WP-F00 | Repository & Toolchain Bootstrap | PUSHED_UNVERIFIED | Generated toolchain state is pushed before QA |
+| WP-F00 | Repository & Toolchain Bootstrap | PUSHED_UNVERIFIED | Formatter repair prepared after `format:check` failure; WP-F01 remains locked |
 | WP-F01 | Workspace & Application Scaffold | LOCKED | Requires WP-F00 acceptance |
 | WP-F02 | Quality, CI & Developer Safety Foundation | LOCKED | Requires prior phase acceptance |
 | WP-F03 | Design System & Responsive Foundation | LOCKED | Requires prior phase acceptance |

@@ -333,7 +333,7 @@ Recommended CI flow:
 
 ```text
 Checkout exact commit
-→ pnpm frozen install
+→ npm frozen install
 → format check
 → lint
 → TypeScript typecheck

@@ -21,6 +21,7 @@
 | Future Phases | `LOCKED` |
 | User Validation Pending | No |
 | Blocking Issue | None |
+| Package Manager Baseline | `npm` + npm workspaces + `package-lock.json` |
 
 ---
 

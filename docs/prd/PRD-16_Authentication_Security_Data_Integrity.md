@@ -960,7 +960,7 @@ Firebase Authentication secret rotation harus menggunakan mechanism yang tidak m
 
 ## 19.1 Lockfile
 
-`pnpm-lock.yaml` wajib committed.
+`package-lock.json` wajib committed.
 
 CI/build harus menggunakan reproducible/frozen lockfile behavior.
 

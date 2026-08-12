@@ -177,6 +177,23 @@ Jika ada tindakan yang memang membutuhkan akun/consent/configuration di luar Git
 
 ---
 
+# 6.1 Package Manager Rule
+
+Canonical package manager adalah **npm**. Gunakan npm workspaces melalui root `package.json`, simpan dependency lock pada `package-lock.json`, dan jangan mencampur package manager lain ke workflow normal.
+
+Command baseline:
+
+```text
+npm install
+npm run dev
+npm run typecheck
+npm run lint
+npm test
+npm run build
+```
+
+---
+
 # 7. Branch and Commit Policy
 
 Baseline saat ini adalah direct-to-`main` karena user akan menarik dan memvalidasi setiap hasil phase.
@@ -319,11 +336,11 @@ Setelah pull, command generik setelah toolchain tersedia dapat berupa:
 
 ```bash
 git pull
-pnpm install
-pnpm typecheck
-pnpm lint
-pnpm test
-pnpm build
+npm install
+npm run typecheck
+npm run lint
+npm test
+npm run build
 ```
 
 Tetapi assistant harus memberikan command yang relevan terhadap phase saat itu, bukan memaksa seluruh suite setiap kali.
@@ -331,13 +348,13 @@ Tetapi assistant harus memberikan command yang relevan terhadap phase saat itu, 
 Phase tertentu dapat membutuhkan:
 
 ```bash
-pnpm test:integration
-pnpm test:rules
-pnpm test:e2e
-pnpm test:visual
-pnpm test:a11y
-pnpm test:security
-pnpm test:performance
+npm run test:integration
+npm run test:rules
+npm run test:e2e
+npm run test:visual
+npm run test:a11y
+npm run test:security
+npm run test:performance
 ```
 
 Contoh PASS:

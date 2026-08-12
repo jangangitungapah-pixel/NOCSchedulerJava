@@ -156,24 +156,24 @@ Sebuah implementation task hanya dapat ditandai **Done** jika seluruh hal yang r
 Nama script final dapat menyesuaikan implementation, tetapi repository harus memiliki logical gates berikut:
 
 ```text
-pnpm typecheck
-pnpm lint
-pnpm format:check
-pnpm test
-pnpm test:integration
-pnpm test:e2e
-pnpm build
-pnpm check:deadcode
+npm run typecheck
+npm run lint
+npm run format:check
+npm test
+npm run test:integration
+npm run test:e2e
+npm run build
+npm run check:deadcode
 ```
 
 Untuk phase tertentu dapat ditambahkan:
 
 ```text
-pnpm test:rules
-pnpm test:visual
-pnpm test:a11y
-pnpm test:security
-pnpm test:performance
+npm run test:rules
+npm run test:visual
+npm run test:a11y
+npm run test:security
+npm run test:performance
 ```
 
 Tidak semua suite harus dijalankan setiap save lokal, tetapi release/production gate harus menjalankan semua suite yang diwajibkan PRD-19.
@@ -223,10 +223,10 @@ Mengubah repo dokumentasi menjadi repository development yang reproducible.
 ## Deliverables
 
 - Node.js runtime policy;
-- pnpm package manager;
+- npm package manager;
 - `.nvmrc`/equivalent runtime declaration bila dipilih;
 - root `package.json`;
-- `pnpm-workspace.yaml`;
+- `root package.json `workspaces` configuration`;
 - `.gitignore`;
 - `.editorconfig`;
 - Prettier baseline;
@@ -239,7 +239,7 @@ Mengubah repo dokumentasi menjadi repository development yang reproducible.
 ## Tasks
 
 - tetapkan Node LTS yang supported Firebase runtime;
-- aktifkan Corepack/pnpm workflow;
+- aktifkan Corepack/npm workflow;
 - buat workspace root;
 - buat strict TypeScript base config;
 - buat lint/format baseline;
@@ -251,8 +251,8 @@ Mengubah repo dokumentasi menjadi repository development yang reproducible.
 ## Exit Gate
 
 - fresh clone dapat melakukan install dependency;
-- `pnpm typecheck` dapat dijalankan walaupun source masih minimal;
-- `pnpm lint` dapat dijalankan;
+- `npm run typecheck` dapat dijalankan walaupun source masih minimal;
+- `npm run lint` dapat dijalankan;
 - config tidak mengandung secret;
 - semua path/package convention terdokumentasi.
 

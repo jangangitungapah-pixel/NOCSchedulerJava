@@ -62,7 +62,7 @@ Dokumen ini tidak menggantikan:
 | E2E / Browser Tests | Playwright |
 | Visual Regression | Playwright screenshot assertions |
 | Accessibility Testing | Automated axe-style checks + manual keyboard QA |
-| Package Manager | pnpm |
+| Package Manager | npm |
 | Runtime Topology | Modular monolith |
 | Primary Deployment Unit | Firebase Hosting SPA + managed Node.js/TypeScript API + Cloud Firestore |
 
@@ -977,7 +977,7 @@ Baseline single-repository structure:
 │  └─ visual/
 │
 ├─ package.json
-├─ pnpm-lock.yaml
+├─ package-lock.json
 ├─ drizzle.config.ts
 ├─ next.config.ts
 ├─ playwright.config.ts
@@ -1216,7 +1216,7 @@ Secrets must never be exposed through client bundles.
 
 # 29. Package Management
 
-Use `pnpm` with committed lockfile.
+Use `npm` with committed lockfile.
 
 Requirements:
 
@@ -1293,21 +1293,21 @@ Exact CI/CD policy is defined in PRD-19 and PRD-20.
 Initial project setup should provide standard scripts conceptually equivalent to:
 
 ```text
-pnpm lint
-pnpm typecheck
-pnpm test
-pnpm test:integration
-pnpm test:e2e
-pnpm test:visual
-pnpm build
+npm run lint
+npm run typecheck
+npm test
+npm run test:integration
+npm run test:e2e
+npm run test:visual
+npm run build
 ```
 
 Optional:
 
 ```text
-pnpm db:generate
-pnpm db:migrate
-pnpm db:studio
+npm db:generate
+npm db:migrate
+npm db:studio
 ```
 
 Naming can change, but one-command quality gates must exist.

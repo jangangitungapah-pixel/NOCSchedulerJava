@@ -157,8 +157,8 @@ Required compiler posture:
 | Browser/E2E | Playwright |
 | Accessibility automation | axe integration + manual keyboard/touch QA |
 | Logging | Pino structured logs to stdout/managed logging |
-| Package manager | pnpm |
-| Repository structure | pnpm workspace modular monorepo |
+| Package manager | npm |
+| Repository structure | npm workspaces modular monorepo |
 
 Package versions must be pinned by lockfile at project setup time. Avoid hardcoding stale exact versions in PRDs; upgrade dependencies intentionally and test before release.
 
@@ -316,8 +316,8 @@ Canonical direction:
 ├─ firestore.rules
 ├─ firestore.indexes.json
 ├─ .firebaserc
-├─ pnpm-workspace.yaml
-└─ package.json
+├─ package-lock.json
+└─ package.json  # root npm workspaces configuration
 ```
 
 Exact directory names may evolve, but these boundaries are mandatory:
@@ -1018,13 +1018,13 @@ Recommended development dependencies:
 Quality commands should conceptually include:
 
 ```text
-pnpm lint
-pnpm format:check
-pnpm test
-pnpm test:integration
-pnpm test:e2e
-pnpm build
-pnpm check:deadcode
+npm run lint
+npm run format:check
+npm test
+npm run test:integration
+npm run test:e2e
+npm run build
+npm run check:deadcode
 ```
 
 Not every expensive suite must run on every local save, but merge/release gates must be explicit.
@@ -1063,7 +1063,7 @@ Canonical production flow:
 
 ```text
 GitHub revision
-→ install from pinned pnpm lockfile
+→ install from pinned package-lock.json
 → lint/test/build gates
 → Vite production build
 → deploy static assets to Firebase Hosting

@@ -14,14 +14,14 @@
 | Field | Value |
 |---|---|
 | Current Phase | `WP-F00` — Repository & Toolchain Bootstrap |
-| Current Status | `GENERATOR_READY` |
+| Current Status | `PUSHED_UNVERIFIED` |
 | Last Accepted Phase | None — implementation has not started |
-| Last Implementation Commit | None |
+| Last Implementation Commit | Pending — resolve latest pushed `main` commit on next assistant audit |
 | Active Generator | `scripts/wp-f00-bootstrap-toolchain.cjs` |
 | Active Execution Model | Downloadable `.cjs` generator → local write → dependency materialization → commit/push → QA |
 | Next Allowed Phase | `WP-F00` only |
 | Future Phases | `LOCKED` |
-| User Validation Pending | No — generator has not been executed yet |
+| User Validation Pending | Yes — local quality gates must run after push |
 | Blocking Issue | None |
 | Package Manager Baseline | `npm` + npm workspaces + `package-lock.json` |
 | Runtime Baseline | Node.js 22 |
@@ -83,7 +83,7 @@ Direct GitHub writes remain acceptable only for controlled workflow/workplan/doc
 
 | Phase | Name | Status | Acceptance / Notes |
 |---|---|---|---|
-| WP-F00 | Repository & Toolchain Bootstrap | GENERATOR_READY | Generator prepared; awaiting local execution |
+| WP-F00 | Repository & Toolchain Bootstrap | PUSHED_UNVERIFIED | Generated toolchain state is pushed before QA |
 | WP-F01 | Workspace & Application Scaffold | LOCKED | Requires WP-F00 acceptance |
 | WP-F02 | Quality, CI & Developer Safety Foundation | LOCKED | Requires prior phase acceptance |
 | WP-F03 | Design System & Responsive Foundation | LOCKED | Requires prior phase acceptance |
@@ -158,24 +158,16 @@ After PASS, the assistant still waits for an explicit request to continue before
 
 # 8. Current Next Action
 
-Execute the downloadable generator:
+WP-F00 generated implementation must be committed and pushed before QA.
+
+Required post-push validation:
 
 ```text
-scripts/wp-f00-bootstrap-toolchain.cjs
+npm run check:runtime
+npm run typecheck
+npm run lint
+npm run format:check
+npm run check:repo
 ```
 
-Canonical order:
-
-```text
-git pull --ff-only
-→ node generator
-→ npm dependency materialization
-→ cleanup generator/backups
-→ git add/commit/push
-→ npm run check:runtime
-→ npm run typecheck
-→ npm run lint
-→ npm run format:check
-→ npm run check:repo
-→ report PASS or exact failure output
-```
+If every gate passes, user performs the final local acceptance check and reports PASS. If any gate fails, the exact pushed GitHub `main` state is authoritative for the repair generator. WP-F01 remains locked until explicit user acceptance.

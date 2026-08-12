@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Build and test output
+dist/
+build/
+coverage/
+playwright-report/
+test-results/
+.vite/
+
+# Firebase local/runtime output
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Credentials and service accounts
+*service-account*.json
+*-firebase-adminsdk-*.json
+google-application-credentials*.json
+
+# Local tooling/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Temporary files
+*.log
+*.tmp
+*.bak-*

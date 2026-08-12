@@ -1,0 +1,9 @@
+node_modules
+dist
+build
+coverage
+.firebase
+package-lock.json
+docs/prd
+docs/workplan
+docs/workflow

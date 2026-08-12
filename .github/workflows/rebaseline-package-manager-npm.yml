@@ -73,21 +73,17 @@ jobs:
               if text != original:
                   path.write_text(text, encoding='utf-8')
 
-          # Ensure PRD-22 explicitly documents npm workspaces.
           p22 = Path('docs/prd/PRD-22_TypeScript_TSX_Node_Vite_Tailwind_Firebase_Platform_Rebaseline.md')
           if p22.exists():
               text = p22.read_text(encoding='utf-8')
-              text = text.replace('| Package manager | npm |', '| Package manager | npm |')
-              text = text.replace('| Repository structure | npm workspaces modular monorepo |', '| Repository structure | npm workspaces modular monorepo |')
               text = text.replace('├─ root package.json `workspaces` configuration\n└─ package.json', '├─ package-lock.json\n└─ package.json  # root npm workspaces configuration')
               p22.write_text(text, encoding='utf-8')
 
-          # Add explicit workflow decision note.
           workflow = Path('docs/workflow/WORKFLOW_Chat_GitHub_Full_Automation_v1.md')
           if workflow.exists():
               text = workflow.read_text(encoding='utf-8')
               marker = '# 7. Branch and Commit Policy'
-              note = '''# 6.1 Package Manager Rule\n\nCanonical package manager adalah **npm**. Gunakan npm workspaces melalui root `package.json`, simpan dependency lock pada `package-lock.json`, dan jangan membuat `pnpm-lock.yaml`, `pnpm-workspace.yaml`, atau mencampur pnpm/yarn ke workflow normal.\n\nCommand baseline:\n\n```text\nnpm install\nnpm run dev\nnpm run typecheck\nnpm run lint\nnpm test\nnpm run build\n```\n\n---\n\n'''
+              note = '''# 6.1 Package Manager Rule\n\nCanonical package manager adalah **npm**. Gunakan npm workspaces melalui root `package.json`, simpan dependency lock pada `package-lock.json`, dan jangan mencampur package manager lain ke workflow normal.\n\nCommand baseline:\n\n```text\nnpm install\nnpm run dev\nnpm run typecheck\nnpm run lint\nnpm test\nnpm run build\n```\n\n---\n\n'''
               if '# 6.1 Package Manager Rule' not in text and marker in text:
                   text = text.replace(marker, note + marker)
               workflow.write_text(text, encoding='utf-8')
@@ -95,7 +91,8 @@ jobs:
           ledger = Path('docs/workflow/PHASE_CONTROL.md')
           if ledger.exists():
               text = ledger.read_text(encoding='utf-8')
-              text = text.replace('| Blocking Issue | None |', '| Blocking Issue | None |\n| Package Manager Baseline | `npm` + npm workspaces + `package-lock.json` |')
+              if '| Package Manager Baseline |' not in text:
+                  text = text.replace('| Blocking Issue | None |', '| Blocking Issue | None |\n| Package Manager Baseline | `npm` + npm workspaces + `package-lock.json` |')
               ledger.write_text(text, encoding='utf-8')
           PY
 
@@ -103,7 +100,7 @@ jobs:
         shell: bash
         run: |
           if grep -Rni --include='*.md' 'pnpm' docs; then
-            echo 'Residual pnpm references found.'
+            echo 'Residual old package-manager references found.'
             exit 1
           fi
           grep -q 'Package manager | npm' docs/prd/PRD-22_TypeScript_TSX_Node_Vite_Tailwind_Firebase_Platform_Rebaseline.md

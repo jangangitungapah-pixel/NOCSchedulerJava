@@ -226,7 +226,7 @@ Mengubah repo dokumentasi menjadi repository development yang reproducible.
 - npm package manager;
 - `.nvmrc`/equivalent runtime declaration bila dipilih;
 - root `package.json`;
-- `root package.json `workspaces` configuration`;
+- npm workspaces configured in root `package.json`;
 - `.gitignore`;
 - `.editorconfig`;
 - Prettier baseline;
@@ -239,7 +239,7 @@ Mengubah repo dokumentasi menjadi repository development yang reproducible.
 ## Tasks
 
 - tetapkan Node LTS yang supported Firebase runtime;
-- aktifkan Corepack/npm workflow;
+- gunakan npm yang disertakan bersama Node.js dan tetapkan npm workspaces pada root `package.json`;
 - buat workspace root;
 - buat strict TypeScript base config;
 - buat lint/format baseline;

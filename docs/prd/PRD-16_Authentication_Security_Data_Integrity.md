@@ -224,7 +224,7 @@ Kontrol harus kuat tetapi UX tetap jelas:
 
 ## 4.1 Authentication Provider
 
-Baseline authentication menggunakan **Better Auth** sesuai PRD-14.
+Baseline authentication menggunakan **Firebase Authentication** sesuai PRD-14.
 
 Baseline login:
 
@@ -280,9 +280,9 @@ User berstatus disabled:
 
 Password tidak pernah disimpan plaintext atau reversible encryption.
 
-Gunakan password hashing yang disediakan/configured oleh Better Auth dengan memory-hard/adaptive algorithm yang memenuhi baseline security saat implementasi.
+Gunakan password hashing yang disediakan/configured oleh Firebase Authentication dengan memory-hard/adaptive algorithm yang memenuhi baseline security saat implementasi.
 
-Jika default Better Auth digunakan, implementation harus memverifikasi parameter aktual saat project setup dan upgrade dependency.
+Jika default Firebase Authentication digunakan, implementation harus memverifikasi parameter aktual saat project setup dan upgrade dependency.
 
 ---
 
@@ -335,7 +335,7 @@ MVP internal boleh menggunakan controlled admin-assisted reset bila email delive
 
 ## 6.1 Session Storage
 
-Prefer database-backed/session mechanism dari Better Auth.
+Prefer database-backed/session mechanism dari Firebase Authentication.
 
 Session token tidak boleh disimpan di `localStorage` sebagai baseline browser auth.
 
@@ -359,7 +359,7 @@ Host-only cookie lebih disukai bila deployment hanya satu host.
 
 Session memiliki finite lifetime.
 
-Exact expiration dan idle/update behavior ditetapkan saat implementation berdasarkan Better Auth configuration dan operasional internal.
+Exact expiration dan idle/update behavior ditetapkan saat implementation berdasarkan Firebase Authentication configuration dan operasional internal.
 
 Requirement:
 
@@ -394,7 +394,7 @@ Jangan mengandalkan permission snapshot yang ditanam ke browser pada saat login 
 
 # 7. CSRF & Origin Security
 
-## 7.1 Better Auth Security Checks Stay Enabled
+## 7.1 Firebase Authentication Security Checks Stay Enabled
 
 Production tidak boleh mengaktifkan configuration yang menonaktifkan CSRF/origin validation hanya untuk mempermudah integration.
 
@@ -596,7 +596,7 @@ Jangan memungkinkan open redirect ke arbitrary external origin.
 
 ## 11.1 CSP
 
-Production harus memiliki Content Security Policy yang sesuai arsitektur Next.js dan third-party resources yang benar-benar digunakan.
+Production harus memiliki Content Security Policy yang sesuai arsitektur React/Vite frontend and Node.js/TypeScript API dan third-party resources yang benar-benar digunakan.
 
 Goal:
 
@@ -638,7 +638,7 @@ Secure cookie tidak boleh diturunkan hanya agar HTTP production dapat bekerja.
 
 ## 12.1 Authentication Rate Limit
 
-Better Auth rate limiting harus aktif pada production dan dikonfigurasi sesuai deployment/proxy.
+Firebase Authentication rate limiting harus aktif pada production dan dikonfigurasi sesuai deployment/proxy.
 
 Sensitive route seperti sign-in/reset/2FA future harus memiliki stricter threshold daripada generic endpoint.
 
@@ -906,7 +906,7 @@ Log dan audit tidak boleh memuat plaintext:
 - API key,
 - database connection string,
 - private key,
-- Better Auth secret,
+- Firebase Authentication secret,
 - raw cookie header.
 
 Jika session correlation diperlukan, gunakan safe derived identifier yang tidak dapat digunakan untuk mengambil alih session.
@@ -927,7 +927,7 @@ Prefer structured logging.
 
 Minimal:
 
-- Better Auth secret(s),
+- Firebase Authentication secret(s),
 - database credentials,
 - deployment credentials,
 - external integration keys,
@@ -952,7 +952,7 @@ Production secret harus disimpan melalui platform secret/environment management 
 
 Critical secret harus mempunyai documented rotation procedure.
 
-Better Auth secret rotation harus menggunakan mechanism yang tidak memutus seluruh active encrypted state secara tidak perlu ketika supported.
+Firebase Authentication secret rotation harus menggunakan mechanism yang tidak memutus seluruh active encrypted state secara tidak perlu ketika supported.
 
 ---
 
@@ -1103,7 +1103,7 @@ Jangan menyimpan:
 
 - session token,
 - password,
-- Better Auth secret,
+- Firebase Authentication secret,
 - database secret,
 - privileged API credential
 
@@ -1303,7 +1303,7 @@ Critical concurrent scenarios:
 - **SEC-012** — Passwords are never stored plaintext.
 - **SEC-013** — Password hashing uses approved adaptive/memory-hard configuration.
 - **SEC-014** — Login errors do not unnecessarily enumerate accounts.
-- **SEC-015** — Better Auth CSRF/origin security checks remain enabled in production.
+- **SEC-015** — Firebase Authentication CSRF/origin security checks remain enabled in production.
 - **SEC-016** — Trusted origins use explicit allowlist.
 - **SEC-017** — NOCScheduler GET endpoints are read-only.
 - **SEC-018** — Cookie-authenticated mutations apply CSRF/origin defense.
@@ -1383,7 +1383,7 @@ A feature affecting authentication, access, schedule mutation, compensation, pay
 
 ## Phase SEC-F0 — Security Foundation
 
-- Better Auth setup,
+- Firebase Authentication setup,
 - production-safe cookie configuration,
 - trusted origins,
 - session lifecycle,
@@ -1451,10 +1451,10 @@ Primary references at time of PRD creation:
 - OWASP ASVS 5.0.0 — https://owasp.org/www-project-application-security-verification-standard/
 - OWASP Top 10:2025 — https://owasp.org/Top10/
 - OWASP Cheat Sheet Series — https://cheatsheetseries.owasp.org/
-- Better Auth Security — https://better-auth.com/docs/reference/security
-- Better Auth Cookies — https://better-auth.com/docs/concepts/cookies
-- Better Auth Rate Limit — https://better-auth.com/docs/concepts/rate-limit
-- Next.js Content Security Policy Guide — https://nextjs.org/docs/app/guides/content-security-policy
+- Firebase Authentication Security — https://better-auth.com/docs/reference/security
+- Firebase Authentication Cookies — https://better-auth.com/docs/concepts/cookies
+- Firebase Authentication Rate Limit — https://better-auth.com/docs/concepts/rate-limit
+- React/Vite frontend and Node.js/TypeScript API Content Security Policy Guide — https://nextjs.org/docs/app/guides/content-security-policy
 
 ---
 

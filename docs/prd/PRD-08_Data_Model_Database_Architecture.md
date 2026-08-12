@@ -19,7 +19,7 @@
 
 # 1. Purpose
 
-Dokumen ini mendefinisikan **conceptual data model, relational boundaries, entity ownership, historical strategy, effective dating, snapshot/versioning, data integrity constraints, deletion policy, concurrency control, indexing direction, dan database guardrail** untuk NOCScheduler.
+Dokumen ini mendefinisikan **conceptual data model, domain-data boundaries, entity ownership, historical strategy, effective dating, snapshot/versioning, data integrity constraints, deletion policy, concurrency control, indexing direction, dan database guardrail** untuk NOCScheduler.
 
 PRD-08 menjadi source of truth untuk menjawab:
 
@@ -27,13 +27,13 @@ PRD-08 menjadi source of truth untuk menjawab:
 
 Dokumen ini sengaja belum menetapkan vendor database, ORM, migration framework, atau deployment topology final. Pilihan teknologi final ditentukan pada **PRD-14 — Technical Architecture & Technology Stack**.
 
-Namun model aplikasi harus diasumsikan menggunakan **relational database dengan dukungan transaction, foreign key, unique constraint, index, dan strong consistency** sebagai baseline.
+Implementasi canonical menggunakan **Cloud Firestore**. Integrity yang sebelumnya diasumsikan berasal dari explicit reference integrity guard/deterministic uniqueness strategy SQL harus diwujudkan melalui deterministic document IDs, transaction, reservation/index documents, explicit references, version fields, effective dating, snapshots, dan server-side invariant checks sesuai PRD-22.
 
 ---
 
 # 2. Data Architecture Principles
 
-## DA-P01 — Relational First
+## DA-P01 — Explicit Domain Records First
 
 Business-critical data harus dimodelkan sebagai entity dan relation yang eksplisit.
 
@@ -47,7 +47,7 @@ JSON diperbolehkan untuk:
 - cached rendering metadata,
 - integration payload di masa depan.
 
-JSON tidak boleh menggantikan relational integrity untuk data inti.
+JSON tidak boleh menggantikan domain/application integrity untuk data inti.
 
 ---
 
@@ -156,7 +156,7 @@ Contoh:
 
 ---
 
-## DA-P08 — Database Constraints Protect Invariants
+## DA-P08 — Persistence and Domain Guards Protect Invariants
 
 Rule yang bisa dijaga database sebaiknya tidak hanya bergantung pada frontend.
 
@@ -166,7 +166,7 @@ Contoh:
 - unique payroll record per employee/period,
 - unique role code,
 - unique permission code,
-- valid foreign keys,
+- valid explicit reference integrity guards,
 - non-negative monetary rate jika rule mengharuskan,
 - non-overlapping effective versions bila database mendukung constraint tersebut.
 
@@ -1111,7 +1111,7 @@ Contoh salary tetap membutuhkan `employee_salary_versions` walaupun perubahan sa
 
 ## 14.1 Default Foreign Key Policy
 
-Gunakan foreign key untuk relation penting.
+Gunakan explicit reference integrity guard untuk relation penting.
 
 Recommended deletion semantics:
 
@@ -1654,11 +1654,11 @@ Data architecture dianggap memenuhi PRD-08 jika:
 - payroll memiliki record + revision + item + adjustment separation,
 - locked payroll immutable dari workflow normal,
 - audit high-risk append-oriented,
-- foreign key/deletion semantics aman,
+- explicit reference integrity guard/deletion semantics aman,
 - soft-delete/archive policy jelas,
 - concurrency dan transaction requirement ditentukan,
 - baseline indexing direction ditentukan,
-- database constraints melindungi invariants penting,
+- persistence/domain invariant guards melindungi invariants penting,
 - schema siap diterjemahkan menjadi migration pada PRD Technical Architecture.
 
 ---

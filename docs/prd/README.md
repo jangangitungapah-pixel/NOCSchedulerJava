@@ -175,7 +175,7 @@ Unless a future approved PRD explicitly changes the decision, implementation mus
 - Server Components;
 - Server Actions;
 - Next.js Route Handlers;
-- TypeScript source files as a mandatory platform;
+- plain JavaScript/JSX as the default first-party application source language;
 - PostgreSQL;
 - Drizzle ORM/Drizzle Kit;
 - Prisma;

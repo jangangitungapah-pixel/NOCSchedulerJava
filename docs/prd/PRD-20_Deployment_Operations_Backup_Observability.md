@@ -20,7 +20,7 @@
 
 # 1. Purpose
 
-Dokumen ini mendefinisikan **production topology, environment strategy, CI/CD, release flow, deployment safety, database migration execution, rollback policy, backup, restore, disaster recovery, RPO/RTO, health checks, structured logging, metrics, alerting, incident response, secret operations, retention, capacity awareness, maintenance, dan operational readiness** untuk NOCScheduler.
+Dokumen ini mendefinisikan **production topology, environment strategy, CI/CD, release flow, deployment safety, Firestore data/index/rules migration execution, rollback policy, backup, restore, disaster recovery, RPO/RTO, health checks, structured logging, metrics, alerting, incident response, secret operations, retention, capacity awareness, maintenance, dan operational readiness** untuk NOCScheduler.
 
 PRD-20 menjadi source of truth untuk menjawab:
 
@@ -76,7 +76,7 @@ Satu release harus dapat diidentifikasi secara stabil melalui minimal:
 - Git commit SHA,
 - build/release identifier,
 - deployment timestamp,
-- migration/schema version.
+- release/data-contract version.
 
 Production tidak boleh diubah dengan manual file editing atau patch langsung pada server.
 
@@ -92,11 +92,11 @@ Jika platform melakukan build per environment, commit SHA, lockfile, runtime ver
 
 ---
 
-## OPS-P04 — Database Changes Are Releases
+## OPS-P04 — Data Contract, Index, Rules, and Backfill Changes Are Releases
 
 Migration bukan side effect kecil deployment.
 
-Setiap schema change harus:
+Setiap perubahan data contract, index, security rules, atau backfill harus:
 
 - version-controlled,
 - direview,
@@ -111,7 +111,7 @@ Setiap schema change harus:
 
 Jika release code bermasalah tetapi data masih benar, prioritaskan application rollback.
 
-Database restore tidak boleh digunakan sebagai tombol undo deployment biasa karena restore dapat menghilangkan business mutation valid yang terjadi setelah backup point.
+Firestore restore tidak boleh digunakan sebagai tombol undo deployment biasa karena restore dapat menghilangkan business mutation valid yang terjadi setelah backup point.
 
 ---
 
@@ -156,7 +156,7 @@ Jika dependency yang diperlukan untuk menjaga consistency tidak tersedia, mutati
 
 Contoh:
 
-- database unavailable,
+- Firestore unavailable,
 - transaction gagal,
 - required audit persistence gagal,
 - authorization dependency gagal.
@@ -250,7 +250,7 @@ Canonical environments:
 Purpose:
 
 - developer implementation,
-- local database,
+- Firebase Emulator Suite data services,
 - unit/integration tests,
 - local visual development.
 
@@ -1019,7 +1019,7 @@ Recommended roles:
 
 ## Migration Role
 
-- schema change privilege,
+- data-contract change privilege,
 - digunakan hanya deployment migration process,
 - credential lebih terbatas distribusinya.
 
@@ -1259,7 +1259,7 @@ Prefer application-level correction command jika tersedia.
 Runbook minimal harus mempertimbangkan:
 
 1. application deployment failure,
-2. database unavailable,
+2. Firestore unavailable,
 3. accidental destructive migration,
 4. widespread accidental data deletion,
 5. credential/secret leak,

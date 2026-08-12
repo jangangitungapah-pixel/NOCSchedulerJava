@@ -1,4 +1,4 @@
-# PRD-22 — TypeScript, TSX, Node.js, Vite, Tailwind & Firebase Managed Platform Rebaseline (Historical)
+# PRD-21 — Firebase Platform Architecture Amendment (Historical)
 
 > **Canonical Technology Baseline:** TypeScript strict mode + TSX + React + Vite + Tailwind CSS + Node.js/TypeScript API + Firebase managed platform. For any platform-specific conflict, PRD-22 is authoritative.
 
@@ -132,5 +132,5 @@ PRD-21 is considered correctly superseded when:
 1. PRD-22 exists and is treated as the highest-precedence platform architecture document;
 2. implementation no longer requires Next.js;
 3. Firebase remains managed infrastructure rather than a self-hosted runtime dependency;
-4. future work uses JavaScript + React + Vite + Tailwind on the client and JavaScript + Node.js on the server;
+4. future work uses TypeScript/TSX + React + Vite + Tailwind on the client and TypeScript + Node.js on the server;
 5. existing business, security, historical, UX, and QA requirements continue to apply.

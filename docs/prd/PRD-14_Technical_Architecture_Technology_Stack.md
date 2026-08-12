@@ -44,10 +44,10 @@ Dokumen ini tidak menggantikan:
 | Language | TypeScript — strict mode |
 | Full-stack Framework | React + Vite frontend; Node.js/TypeScript API backend |
 | UI Runtime | React supported by selected React/Vite release |
-| Database | PostgreSQL |
-| ORM / SQL Toolkit | Drizzle ORM |
-| Migration Tool | Drizzle Kit + reviewed SQL migrations |
-| Authentication | Better Auth |
+| Database | Cloud Firestore |
+| Data Access | Firebase Admin SDK + application-owned repository layer |
+| Data/Index/Rules Change Tooling | Versioned Firestore indexes, security rules, and reviewed TypeScript data-migration scripts |
+| Authentication | Firebase Authentication |
 | Authorization | NOCScheduler custom permission/capability service |
 | Runtime Validation | Zod 4 |
 | Client Server-State | TanStack Query |
@@ -64,7 +64,7 @@ Dokumen ini tidak menggantikan:
 | Accessibility Testing | Automated axe-style checks + manual keyboard QA |
 | Package Manager | pnpm |
 | Runtime Topology | Modular monolith |
-| Primary Deployment Unit | One web application + PostgreSQL |
+| Primary Deployment Unit | Firebase Hosting SPA + managed Node.js/TypeScript API + Cloud Firestore |
 
 Exact dependency patch/minor versions should be pinned in the lockfile when project setup is created and upgraded intentionally through controlled dependency updates.
 
@@ -351,9 +351,9 @@ If an operation already has a canonical API contract, typed API commands must no
 
 # 6. Database Architecture
 
-## 6.1 Database Choice — PostgreSQL
+## 6.1 Database Choice — Cloud Firestore
 
-PostgreSQL is the baseline relational database.
+Cloud Firestore is the canonical managed persistence layer. Relational-style invariants are preserved through explicit domain contracts, transactions, deterministic IDs, effective dating, snapshots, and tested repository guards.
 
 Required capabilities include:
 
@@ -368,47 +368,46 @@ Required capabilities include:
 
 ---
 
-## 6.2 ORM — Drizzle ORM
+## 6.2 Data Access — Firebase Admin SDK Repository Layer
 
-Drizzle is recommended because the application benefits from:
+Firebase Admin SDK is the privileged server adapter. Application-owned repositories are required because the application benefits from:
 
-- explicit relational schema,
-- close mapping to SQL,
-- type-safe query construction,
+- explicit collection/document contracts,
+- clear mapping between domain records and Firestore documents,
+- typed TypeScript repository contracts and runtime-validated data boundaries,
 - transaction support,
-- migration generation,
-- ability to inspect/review generated SQL.
+- version-controlled indexes/rules and explicit data migration scripts,
+- ability to inspect/review every persistence mutation and query pattern.
 
-ORM usage must not hide important database behavior.
+Repository abstractions must not hide important Firestore transaction, indexing, read-cost, or consistency behavior.
 
-For complex constraints or optimized queries, explicit SQL is allowed when documented and tested.
+For complex invariants or optimized queries, explicit Firestore transaction/query logic is allowed when documented and tested.
 
 ---
 
 ## 6.3 Migration Strategy
 
-Use codebase-first schema management.
+Use codebase-first data-contract, index, rules, and migration management.
 
 Flow:
 
 ```text
-Schema change
-→ generate migration
-→ review SQL
-→ test on local/test database
-→ commit migration
+Data-contract/index/rules change
+→ create reviewed migration/index/rules change
+→ test with Emulator Suite
+→ commit versioned change
 → apply through deployment process
 ```
 
-Direct `push`-style schema synchronization must not be the normal production migration path.
+Ad-hoc production document mutation must not be the normal migration path.
 
-Production schema changes require versioned migration files.
+Production data-shape/backfill changes require versioned TypeScript migration scripts or explicitly versioned index/rules changes.
 
 ---
 
 ## 6.4 Migration Safety
 
-Potentially destructive migrations require explicit review.
+Potentially destructive Firestore data migrations require explicit review.
 
 Examples:
 
@@ -427,7 +426,7 @@ Use expand/migrate/contract strategy where zero-downtime or data safety warrants
 
 ## 7.1 Better Auth
 
-Better Auth is the recommended authentication framework.
+Firebase Authentication is the canonical identity provider.
 
 Baseline authentication method:
 
@@ -446,7 +445,7 @@ These are not all required for MVP.
 
 ## 7.2 Authentication vs Authorization
 
-Better Auth handles:
+Firebase Authentication handles:
 
 - identity,
 - credentials,
@@ -1594,7 +1593,7 @@ This sequence avoids building beautiful screens on top of unstable domain infras
 
 NOCScheduler should be engineered as:
 
-> **A TypeScript-first, Next.js modular monolith backed by PostgreSQL, with explicit domain services, strong transactional integrity, Drizzle-managed relational data, Better Auth identity/session handling, capability-based authorization, Zod runtime validation, TanStack Query for interactive server state, semantic-token-driven Tailwind styling, premium accessible UI primitives, controlled Motion animations, and Vitest + Playwright quality gates.**
+> **A TypeScript-first, legacy Next.js modular monolith backed by PostgreSQL, with explicit domain services, strong transactional integrity, Drizzle-managed relational data, Better Auth identity/session handling, capability-based authorization, Zod runtime validation, TanStack Query for interactive server state, semantic-token-driven Tailwind styling, premium accessible UI primitives, controlled Motion animations, and Vitest + Playwright quality gates.**
 
 The architecture must optimize for:
 

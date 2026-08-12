@@ -113,15 +113,15 @@ Input sama harus menghasilkan output sama.
 
 ---
 
-## QA-P04 — Database Constraints Are Tested Contracts
+## QA-P04 — Persistence and Domain Invariants Are Tested Contracts
 
-Constraint penting harus memiliki integration/database contract test.
+Invariant persistence penting harus memiliki integration/repository contract test menggunakan Firebase Emulator Suite.
 
 Contoh:
 
 - duplicate primary assignment ditolak,
 - duplicate payroll record ditolak,
-- invalid foreign key ditolak,
+- invalid/dangling application reference ditolak oleh domain/repository guard,
 - overlapping effective compensation version ditolak atau dicegah service/DB policy,
 - historical referenced data tidak cascade-delete.
 
@@ -194,7 +194,7 @@ Release membutuhkan kombinasi:
 - passing automated suites,
 - required visual acceptance,
 - required manual exploratory checks,
-- migration verification,
+- data-contract/index/rules migration verification,
 - security gate,
 - no unresolved release-blocking defect.
 
@@ -1075,7 +1075,7 @@ Release/main pipeline dapat memperluas ke:
 ```text
 Cross-browser E2E
 + broader visual regression
-+ migration verification
++ data-contract/index/rules migration verification
 + security checks
 + performance smoke
 ```

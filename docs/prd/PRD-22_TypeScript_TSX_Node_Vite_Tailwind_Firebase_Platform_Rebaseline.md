@@ -85,7 +85,7 @@ Product/business requirements remain canonical unless this document explicitly c
 | PRD-11 Design System | Fully retained; Tailwind implements semantic token/component system |
 | PRD-12 Responsive & Mobile | Fully retained |
 | PRD-13 UI Polish | Fully retained |
-| PRD-14 Technical Architecture | Next.js/TypeScript/PostgreSQL-specific baseline superseded by PRD-22 |
+| PRD-14 Technical Architecture | Legacy Next.js/PostgreSQL full-stack assumptions superseded by PRD-22 |
 | PRD-15 API Contract | HTTP semantics retained; route implementation moves to Node.js API |
 | PRD-16 Security | Security requirements retained; Better Auth/Next.js-specific guidance superseded |
 | PRD-17 Reporting | Requirements retained |
@@ -284,18 +284,18 @@ Canonical direction:
 │  │  │  ├─ styles/
 │  │  │  └─ main.tsx
 │  │  ├─ index.html
-│  │  └─ vite.config.js
+│  │  └─ vite.config.ts
 │  │
 │  └─ api/
 │     ├─ src/
-│     │  ├─ app.js
+│     │  ├─ app.ts
 │     │  ├─ routes/
 │     │  ├─ middleware/
 │     │  ├─ modules/
 │     │  ├─ repositories/
 │     │  ├─ services/
 │     │  └─ firebase/
-│     └─ index.js
+│     └─ index.ts
 │
 ├─ packages/
 │  ├─ domain/
@@ -331,30 +331,44 @@ Exact directory names may evolve, but these boundaries are mandatory:
 
 ---
 
-# 7. JavaScript Source Standard
+# 7. TypeScript Source Standard
 
-NOCScheduler intentionally uses JavaScript rather than TypeScript as the source language.
+NOCScheduler uses TypeScript as the canonical first-party source language for both frontend and backend.
 
 Canonical file extensions:
 
-- `.js` for standard modules;
-- `.tsx` for React components.
+- `.ts` for standard non-React modules;
+- `.tsx` for React components and files containing JSX.
 
-Do not introduce `.ts` or `.tsx` without a future explicit architecture decision.
+Do not introduce first-party `.js` or `.jsx` application source unless a tool-generated configuration cannot reasonably be expressed in TypeScript.
 
-To keep a large JavaScript codebase safe:
+To keep the TypeScript codebase safe and maintainable:
 
 - use ESM imports/exports;
 - enable strict ESLint rules;
 - use Zod at untrusted boundaries;
-- use JSDoc for important domain/API types;
-- optionally enable `// @ts-check` / `tsc --noEmit` static analysis while keeping source files JavaScript;
+- model important domain/API contracts with TypeScript types/interfaces plus Zod runtime schemas at trust boundaries;
+- run `tsc --noEmit` as a required static type-check quality gate;
 - keep functions small and domain-specific;
 - prefer pure deterministic functions for calculation rules;
 - never represent IDR using binary floating point;
 - add contract/regression tests for every critical rule.
 
-A TypeScript compiler may be used only as a **development checker for JavaScript/JSDoc** if useful; this does not make TypeScript the application source language.
+TypeScript is the application source language. The emitted browser/server runtime is JavaScript, but first-party source remains `.ts`/`.tsx`.
+
+---
+
+## 7.1 Compiler and type-safety contract
+
+The root/workspace TypeScript configuration must enforce a strict baseline. At minimum, implementation must preserve `strict: true` and a dedicated `typecheck` command using `tsc --noEmit`. Prefer `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, and `useUnknownInCatchVariables` unless a documented compatibility issue requires a temporary exception.
+
+Rules:
+
+- `any` is prohibited by default in domain, API contract, payroll, scheduling, authorization, and repository code;
+- use `unknown` for untrusted values until validation/narrowing succeeds;
+- discriminated unions should model business lifecycle states where they make invalid states harder to represent;
+- branded/opaque ID types may be introduced for critical identifiers when they materially reduce accidental ID mixing;
+- TypeScript types never replace Zod/server validation at runtime boundaries.
 
 ---
 
@@ -597,7 +611,7 @@ High-risk operations such as publish/finalize/lock must show explicit server-con
 
 Use an actively supported Node.js LTS/runtime supported by the selected Firebase managed environment.
 
-Application server code is JavaScript ESM.
+Application server source is TypeScript ESM and is compiled/transpiled to JavaScript for the managed Node.js runtime.
 
 ## 11.2 Express application
 
@@ -1092,7 +1106,7 @@ Requirements include:
 Do not introduce these without a real requirement:
 
 - Next.js;
-- TypeScript as application source language;
+- plain JavaScript/JSX as the default first-party application source language;
 - PostgreSQL;
 - Drizzle ORM;
 - Prisma ORM;
@@ -1138,12 +1152,12 @@ Implementation should explicitly support:
 
 # 27. Logic Reliability Requirements Added by the Rebaseline
 
-Because the codebase uses JavaScript rather than TypeScript source, reliability must be intentional.
+Because NOCScheduler contains high-risk scheduling and payroll logic, strict TypeScript and runtime validation are both required.
 
 Required safeguards:
 
 - pure domain modules;
-- JSDoc for high-value structures and public module contracts;
+- explicit TypeScript types/interfaces for high-value structures and public module contracts;
 - runtime Zod schemas at every untrusted boundary;
 - deterministic test fixtures;
 - exhaustive business-state tests for payroll/schedule transitions;
@@ -1199,7 +1213,7 @@ Business/domain modules should be migrated without rewriting rules unless tests 
 
 The platform rebaseline is considered implemented when all of the following are true:
 
-- source application uses `.js/.tsx`, not Next.js framework structure;
+- source application uses `.ts/.tsx`, not Next.js framework structure;
 - Vite builds the frontend successfully;
 - Tailwind + semantic token foundation supports Light/Dark parity;
 - React Router owns navigation;
@@ -1225,7 +1239,7 @@ The platform rebaseline is considered implemented when all of the following are 
 
 The canonical NOCScheduler architecture is:
 
-> **A modern internal React SPA written in TypeScript/TSX, built with Vite and styled through Tailwind CSS using a strict semantic design system; backed by a server-authoritative JavaScript/Node.js HTTP API running on Firebase-managed infrastructure; using Firebase Authentication, Cloud Firestore, Admin SDK, and Emulator Suite; with TanStack data tooling, accessible headless UI primitives, robust validation, deterministic business-domain tests, and first-class desktop/mobile Light/Dark UX.**
+> **A modern internal React SPA written in TypeScript/TSX, built with Vite and styled through Tailwind CSS using a strict semantic design system; backed by a server-authoritative TypeScript/Node.js HTTP API running on Firebase-managed infrastructure; using Firebase Authentication, Cloud Firestore, Admin SDK, and Emulator Suite; with TanStack data tooling, accessible headless UI primitives, robust validation, deterministic business-domain tests, and first-class desktop/mobile Light/Dark UX.**
 
 This architecture intentionally optimizes for:
 

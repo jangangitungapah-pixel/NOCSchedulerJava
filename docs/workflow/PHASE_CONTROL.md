@@ -14,14 +14,14 @@
 | Field | Value |
 |---|---|
 | Current Phase | `WP-F00` — Repository & Toolchain Bootstrap |
-| Current Status | `PUSHED_UNVERIFIED` |
-| Last Accepted Phase | None — implementation has not started |
-| Last Implementation Commit | `4f07706a2224d9990d94027e7235a9703283970e` — bootstrap pushed; formatter repair based on remote checkpoint `7c2f78266272c2f3bc54873cf803db85875c130b` pending |
-| Active Generator | `scripts/wp-f00-repair-format-after-checkpoint.cjs` |
-| Active Execution Model | Downloadable `.cjs` generator → local write → dependency materialization → commit/push → QA |
-| Next Allowed Phase | `WP-F00` only |
-| Future Phases | `LOCKED` |
-| User Validation Pending | Yes — formatter repair must be pushed, then full WP-F00 gates rerun |
+| Current Status | `ACCEPTED` |
+| Last Accepted Phase | `WP-F00` — Repository & Toolchain Bootstrap |
+| Last Implementation Commit | `45b712c577433ea048f6707d5e636a4f115533df` — formatter repair; all WP-F00 local gates passed |
+| Active Generator | None |
+| Active Execution Model | Downloadable `.cjs` generator → local write → dependency materialization when needed → commit/push → QA |
+| Next Allowed Phase | `WP-F01` — Workspace & Application Scaffold |
+| Future Phases | `WP-F02` and later remain `LOCKED` |
+| User Validation Pending | No — WP-F00 accepted from user-provided passing local QA output |
 | Blocking Issue | None |
 | Package Manager Baseline | `npm` + npm workspaces + `package-lock.json` |
 | Runtime Baseline | Node.js 22 |
@@ -38,8 +38,9 @@ NOT_STARTED
 → PUSHED_UNVERIFIED
    ├─ QA FAIL → QA_FAILED → repair generator → PUSHED_UNVERIFIED
    └─ QA PASS → USER_VALIDATION_REQUIRED
-                 → user PASS + explicit continue
+                 → user validation confirms PASS
                  → ACCEPTED
+                 → wait for explicit `lanjut`
                  → next phase may begin
 ```
 
@@ -83,9 +84,9 @@ Direct GitHub writes remain acceptable only for controlled workflow/workplan/doc
 
 | Phase | Name | Status | Acceptance / Notes |
 |---|---|---|---|
-| WP-F00 | Repository & Toolchain Bootstrap | PUSHED_UNVERIFIED | Formatter repair prepared after `format:check` failure; WP-F01 remains locked |
-| WP-F01 | Workspace & Application Scaffold | LOCKED | Requires WP-F00 acceptance |
-| WP-F02 | Quality, CI & Developer Safety Foundation | LOCKED | Requires prior phase acceptance |
+| WP-F00 | Repository & Toolchain Bootstrap | ACCEPTED | Node 22.23.2 runtime gate, typecheck, lint, format check, and repository policy all passed locally |
+| WP-F01 | Workspace & Application Scaffold | NOT_STARTED | Next allowed phase; requires explicit user `lanjut` after WP-F00 acceptance |
+| WP-F02 | Quality, CI & Developer Safety Foundation | LOCKED | Requires WP-F01 acceptance |
 | WP-F03 | Design System & Responsive Foundation | LOCKED | Requires prior phase acceptance |
 | WP-F04 | Firebase Platform & Emulator Foundation | LOCKED | Requires prior phase acceptance |
 | WP-F05 | Shared Contracts & Domain Kernel | LOCKED | Requires prior phase acceptance |
@@ -113,54 +114,24 @@ Direct GitHub writes remain acceptable only for controlled workflow/workplan/doc
 
 ---
 
-# 5. WP-F00 Generator Contract
+# 5. WP-F00 Acceptance Record
 
-The active generator must implement only WP-F00 repository/toolchain foundation. It may create or update:
+WP-F00 established the reproducible repository/toolchain baseline without advancing into application scaffolding.
 
-- root npm workspace metadata;
-- Node runtime declarations;
-- TypeScript strict baseline;
-- ESLint and Prettier baseline;
+Accepted baseline includes:
+
+- Node.js 22 runtime policy;
+- npm workspaces and committed `package-lock.json`;
+- root `package.json` and engine constraints;
+- strict TypeScript base configuration;
+- ESLint baseline;
+- Prettier baseline;
 - repository/editor/ignore policy;
-- environment example policy;
+- environment example and secret-exclusion policy;
 - developer bootstrap documentation;
-- toolchain sentinel/policy checks;
-- this phase ledger to `PUSHED_UNVERIFIED` as part of the generated commit.
+- repository policy checks.
 
-It must not implement WP-F01 application scaffold or later product features.
-
-Because WP-F00 introduces development dependencies, `npm install` is part of the write/materialization stage and `package-lock.json` must be committed before QA.
-
----
-
-# 6. Durable Remote Checkpoint Rule
-
-The WP-F00 generator updates this ledger in the generated repository state to:
-
-```text
-Current Status: PUSHED_UNVERIFIED
-User Validation Pending: Yes
-```
-
-The implementation SHA is unknown until the local Git commit exists. On the next assistant turn, latest GitHub `main` is authoritative and the exact SHA is recorded from GitHub.
-
----
-
-# 7. Acceptance Contract
-
-A phase may be marked `ACCEPTED` only after user feedback confirms local validation passed. Generator completion, commit, push, CI, or assistant confidence are not sufficient by themselves.
-
-If QA fails, WP-F00 remains active and the assistant must fetch the exact pushed failing commit before generating a repair.
-
-After PASS, the assistant still waits for an explicit request to continue before beginning WP-F01.
-
----
-
-# 8. Current Next Action
-
-WP-F00 generated implementation must be committed and pushed before QA.
-
-Required post-push validation:
+User-provided local validation on 2026-08-13 passed:
 
 ```text
 npm run check:runtime
@@ -170,4 +141,34 @@ npm run format:check
 npm run check:repo
 ```
 
-If every gate passes, user performs the final local acceptance check and reports PASS. If any gate fails, the exact pushed GitHub `main` state is authoritative for the repair generator. WP-F01 remains locked until explicit user acceptance.
+Observed runtime during acceptance:
+
+```text
+Node.js v22.23.2
+npm 10.9.8
+Java 26 detected
+```
+
+WP-F00 is therefore accepted. No WP-F01 source has been generated yet.
+
+---
+
+# 6. Acceptance Contract
+
+A phase may be marked `ACCEPTED` only after user feedback confirms local validation passed. Generator completion, commit, push, CI, or assistant confidence are not sufficient by themselves.
+
+After acceptance, the assistant waits for an explicit user request to continue before beginning the next phase.
+
+---
+
+# 7. Current Next Action
+
+WP-F00 is complete and accepted.
+
+The next valid implementation request is:
+
+```text
+lanjut WP-F01 — Workspace & Application Scaffold
+```
+
+When the user explicitly asks to continue, the assistant must re-read latest `main`, this ledger, Workflow V2, WP-F01 scope in the master workplan, PRD-22, and relevant architecture/QA PRDs before generating the next downloadable `.cjs` implementation script.

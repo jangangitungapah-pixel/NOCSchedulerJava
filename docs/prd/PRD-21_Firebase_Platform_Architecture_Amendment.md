@@ -1,4 +1,6 @@
-# PRD-21 — Firebase Platform Architecture Amendment (Historical)
+# PRD-22 — TypeScript, TSX, Node.js, Vite, Tailwind & Firebase Managed Platform Rebaseline (Historical)
+
+> **Canonical Technology Baseline:** TypeScript strict mode + TSX + React + Vite + Tailwind CSS + Node.js/TypeScript API + Firebase managed platform. For any platform-specific conflict, PRD-22 is authoritative.
 
 > **Product:** NOCScheduler  
 > **Document Type:** Historical Architecture Amendment  
@@ -20,7 +22,7 @@ Its original decision removed the PostgreSQL/Drizzle/Docker/self-managed-server 
 
 However, the original PRD-21 implementation selected **Next.js + Firebase App Hosting**. That framework choice is no longer canonical.
 
-Effective immediately, **PRD-22 — JavaScript, Node.js, Vite, Tailwind & Firebase Managed Platform Rebaseline** supersedes PRD-21 and every conflicting platform-specific statement in PRD-01 through PRD-20.
+Effective immediately, **PRD-22 — TypeScript, TSX, Node.js, Vite, Tailwind & Firebase Managed Platform Rebaseline** supersedes PRD-21 and every conflicting platform-specific statement in PRD-01 through PRD-20.
 
 If this document conflicts with PRD-22, **PRD-22 wins**.
 
@@ -65,14 +67,14 @@ The replacement architecture is defined in PRD-22 and uses this logical split:
 
 ```text
 Browser
-  → React + JavaScript SPA
+  → React + TypeScript/TSX SPA
   → Vite build/runtime tooling
   → Tailwind CSS design-system implementation
   → Firebase Hosting
       ├─ SPA route fallback
       └─ /api/* rewrite
            ↓
-     Node.js API on managed Firebase/Google Cloud runtime
+     Node.js/TypeScript API on managed Firebase/Google Cloud runtime
            ↓
      Firebase Admin SDK
            ↓
@@ -83,7 +85,7 @@ Browser authentication
 
 Local development / CI
   → Vite dev server
-  → Node.js API runtime
+  → Node.js/TypeScript API runtime
   → Firebase Local Emulator Suite
 ```
 

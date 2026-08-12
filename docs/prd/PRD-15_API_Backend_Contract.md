@@ -1,6 +1,8 @@
 # PRD-15 — API & Backend Contract
 
-> **Architecture Amendment:** Platform-specific persistence, authentication, hosting, deployment, and database assumptions in this document are superseded where they conflict with **PRD-21 — Firebase Platform Architecture Amendment**. Product/business requirements remain canonical.
+> **Canonical Technology Baseline:** TypeScript strict mode + TSX + React + Vite + Tailwind CSS + Node.js/TypeScript API + Firebase managed platform. For any platform-specific conflict, PRD-22 is authoritative.
+
+> **Architecture Amendment:** Platform-specific persistence, authentication, hosting, deployment, and database assumptions in this document are superseded where they conflict with **PRD-22 — TypeScript, TSX, Node.js, Vite, Tailwind & Firebase Managed Platform Rebaseline**. Product/business requirements remain canonical.
 
 > **Product:** NOCScheduler  
 > **Document Type:** Product Requirements Document — API & Backend Contract  
@@ -11,7 +13,7 @@
 > **Default Locale:** Indonesia  
 > **Default Timezone:** Asia/Jakarta  
 > **Default Currency:** IDR  
-> **Repository:** `jangangitungapah-pixel/NOCScheduler`
+> **Repository:** `jangangitungapah-pixel/NOCSchedulerJava`
 
 ---
 
@@ -43,7 +45,7 @@ Repository / Database
 Audit / Outbox when required
 ```
 
-Route Handler tidak boleh menjadi tempat business logic scheduling/payroll ditulis secara langsung.
+Node.js/TypeScript route/controller tidak boleh menjadi tempat business logic scheduling/payroll ditulis secara langsung.
 
 ---
 
@@ -1964,7 +1966,7 @@ Minimum MVP-oriented endpoint groups:
 /api/v1/holidays
 ```
 
-Exact file-system Route Handler structure may differ while preserving canonical HTTP contract.
+Exact file-system Node.js/TypeScript route/controller structure may differ while preserving canonical HTTP contract.
 
 ---
 

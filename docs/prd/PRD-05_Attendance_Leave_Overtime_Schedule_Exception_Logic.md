@@ -1,5 +1,7 @@
 # PRD-05 — Attendance, Leave, Overtime & Schedule Exception Logic
 
+> **Canonical Technology Baseline:** TypeScript strict mode + TSX + React + Vite + Tailwind CSS + Node.js/TypeScript API + Firebase managed platform. For any platform-specific conflict, PRD-22 is authoritative.
+
 > **Product:** NOCScheduler  
 > **Document Type:** Product Requirements Document — Business Logic  
 > **Document ID:** PRD-05  
@@ -8,7 +10,7 @@
 > **Target:** Internal NOC Operations  
 > **Default Locale:** Indonesia  
 > **Default Timezone:** Asia/Jakarta  
-> **Repository:** `jangangitungapah-pixel/NOCScheduler`
+> **Repository:** `jangangitungapah-pixel/NOCSchedulerJava`
 
 ---
 

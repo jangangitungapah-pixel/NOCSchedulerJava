@@ -11,7 +11,7 @@
 Before generating architecture, scaffolding, dependencies, deployment configuration, API runtime, authentication integration, database access, tests, or frontend code, read:
 
 1. the product/business PRD relevant to the feature;
-2. **PRD-22 — JavaScript, Node.js, Vite, Tailwind & Firebase Managed Platform Rebaseline**;
+2. **PRD-22 — TypeScript, TSX, Node.js, Vite, Tailwind & Firebase Managed Platform Rebaseline**;
 3. any other referenced PRD for the feature.
 
 Do **not** infer the active platform from older Next.js/PostgreSQL wording that may remain as historical context in legacy documents.
@@ -24,7 +24,7 @@ When platform statements conflict, **PRD-22 wins**.
 
 ```text
 Frontend
-  JavaScript / JSX
+  TypeScript / TSX
   React
   Vite
   React Router
@@ -35,7 +35,7 @@ Frontend
   Motion / dnd-kit / modern UX utilities where justified
 
 Backend
-  JavaScript
+  TypeScript
   Node.js
   Express HTTP API
   /api/v1
@@ -59,7 +59,7 @@ Quality
 
 The application is **not a Java/JVM application** despite the repository name `NOCSchedulerJava`. “Java” in the repository name must not be interpreted as a requirement for Java language, Spring Boot, Maven, or Gradle.
 
-The active application source language is **JavaScript**.
+The active application source language is **TypeScript**. React source uses **`.tsx`** and non-React source uses **`.ts`**.
 
 ---
 
@@ -69,8 +69,8 @@ The active application source language is **JavaScript**.
 |---|---|---|
 | PRD-01 Product Vision, Scope & Requirements | Canonical product truth | Retained |
 | PRD-02 Feature Specification | Canonical feature truth | Retained |
-| PRD-03 Scheduling & Shift Business Logic | Canonical scheduling rules | Retained; implement in JavaScript domain/server modules |
-| PRD-04 Payroll, Salary & Incentive Logic | Canonical payroll rules | Retained; server-authoritative JavaScript implementation |
+| PRD-03 Scheduling & Shift Business Logic | Canonical scheduling rules | Retained; implement in TypeScript domain/server modules |
+| PRD-04 Payroll, Salary & Incentive Logic | Canonical payroll rules | Retained; server-authoritative TypeScript implementation |
 | PRD-05 Attendance, Leave, Overtime & Exceptions | Canonical workforce exception rules | Retained |
 | PRD-06 IA, Navigation & Page Structure | Canonical route/IA semantics | Retained; implement with React Router |
 | PRD-07 Roles, Permissions & Transparency | Canonical authorization policy | Retained; enforce in Node API |
@@ -88,7 +88,7 @@ The active application source language is **JavaScript**.
 | PRD-19 QA, Testing & Acceptance Criteria | Canonical QA requirements | Tooling/runtime specifics superseded by PRD-22 |
 | PRD-20 Deployment, Operations, Backup & Observability | Canonical operational objectives | Next.js/PostgreSQL topology superseded by Firebase Hosting + managed Node + Firestore |
 | PRD-21 Firebase Platform Architecture Amendment | Historical amendment | Superseded by PRD-22 |
-| PRD-22 JavaScript, Node.js, Vite, Tailwind & Firebase Platform Rebaseline | **Highest-precedence platform source of truth** | Active |
+| PRD-22 TypeScript, TSX, Node.js, Vite, Tailwind & Firebase Platform Rebaseline | **Highest-precedence platform source of truth** | Active |
 
 ---
 

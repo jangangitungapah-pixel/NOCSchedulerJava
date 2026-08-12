@@ -1,5 +1,7 @@
 # PRD-09 — Audit Trail & Historical Data
 
+> **Canonical Technology Baseline:** TypeScript strict mode + TSX + React + Vite + Tailwind CSS + Node.js/TypeScript API + Firebase managed platform. For any platform-specific conflict, PRD-22 is authoritative.
+
 > **Product:** NOCScheduler  
 > **Document Type:** Product Requirements Document — Audit Trail & Historical Data  
 > **Document ID:** PRD-09  
@@ -8,7 +10,7 @@
 > **Target:** Internal NOC Operations  
 > **Default Locale:** Indonesia  
 > **Default Timezone:** Asia/Jakarta  
-> **Repository:** `jangangitungapah-pixel/NOCScheduler`
+> **Repository:** `jangangitungapah-pixel/NOCSchedulerJava`
 
 ---
 

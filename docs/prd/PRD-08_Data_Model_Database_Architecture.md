@@ -1,6 +1,8 @@
 # PRD-08 — Data Model & Database Architecture
 
-> **Architecture Amendment:** Platform-specific persistence, authentication, hosting, deployment, and database assumptions in this document are superseded where they conflict with **PRD-21 — Firebase Platform Architecture Amendment**. Product/business requirements remain canonical.
+> **Canonical Technology Baseline:** TypeScript strict mode + TSX + React + Vite + Tailwind CSS + Node.js/TypeScript API + Firebase managed platform. For any platform-specific conflict, PRD-22 is authoritative.
+
+> **Architecture Amendment:** Platform-specific persistence, authentication, hosting, deployment, and database assumptions in this document are superseded where they conflict with **PRD-22 — TypeScript, TSX, Node.js, Vite, Tailwind & Firebase Managed Platform Rebaseline**. Product/business requirements remain canonical.
 
 > **Product:** NOCScheduler  
 > **Document Type:** Product Requirements Document — Data Model & Database Architecture  
@@ -11,7 +13,7 @@
 > **Default Locale:** Indonesia  
 > **Default Timezone:** Asia/Jakarta  
 > **Default Currency:** IDR  
-> **Repository:** `jangangitungapah-pixel/NOCScheduler`
+> **Repository:** `jangangitungapah-pixel/NOCSchedulerJava`
 
 ---
 

@@ -1,5 +1,7 @@
 # PRD-10 — UI/UX, User Flow & Interaction Design
 
+> **Canonical Technology Baseline:** TypeScript strict mode + TSX + React + Vite + Tailwind CSS + Node.js/TypeScript API + Firebase managed platform. For any platform-specific conflict, PRD-22 is authoritative.
+
 > **Product:** NOCScheduler  
 > **Document Type:** Product Requirements Document — UI/UX & Interaction Design  
 > **Document ID:** PRD-10  
@@ -11,7 +13,7 @@
 > **Default Theme:** Light  
 > **Theme Support:** Light + Dark parity required  
 > **Platforms:** Desktop Web + Mobile Web with equal product priority  
-> **Repository:** `jangangitungapah-pixel/NOCScheduler`
+> **Repository:** `jangangitungapah-pixel/NOCSchedulerJava`
 
 ---
 

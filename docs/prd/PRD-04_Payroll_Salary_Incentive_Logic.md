@@ -1,5 +1,7 @@
 # PRD-04 — Payroll, Salary & Incentive Logic
 
+> **Canonical Technology Baseline:** TypeScript strict mode + TSX + React + Vite + Tailwind CSS + Node.js/TypeScript API + Firebase managed platform. For any platform-specific conflict, PRD-22 is authoritative.
+
 > **Product:** NOCScheduler  
 > **Document Type:** Product Requirements Document — Business Logic  
 > **Document ID:** PRD-04  
@@ -9,7 +11,7 @@
 > **Default Locale:** Indonesia  
 > **Default Currency:** IDR  
 > **Default Timezone:** Asia/Jakarta  
-> **Repository:** `jangangitungapah-pixel/NOCScheduler`
+> **Repository:** `jangangitungapah-pixel/NOCSchedulerJava`
 
 ---
 

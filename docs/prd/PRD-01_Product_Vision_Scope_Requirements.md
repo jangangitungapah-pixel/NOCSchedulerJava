@@ -1,5 +1,7 @@
 # PRD-01 — Product Vision, Scope & Requirements
 
+> **Canonical Technology Baseline:** TypeScript strict mode + TSX + React + Vite + Tailwind CSS + Node.js/TypeScript API + Firebase managed platform. For any platform-specific conflict, PRD-22 is authoritative.
+
 > **Product:** NOCScheduler  
 > **Document Type:** Product Requirements Document  
 > **Document ID:** PRD-01  
@@ -8,7 +10,7 @@
 > **Default Locale:** Indonesia  
 > **Default Timezone:** Asia/Jakarta  
 > **Default Theme Direction:** Light-first, dark-mode ready  
-> **Repository:** `jangangitungapah-pixel/NOCScheduler`
+> **Repository:** `jangangitungapah-pixel/NOCSchedulerJava`
 
 ---
 

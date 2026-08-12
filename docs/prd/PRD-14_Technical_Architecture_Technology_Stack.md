@@ -1,6 +1,8 @@
 # PRD-14 — Technical Architecture & Technology Stack
 
-> **Architecture Amendment:** Platform-specific persistence, authentication, hosting, deployment, and database assumptions in this document are superseded where they conflict with **PRD-21 — Firebase Platform Architecture Amendment**. Product/business requirements remain canonical.
+> **Canonical Technology Baseline:** TypeScript strict mode + TSX + React + Vite + Tailwind CSS + Node.js/TypeScript API + Firebase managed platform. For any platform-specific conflict, PRD-22 is authoritative.
+
+> **Architecture Amendment:** Platform-specific persistence, authentication, hosting, deployment, and database assumptions in this document are superseded where they conflict with **PRD-22 — TypeScript, TSX, Node.js, Vite, Tailwind & Firebase Managed Platform Rebaseline**. Product/business requirements remain canonical.
 
 > **Product:** NOCScheduler  
 > **Document Type:** Product Requirements Document — Technical Architecture & Technology Stack  
@@ -12,7 +14,7 @@
 > **Default Timezone:** Asia/Jakarta  
 > **Default Currency:** IDR  
 > **Platforms:** Desktop Web + Mobile Web with equal product priority  
-> **Repository:** `jangangitungapah-pixel/NOCScheduler`
+> **Repository:** `jangangitungapah-pixel/NOCSchedulerJava`
 
 ---
 
@@ -40,8 +42,8 @@ Dokumen ini tidak menggantikan:
 | Layer | Recommended Technology |
 |---|---|
 | Language | TypeScript — strict mode |
-| Full-stack Framework | Next.js 16+ App Router |
-| UI Runtime | React supported by selected Next.js release |
+| Full-stack Framework | React + Vite frontend; Node.js/TypeScript API backend |
+| UI Runtime | React supported by selected React/Vite release |
 | Database | PostgreSQL |
 | ORM / SQL Toolkit | Drizzle ORM |
 | Migration Tool | Drizzle Kit + reviewed SQL migrations |
@@ -182,10 +184,10 @@ Architecture must leave clean extension points without paying full complexity co
 ```text
 Browser
   ↓
-Next.js Application
-  ├─ Server Components
-  ├─ Client Components
-  ├─ Route Handlers / API
+React/Vite Frontend + Node.js/TypeScript API
+  ├─ API-backed route/page loaders and TanStack Query server-state
+  ├─ React components
+  ├─ Node.js/TypeScript HTTP API
   ├─ Authentication
   ├─ Authorization
   ├─ Domain Services
@@ -210,13 +212,13 @@ Background Worker
 
 ---
 
-## 4.2 Next.js App Router
+## 4.2 React Router + Vite application routing
 
 Use App Router as the routing and rendering foundation.
 
 Recommended responsibilities:
 
-### Server Components
+### API-backed route/page loaders and TanStack Query server-state
 
 Use for:
 
@@ -226,7 +228,7 @@ Use for:
 - non-interactive data presentation,
 - minimizing unnecessary client JavaScript.
 
-### Client Components
+### React components
 
 Use only where browser interactivity is required:
 
@@ -306,9 +308,9 @@ CQRS infrastructure is **not required**. This is a code-organization principle, 
 
 ---
 
-## 5.3 Route Handlers as Canonical HTTP API
+## 5.3 Node.js/TypeScript API routes as Canonical HTTP API
 
-Interactive client operations should use typed Route Handlers as the canonical HTTP boundary.
+Interactive client operations should use typed Node.js/TypeScript API routes as the canonical HTTP boundary.
 
 Benefits:
 
@@ -322,11 +324,11 @@ PRD-15 will define exact endpoints.
 
 ---
 
-## 5.4 Server Components May Call Query Services Directly
+## 5.4 API-backed route/page loaders and TanStack Query server-state May Call Query Services Directly
 
 Server-rendered pages do not need to make internal HTTP calls back into the same application.
 
-Server Components may call query/application services directly as long as:
+API-backed route/page loaders and TanStack Query server-state may call query/application services directly as long as:
 
 - authentication context is resolved,
 - authorization is enforced,
@@ -335,15 +337,15 @@ Server Components may call query/application services directly as long as:
 
 ---
 
-## 5.5 Server Actions
+## 5.5 typed API commands
 
-Server Actions may be used selectively for tightly scoped UI forms if they provide clear value.
+typed API commands may be used selectively for tightly scoped UI forms if they provide clear value.
 
 They must not become a parallel unstructured backend.
 
 High-value domain operations should still route through shared command/application services.
 
-If an operation already has a canonical API contract, Server Actions must not implement separate business logic.
+If an operation already has a canonical API contract, typed API commands must not implement separate business logic.
 
 ---
 
@@ -563,7 +565,7 @@ Do not globally refetch everything after every mutation.
 
 ---
 
-## 10.2 Server Components for Initial Read
+## 10.2 API-backed route/page loaders and TanStack Query server-state for Initial Read
 
 Initial route content can be loaded server-side and passed/hydrated into client workspaces where beneficial.
 
@@ -1398,13 +1400,13 @@ Stale concurrent writes must not silently overwrite current state.
 Audit evidence for critical actions must be durable.
 
 ## ARCH-015
-Server Components must not bypass authorization/service rules.
+API-backed route/page loaders and TanStack Query server-state must not bypass authorization/service rules.
 
 ## ARCH-016
-Route Handlers must not contain duplicated domain logic.
+Node.js/TypeScript API routes must not contain duplicated domain logic.
 
 ## ARCH-017
-Server Actions, if used, must delegate to shared application/domain services.
+typed API commands, if used, must delegate to shared application/domain services.
 
 ## ARCH-018
 TanStack Query cache must not become source of truth.
@@ -1511,7 +1513,7 @@ Architecture changes that violate a previous PRD business invariant require expl
 
 Before feature development begins, project setup should demonstrate:
 
-- [ ] Next.js App Router application boots successfully.
+- [ ] React Router + Vite application routing application boots successfully.
 - [ ] TypeScript strict mode enabled.
 - [ ] PostgreSQL connectivity established.
 - [ ] Drizzle schema and migration flow working.

@@ -1,4 +1,6 @@
-# PRD-22 — JavaScript, Node.js, Vite, Tailwind & Firebase Managed Platform Rebaseline
+# PRD-22 — TypeScript, TSX, Node.js, Vite, Tailwind & Firebase Managed Platform Rebaseline
+
+> **Canonical Technology Baseline:** TypeScript strict mode + TSX + React + Vite + Tailwind CSS + Node.js/TypeScript API + Firebase managed platform. For any platform-specific conflict, PRD-22 is authoritative.
 
 > **Product:** NOCScheduler  
 > **Document Type:** Canonical Platform Architecture Rebaseline  
@@ -9,8 +11,8 @@
 > **Default Locale:** Indonesia  
 > **Default Timezone:** Asia/Jakarta  
 > **Default Currency:** IDR  
-> **Frontend Language:** JavaScript / JSX  
-> **Backend Language:** JavaScript / Node.js  
+> **Frontend Language:** TypeScript / TSX — strict mode  
+> **Backend Language:** TypeScript / Node.js — strict mode  
 > **Default Theme:** Light  
 > **Theme Support:** Light + Dark parity required
 
@@ -18,7 +20,7 @@
 
 # 1. Purpose
 
-PRD-22 rebaselines the implementation platform of the entire NOCScheduler PRD set from the previous Next.js-oriented architecture to a modern **JavaScript + React + Vite + Tailwind CSS frontend and JavaScript + Node.js backend**, while retaining Firebase as managed infrastructure so the owner does not need to operate a dedicated application/database server.
+PRD-22 rebaselines the implementation platform of the entire NOCScheduler PRD set from the previous Next.js-oriented architecture to a modern **TypeScript + React + Vite + Tailwind CSS frontend and TypeScript + Node.js backend**, while retaining Firebase as managed infrastructure so the owner does not need to operate a dedicated application/database server.
 
 This document exists to make future implementation unambiguous.
 
@@ -31,10 +33,10 @@ Next.js full-stack application
 The canonical platform is:
 
 ```text
-React SPA written in JavaScript/JSX
+React SPA written in TypeScript/TSX
 + Vite
 + Tailwind CSS
-+ Node.js API written in JavaScript
++ Node.js API written in TypeScript
 + Firebase managed platform
 ```
 
@@ -72,8 +74,8 @@ Product/business requirements remain canonical unless this document explicitly c
 |---|---|
 | PRD-01 Product Vision | Product requirements retained |
 | PRD-02 Feature Specification | Feature requirements retained |
-| PRD-03 Scheduling & Shift Logic | Business logic retained; implemented in shared/server JavaScript domain modules |
-| PRD-04 Payroll Logic | Business logic retained; implemented server-authoritatively in JavaScript |
+| PRD-03 Scheduling & Shift Logic | Business logic retained; implemented in shared/server TypeScript domain modules |
+| PRD-04 Payroll Logic | Business logic retained; implemented server-authoritatively in TypeScript |
 | PRD-05 Workforce Exceptions | Business logic retained |
 | PRD-06 IA & Navigation | Route semantics retained; implemented with client-side routing |
 | PRD-07 Roles & Permissions | Authorization policy retained; enforced in Node API |
@@ -94,16 +96,35 @@ Product/business requirements remain canonical unless this document explicitly c
 
 ---
 
+# 2.2 TypeScript source and runtime rule
+
+All first-party application source code is TypeScript. React files use `.tsx`; non-React modules use `.ts`. Plain `.js`/`.jsx` application source is not part of the canonical architecture, except unavoidable tool-generated/vendor configuration where the selected tool does not support TypeScript.
+
+Vite and the Node.js build pipeline compile/transpile TypeScript to JavaScript for browser/server execution. Therefore TypeScript improves authoring safety without requiring browsers to execute TypeScript directly.
+
+Required compiler posture:
+
+- `strict: true`;
+- `noUncheckedIndexedAccess: true` where compatible with the codebase;
+- `exactOptionalPropertyTypes: true` where practical;
+- `noImplicitOverride: true` when class inheritance is used;
+- `useUnknownInCatchVariables: true`;
+- `tsc --noEmit` is a required CI quality gate;
+- avoid `any`; use `unknown` plus narrowing when external input is not yet validated;
+- Zod remains required at runtime boundaries because TypeScript types disappear at runtime.
+
+---
+
 # 3. Architecture Decision Summary
 
 ## 3.1 Canonical baseline stack
 
 | Layer | Canonical Technology |
 |---|---|
-| Source language | JavaScript ESM + JSX; no TypeScript source requirement |
-| Frontend | React |
+| Source language | TypeScript ESM + TSX — strict mode |
+| Frontend | React + TypeScript/TSX |
 | Frontend build/dev tooling | Vite |
-| React compiler pipeline | Vite React SWC plugin or equivalent supported fast compiler |
+| React compiler pipeline | Vite React SWC TypeScript/TSX pipeline or equivalent supported compiler |
 | Routing | React Router |
 | Styling | Tailwind CSS + semantic CSS custom properties |
 | UI primitives | Radix-style accessible headless primitives |
@@ -261,7 +282,7 @@ Canonical direction:
 │  │  │  ├─ hooks/
 │  │  │  ├─ lib/
 │  │  │  ├─ styles/
-│  │  │  └─ main.jsx
+│  │  │  └─ main.tsx
 │  │  ├─ index.html
 │  │  └─ vite.config.js
 │  │
@@ -317,7 +338,7 @@ NOCScheduler intentionally uses JavaScript rather than TypeScript as the source 
 Canonical file extensions:
 
 - `.js` for standard modules;
-- `.jsx` for React components.
+- `.tsx` for React components.
 
 Do not introduce `.ts` or `.tsx` without a future explicit architecture decision.
 
@@ -327,7 +348,7 @@ To keep a large JavaScript codebase safe:
 - enable strict ESLint rules;
 - use Zod at untrusted boundaries;
 - use JSDoc for important domain/API types;
-- optionally enable `// @ts-check` / `checkJs` static analysis while keeping source files JavaScript;
+- optionally enable `// @ts-check` / `tsc --noEmit` static analysis while keeping source files JavaScript;
 - keep functions small and domain-specific;
 - prefer pure deterministic functions for calculation rules;
 - never represent IDR using binary floating point;
@@ -1178,7 +1199,7 @@ Business/domain modules should be migrated without rewriting rules unless tests 
 
 The platform rebaseline is considered implemented when all of the following are true:
 
-- source application uses `.js/.jsx`, not Next.js framework structure;
+- source application uses `.js/.tsx`, not Next.js framework structure;
 - Vite builds the frontend successfully;
 - Tailwind + semantic token foundation supports Light/Dark parity;
 - React Router owns navigation;
@@ -1204,7 +1225,7 @@ The platform rebaseline is considered implemented when all of the following are 
 
 The canonical NOCScheduler architecture is:
 
-> **A modern internal React SPA written in JavaScript/JSX, built with Vite and styled through Tailwind CSS using a strict semantic design system; backed by a server-authoritative JavaScript/Node.js HTTP API running on Firebase-managed infrastructure; using Firebase Authentication, Cloud Firestore, Admin SDK, and Emulator Suite; with TanStack data tooling, accessible headless UI primitives, robust validation, deterministic business-domain tests, and first-class desktop/mobile Light/Dark UX.**
+> **A modern internal React SPA written in TypeScript/TSX, built with Vite and styled through Tailwind CSS using a strict semantic design system; backed by a server-authoritative JavaScript/Node.js HTTP API running on Firebase-managed infrastructure; using Firebase Authentication, Cloud Firestore, Admin SDK, and Emulator Suite; with TanStack data tooling, accessible headless UI primitives, robust validation, deterministic business-domain tests, and first-class desktop/mobile Light/Dark UX.**
 
 This architecture intentionally optimizes for:
 

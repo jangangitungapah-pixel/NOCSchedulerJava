@@ -1,5 +1,7 @@
 # PRD-18 — Notifications & Operational Awareness
 
+> **Canonical Technology Baseline:** TypeScript strict mode + TSX + React + Vite + Tailwind CSS + Node.js/TypeScript API + Firebase managed platform. For any platform-specific conflict, PRD-22 is authoritative.
+
 > **Product:** NOCScheduler  
 > **Document Type:** Product Requirements Document — Notifications & Operational Awareness  
 > **Document ID:** PRD-18  
@@ -9,7 +11,7 @@
 > **Default Locale:** Indonesia  
 > **Default Timezone:** Asia/Jakarta  
 > **Platforms:** Desktop Web + Mobile Web with equal product priority  
-> **Repository:** `jangangitungapah-pixel/NOCScheduler`
+> **Repository:** `jangangitungapah-pixel/NOCSchedulerJava`
 
 ---
 

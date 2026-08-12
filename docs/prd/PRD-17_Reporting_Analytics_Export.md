@@ -1,5 +1,7 @@
 # PRD-17 — Reporting, Analytics & Export
 
+> **Canonical Technology Baseline:** TypeScript strict mode + TSX + React + Vite + Tailwind CSS + Node.js/TypeScript API + Firebase managed platform. For any platform-specific conflict, PRD-22 is authoritative.
+
 > **Product:** NOCScheduler  
 > **Document Type:** Product Requirements Document — Reporting, Analytics & Export  
 > **Document ID:** PRD-17  
@@ -10,7 +12,7 @@
 > **Default Timezone:** Asia/Jakarta  
 > **Default Currency:** IDR  
 > **Platforms:** Desktop Web + Mobile Web with equal product priority  
-> **Repository:** `jangangitungapah-pixel/NOCScheduler`
+> **Repository:** `jangangitungapah-pixel/NOCSchedulerJava`
 
 ---
 

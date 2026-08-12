@@ -1,6 +1,8 @@
 # PRD-16 — Authentication, Security & Data Integrity
 
-> **Architecture Amendment:** Platform-specific persistence, authentication, hosting, deployment, and database assumptions in this document are superseded where they conflict with **PRD-21 — Firebase Platform Architecture Amendment**. Product/business requirements remain canonical.
+> **Canonical Technology Baseline:** TypeScript strict mode + TSX + React + Vite + Tailwind CSS + Node.js/TypeScript API + Firebase managed platform. For any platform-specific conflict, PRD-22 is authoritative.
+
+> **Architecture Amendment:** Platform-specific persistence, authentication, hosting, deployment, and database assumptions in this document are superseded where they conflict with **PRD-22 — TypeScript, TSX, Node.js, Vite, Tailwind & Firebase Managed Platform Rebaseline**. Product/business requirements remain canonical.
 
 > **Product:** NOCScheduler  
 > **Document Type:** Product Requirements Document — Authentication, Security & Data Integrity  
@@ -11,7 +13,7 @@
 > **Default Locale:** Indonesia  
 > **Default Timezone:** Asia/Jakarta  
 > **Default Currency:** IDR  
-> **Repository:** `jangangitungapah-pixel/NOCScheduler`
+> **Repository:** `jangangitungapah-pixel/NOCSchedulerJava`
 
 ---
 
@@ -51,8 +53,8 @@ NOCScheduler menggunakan baseline berikut sebagai rujukan engineering security:
 - OWASP Application Security Verification Standard (ASVS) 5.0.0,
 - OWASP Top 10:2025,
 - OWASP Cheat Sheet Series yang relevan,
-- security guidance resmi Better Auth,
-- security guidance resmi Next.js untuk deployment yang digunakan.
+- security guidance resmi Firebase Authentication,
+- security guidance resmi Vite, Node.js, Firebase Hosting, Cloud Functions, dan Firebase Authentication untuk deployment yang digunakan.
 
 PRD ini tidak mengklaim sertifikasi formal ASVS. Tujuannya adalah menggunakan standar tersebut sebagai checklist verifikasi dan arah secure-by-design.
 

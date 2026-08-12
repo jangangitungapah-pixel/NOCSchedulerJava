@@ -1,6 +1,8 @@
 # PRD-20 — Deployment, Operations, Backup & Observability
 
-> **Architecture Amendment:** Platform-specific persistence, authentication, hosting, deployment, and database assumptions in this document are superseded where they conflict with **PRD-21 — Firebase Platform Architecture Amendment**. Product/business requirements remain canonical.
+> **Canonical Technology Baseline:** TypeScript strict mode + TSX + React + Vite + Tailwind CSS + Node.js/TypeScript API + Firebase managed platform. For any platform-specific conflict, PRD-22 is authoritative.
+
+> **Architecture Amendment:** Platform-specific persistence, authentication, hosting, deployment, and database assumptions in this document are superseded where they conflict with **PRD-22 — TypeScript, TSX, Node.js, Vite, Tailwind & Firebase Managed Platform Rebaseline**. Product/business requirements remain canonical.
 
 > **Product:** NOCScheduler  
 > **Document Type:** Product Requirements Document — Deployment, Operations, Backup & Observability  
@@ -12,7 +14,7 @@
 > **Default Timezone:** Asia/Jakarta  
 > **Default Currency:** IDR  
 > **Platforms:** Desktop Web + Mobile Web with equal product priority  
-> **Repository:** `jangangitungapah-pixel/NOCScheduler`
+> **Repository:** `jangangitungapah-pixel/NOCSchedulerJava`
 
 ---
 
@@ -61,7 +63,7 @@ MVP tidak membutuhkan microservice cluster, Kubernetes, Kafka, service mesh, ata
 
 ## OPS-P01 — One Production Truth
 
-Production environment harus memiliki satu canonical application state dan satu canonical PostgreSQL primary data source.
+Production environment harus memiliki satu canonical application state dan satu canonical Cloud Firestore primary data source.
 
 Read replica/cache boleh ditambahkan kemudian tetapi tidak boleh menjadi tempat mutation business truth.
 
@@ -178,17 +180,17 @@ Users
   ↓ HTTPS
 Managed Application Runtime / Load Balancer
   ↓
-NOCScheduler Next.js Modular Monolith
-  ├─ Server Components
-  ├─ Route Handlers / API
-  ├─ Better Auth
+NOCScheduler React/Vite frontend + managed Node.js/TypeScript API
+  ├─ React SPA routes
+  ├─ Node.js/TypeScript API
+  ├─ Firebase Authentication
   ├─ Authorization
   ├─ Domain Services
   ├─ Query Services
   ├─ Audit / Notification Policy
   └─ Health / Observability
         ↓
-Managed PostgreSQL
+Cloud Firestore
   ├─ transactional data
   ├─ audit records
   ├─ notification records
@@ -212,7 +214,7 @@ Tidak wajib pada MVP.
 
 Production application runtime harus mendukung:
 
-- Node.js runtime compatible dengan selected Next.js release,
+- Node.js runtime compatible dengan selected Node.js/TypeScript runtime,
 - HTTPS/TLS termination,
 - secure environment secrets,
 - zero/minimal-downtime deployment capability,
@@ -227,7 +229,7 @@ Production application runtime harus mendukung:
 
 Business mutation yang membutuhkan:
 
-- PostgreSQL transaction,
+- Cloud Firestore transaction,
 - auth session resolution,
 - payroll calculation,
 - schedule publication,
@@ -261,7 +263,7 @@ Data production tidak boleh dicopy ke local secara mentah.
 Purpose:
 
 - automated test suites,
-- ephemeral/isolated PostgreSQL,
+- ephemeral/isolated Cloud Firestore,
 - migration verification,
 - API/security testing.
 
@@ -314,7 +316,7 @@ Direct ad-hoc deployment dari developer machine dilarang sebagai workflow normal
 Setiap environment harus memiliki separation minimal untuk:
 
 - database,
-- Better Auth secret,
+- Firebase Authentication secret,
 - application secret,
 - session/cookie context,
 - external integration key,
@@ -517,7 +519,7 @@ Alasan: full restore dapat menghapus valid schedule/request/payroll mutation yan
 
 # 14. Backup Strategy
 
-Production PostgreSQL wajib memiliki backup strategy yang mendukung point-in-time recovery atau equivalent capability.
+Production Cloud Firestore wajib memiliki backup strategy yang mendukung point-in-time recovery atau equivalent capability.
 
 Minimum baseline target:
 
@@ -717,7 +719,7 @@ Dilarang mencatat:
 - API secret,
 - private key,
 - database connection string,
-- Better Auth secret,
+- Firebase Authentication secret,
 - raw authorization header.
 
 Salary/payroll values tidak perlu masuk generic request log kecuali diagnostic event yang benar-benar memerlukan dan policy mengizinkan; audit/business record tetap canonical.
@@ -990,7 +992,7 @@ Secret inventory minimal mencatat jenis secret dan owner tanpa menyimpan plainte
 
 Runbook rotation harus tersedia untuk minimal:
 
-- Better Auth secret/session-related key bila mekanisme mendukung,
+- Firebase Authentication secret/session-related key bila mekanisme mendukung,
 - database credential,
 - deployment token,
 - external integration key future.
@@ -1203,8 +1205,8 @@ Upgrade major/minor penting pada:
 
 - Next.js,
 - React,
-- PostgreSQL,
-- Better Auth,
+- Cloud Firestore,
+- Firebase Authentication,
 - Drizzle,
 - Zod,
 - Playwright,
@@ -1373,7 +1375,7 @@ Production go-live minimum:
 - [ ] Restore test completed successfully
 - [ ] RPO/RTO capability reviewed
 - [ ] Production secrets configured
-- [ ] Better Auth production config verified
+- [ ] Firebase Authentication production config verified
 - [ ] Domain/trusted origins verified
 - [ ] HTTPS enabled
 - [ ] Security headers verified

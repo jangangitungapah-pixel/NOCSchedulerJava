@@ -14,22 +14,21 @@
 | Field | Value |
 |---|---|
 | Current Phase | `WP-F00` — Repository & Toolchain Bootstrap |
-| Current Status | `NOT_STARTED` |
+| Current Status | `GENERATOR_READY` |
 | Last Accepted Phase | None — implementation has not started |
 | Last Implementation Commit | None |
-| Last Workflow Commit | `0854ba2d56aff678cfba91aac070a91c4367a2c8` |
-| Active Execution Model | Downloadable `.cjs` generator → local write → commit/push → QA |
+| Active Generator | `scripts/wp-f00-bootstrap-toolchain.cjs` |
+| Active Execution Model | Downloadable `.cjs` generator → local write → dependency materialization → commit/push → QA |
 | Next Allowed Phase | `WP-F00` only |
 | Future Phases | `LOCKED` |
-| User Validation Pending | No |
+| User Validation Pending | No — generator has not been executed yet |
 | Blocking Issue | None |
 | Package Manager Baseline | `npm` + npm workspaces + `package-lock.json` |
+| Runtime Baseline | Node.js 22 |
 
 ---
 
 # 2. Canonical Phase Progression
-
-The assistant must never infer permission to advance from repository state alone.
 
 ```text
 NOT_STARTED
@@ -53,22 +52,22 @@ SUPERSEDED
 LOCKED
 ```
 
-A pushed commit is deliberately allowed to be temporarily red because GitHub `main` is the shared debugging state used by the assistant after local QA failure.
+A pushed commit may intentionally be temporarily red because GitHub `main` is the durable shared debugging state used by the assistant after local QA failure.
 
 ---
 
 # 3. Generator Workflow Rule
 
-Normal application-source mutation no longer uses direct GitHub file editing.
-
-Canonical path:
+Normal application-source mutation uses the canonical generator path:
 
 ```text
 Assistant audits latest GitHub main
 → assistant creates downloadable scripts/<task>.cjs
+→ user syncs local main
 → user runs generator locally
 → generator writes repository
-→ temporary generator/backups cleaned
+→ dependency lockfile is materialized when required
+→ temporary generator/backups are cleaned
 → git add -A
 → git commit
 → git push
@@ -76,9 +75,7 @@ Assistant audits latest GitHub main
 → user reports PASS or FAIL
 ```
 
-For dependency-changing tasks, npm lockfile materialization may occur after generator writing and before commit. Typecheck/lint/test/build remain after push.
-
-Direct GitHub writes remain acceptable for controlled workflow/workplan/documentation maintenance when source generator execution is not the relevant mechanism.
+Direct GitHub writes remain acceptable only for controlled workflow/workplan/documentation maintenance when source generator execution is not the relevant mechanism.
 
 ---
 
@@ -86,7 +83,7 @@ Direct GitHub writes remain acceptable for controlled workflow/workplan/document
 
 | Phase | Name | Status | Acceptance / Notes |
 |---|---|---|---|
-| WP-F00 | Repository & Toolchain Bootstrap | NOT_STARTED | Next allowed phase |
+| WP-F00 | Repository & Toolchain Bootstrap | GENERATOR_READY | Generator prepared; awaiting local execution |
 | WP-F01 | Workspace & Application Scaffold | LOCKED | Requires WP-F00 acceptance |
 | WP-F02 | Quality, CI & Developer Safety Foundation | LOCKED | Requires prior phase acceptance |
 | WP-F03 | Design System & Responsive Foundation | LOCKED | Requires prior phase acceptance |
@@ -116,74 +113,69 @@ Direct GitHub writes remain acceptable for controlled workflow/workplan/document
 
 ---
 
-# 5. Durable Remote Checkpoint Rule
+# 5. WP-F00 Generator Contract
 
-Because commit/push intentionally occurs before QA, the generator should update this ledger to a durable state appropriate for the pushed code, normally:
+The active generator must implement only WP-F00 repository/toolchain foundation. It may create or update:
+
+- root npm workspace metadata;
+- Node runtime declarations;
+- TypeScript strict baseline;
+- ESLint and Prettier baseline;
+- repository/editor/ignore policy;
+- environment example policy;
+- developer bootstrap documentation;
+- toolchain sentinel/policy checks;
+- this phase ledger to `PUSHED_UNVERIFIED` as part of the generated commit.
+
+It must not implement WP-F01 application scaffold or later product features.
+
+Because WP-F00 introduces development dependencies, `npm install` is part of the write/materialization stage and `package-lock.json` must be committed before QA.
+
+---
+
+# 6. Durable Remote Checkpoint Rule
+
+The WP-F00 generator updates this ledger in the generated repository state to:
 
 ```text
 Current Status: PUSHED_UNVERIFIED
-Last Implementation Commit: populated by the resulting Git commit context when practical
 User Validation Pending: Yes
 ```
 
-If exact implementation SHA cannot be known before the commit is created, the next assistant audit uses latest GitHub `main` as authoritative and the next generator/state update records it.
-
-The ledger does not need to pretend QA passed before the user actually runs it.
+The implementation SHA is unknown until the local Git commit exists. On the next assistant turn, latest GitHub `main` is authoritative and the exact SHA is recorded from GitHub.
 
 ---
 
-# 6. Assistant Update Contract
+# 7. Acceptance Contract
 
-Assistant must ensure this file is updated through the relevant generator or controlled documentation write when any of the following materially changes:
+A phase may be marked `ACCEPTED` only after user feedback confirms local validation passed. Generator completion, commit, push, CI, or assistant confidence are not sufficient by themselves.
 
-- active workflow;
-- active phase;
-- phase acceptance;
-- blocker;
-- phase split/merge/defer/supersede;
-- execution model;
-- package-manager baseline;
-- next valid phase.
+If QA fails, WP-F00 remains active and the assistant must fetch the exact pushed failing commit before generating a repair.
 
-During a repair loop, exact pushed GitHub state is authoritative even if the ledger still reflects `PUSHED_UNVERIFIED` from the preceding generator.
-
----
-
-# 7. User Acceptance Contract
-
-A phase may be marked `ACCEPTED` only after user feedback clearly confirms validation passed.
-
-The following are not sufficient by themselves:
-
-- generator completed;
-- commit succeeded;
-- push succeeded;
-- GitHub shows latest source;
-- CI is green;
-- assistant believes the implementation is correct.
-
-After user PASS, the assistant still waits for an explicit request to continue before beginning the next phase.
+After PASS, the assistant still waits for an explicit request to continue before beginning WP-F01.
 
 ---
 
 # 8. Current Next Action
 
-No implementation phase has started yet.
-
-The next valid implementation request remains:
+Execute the downloadable generator:
 
 ```text
-Start / lanjut WP-F00 — Repository & Toolchain Bootstrap
+scripts/wp-f00-bootstrap-toolchain.cjs
 ```
 
-When the user asks to continue, assistant must first re-read:
+Canonical order:
 
 ```text
-docs/workflow/WORKFLOW_Generator_CJS_GitHub_Sync_v2.md
-docs/workflow/PHASE_CONTROL.md
-docs/workplan/WORKPLAN_NOCScheduler_Full_Production_v1.md
-PRD-22
-latest GitHub main
+git pull --ff-only
+→ node generator
+→ npm dependency materialization
+→ cleanup generator/backups
+→ git add/commit/push
+→ npm run check:runtime
+→ npm run typecheck
+→ npm run lint
+→ npm run format:check
+→ npm run check:repo
+→ report PASS or exact failure output
 ```
-
-Then assistant creates the first downloadable `.cjs` generator for WP-F00 rather than directly writing application source through GitHub.

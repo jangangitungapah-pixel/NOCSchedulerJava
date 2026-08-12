@@ -2,7 +2,8 @@
 
 > **Status:** Active  
 > **Repository:** `jangangitungapah-pixel/NOCSchedulerJava`  
-> **Workflow:** `docs/workflow/WORKFLOW_Chat_GitHub_Full_Automation_v1.md`  
+> **Workflow:** `docs/workflow/WORKFLOW_Generator_CJS_GitHub_Sync_v2.md`  
+> **Superseded Workflow:** `docs/workflow/WORKFLOW_Chat_GitHub_Full_Automation_v1.md`  
 > **Workplan:** `docs/workplan/WORKPLAN_NOCScheduler_Full_Production_v1.md`  
 > **Last Updated:** 2026-08-13
 
@@ -16,7 +17,8 @@
 | Current Status | `NOT_STARTED` |
 | Last Accepted Phase | None — implementation has not started |
 | Last Implementation Commit | None |
-| Last Workflow Commit | `a43d57f77da71fc61fb30b4c865804d70cb9b351` |
+| Last Workflow Commit | `0854ba2d56aff678cfba91aac070a91c4367a2c8` |
+| Active Execution Model | Downloadable `.cjs` generator → local write → commit/push → QA |
 | Next Allowed Phase | `WP-F00` only |
 | Future Phases | `LOCKED` |
 | User Validation Pending | No |
@@ -25,35 +27,62 @@
 
 ---
 
-# 2. Phase Progression Rule
+# 2. Canonical Phase Progression
 
 The assistant must never infer permission to advance from repository state alone.
 
 ```text
 NOT_STARTED
 → AUDIT
-→ IN_PROGRESS
-→ IMPLEMENTED
-→ PLUGIN_VERIFIED
-→ USER_VALIDATION_REQUIRED
-→ user PASS + explicit continue
-→ ACCEPTED
-→ next phase may begin
+→ GENERATOR_READY
+→ user executes generator
+→ PUSHED_UNVERIFIED
+   ├─ QA FAIL → QA_FAILED → repair generator → PUSHED_UNVERIFIED
+   └─ QA PASS → USER_VALIDATION_REQUIRED
+                 → user PASS + explicit continue
+                 → ACCEPTED
+                 → next phase may begin
 ```
 
-If user validation fails:
+Possible exceptional states:
 
 ```text
-USER_VALIDATION_REQUIRED
-→ QA_FAILED
-→ IN_PROGRESS
-→ repair
-→ USER_VALIDATION_REQUIRED
+BLOCKED
+BLOCKED_EXTERNAL
+SUPERSEDED
+LOCKED
 ```
+
+A pushed commit is deliberately allowed to be temporarily red because GitHub `main` is the shared debugging state used by the assistant after local QA failure.
 
 ---
 
-# 3. Phase Ledger
+# 3. Generator Workflow Rule
+
+Normal application-source mutation no longer uses direct GitHub file editing.
+
+Canonical path:
+
+```text
+Assistant audits latest GitHub main
+→ assistant creates downloadable scripts/<task>.cjs
+→ user runs generator locally
+→ generator writes repository
+→ temporary generator/backups cleaned
+→ git add -A
+→ git commit
+→ git push
+→ npm quality gates
+→ user reports PASS or FAIL
+```
+
+For dependency-changing tasks, npm lockfile materialization may occur after generator writing and before commit. Typecheck/lint/test/build remain after push.
+
+Direct GitHub writes remain acceptable for controlled workflow/workplan/documentation maintenance when source generator execution is not the relevant mechanism.
+
+---
+
+# 4. Phase Ledger
 
 | Phase | Name | Status | Acceptance / Notes |
 |---|---|---|---|
@@ -87,42 +116,74 @@ USER_VALIDATION_REQUIRED
 
 ---
 
-# 4. Assistant Update Contract
+# 5. Durable Remote Checkpoint Rule
 
-Assistant must update this file when any of the following happens:
+Because commit/push intentionally occurs before QA, the generator should update this ledger to a durable state appropriate for the pushed code, normally:
 
-- a phase begins audit;
-- implementation starts;
-- implementation is handed to user;
-- user reports QA failure;
-- repair is handed back;
-- user accepts a phase;
-- a blocker appears or clears;
-- workflow/workplan changes the valid next phase;
-- a phase is split, merged, deferred, or superseded.
+```text
+Current Status: PUSHED_UNVERIFIED
+Last Implementation Commit: populated by the resulting Git commit context when practical
+User Validation Pending: Yes
+```
 
-The ledger must include the latest relevant commit SHA and must keep future phases locked until allowed by the workflow.
+If exact implementation SHA cannot be known before the commit is created, the next assistant audit uses latest GitHub `main` as authoritative and the next generator/state update records it.
+
+The ledger does not need to pretend QA passed before the user actually runs it.
 
 ---
 
-# 5. User Acceptance Contract
+# 6. Assistant Update Contract
+
+Assistant must ensure this file is updated through the relevant generator or controlled documentation write when any of the following materially changes:
+
+- active workflow;
+- active phase;
+- phase acceptance;
+- blocker;
+- phase split/merge/defer/supersede;
+- execution model;
+- package-manager baseline;
+- next valid phase.
+
+During a repair loop, exact pushed GitHub state is authoritative even if the ledger still reflects `PUSHED_UNVERIFIED` from the preceding generator.
+
+---
+
+# 7. User Acceptance Contract
 
 A phase may be marked `ACCEPTED` only after user feedback clearly confirms validation passed.
 
-A GitHub commit, green CI, or assistant confidence alone is insufficient to mark a phase accepted.
+The following are not sufficient by themselves:
 
-After `ACCEPTED`, the assistant still waits for an explicit user request to continue before beginning the next phase.
+- generator completed;
+- commit succeeded;
+- push succeeded;
+- GitHub shows latest source;
+- CI is green;
+- assistant believes the implementation is correct.
+
+After user PASS, the assistant still waits for an explicit request to continue before beginning the next phase.
 
 ---
 
-# 6. Current Next Action
+# 8. Current Next Action
 
 No implementation phase has started yet.
 
-The next valid implementation request is:
+The next valid implementation request remains:
 
 ```text
 Start / lanjut WP-F00 — Repository & Toolchain Bootstrap
 ```
 
-When the user asks to continue, the assistant must first re-read this ledger, the workflow, WP-F00 in the master workplan, PRD-22, and the latest `main` state before writing code.
+When the user asks to continue, assistant must first re-read:
+
+```text
+docs/workflow/WORKFLOW_Generator_CJS_GitHub_Sync_v2.md
+docs/workflow/PHASE_CONTROL.md
+docs/workplan/WORKPLAN_NOCScheduler_Full_Production_v1.md
+PRD-22
+latest GitHub main
+```
+
+Then assistant creates the first downloadable `.cjs` generator for WP-F00 rather than directly writing application source through GitHub.

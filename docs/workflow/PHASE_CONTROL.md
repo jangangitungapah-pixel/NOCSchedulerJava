@@ -15,12 +15,12 @@
 | Current Phase | `WP-F02` — Quality, CI & Developer Safety Foundation |
 | Current Status | `PUSHED_UNVERIFIED` |
 | Last Accepted Phase | `WP-F01` — Workspace & Application Scaffold |
-| Last Implementation Commit | Pending — resolve latest pushed `main` commit on next assistant audit |
-| Generator Applied | `scripts/wp-f02-quality-ci-foundation.cjs` — temporary file removed before commit |
+| Last Implementation Commit | `34d156cf73b45a8f7e59240f231c8cf24f93ee1d` — WP-F02 quality foundation pushed; local and GitHub Actions typecheck failed on Vitest/Playwright/axe config typing |
+| Generator Applied | `scripts/wp-f02-fix-quality-config-types.cjs` — repair exact TypeScript config/tooling incompatibilities from first WP-F02 CI run |
 | Active Execution Model | Downloadable `.cjs` generator → dependency materialization → format write-stage → commit/push → QA |
 | Next Allowed Phase | `WP-F02` only |
 | Future Phases | `WP-F03` and later remain `LOCKED` |
-| User Validation Pending | Yes — automated quality/CI foundation must pass |
+| User Validation Pending | Yes — config typing repair must be pushed, then WP-F02 gates and CI rerun |
 | Blocking Issue | None |
 | Package Manager Baseline | npm workspaces + committed `package-lock.json` |
 | Runtime Baseline | Node.js 22 |
@@ -33,7 +33,7 @@
 |---|---|---|
 | WP-F00 | ACCEPTED | Repository/toolchain bootstrap |
 | WP-F01 | ACCEPTED | Web/API/package scaffold and local health runtime |
-| WP-F02 | PUSHED_UNVERIFIED | Quality foundation generated; requires QA |
+| WP-F02 | PUSHED_UNVERIFIED | TypeScript config/tooling repair prepared after first CI failure |
 | WP-F03+ | LOCKED | Requires WP-F02 acceptance |
 
 ---

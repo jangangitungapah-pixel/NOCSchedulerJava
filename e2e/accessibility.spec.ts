@@ -1,4 +1,4 @@
-import AxeBuilder from '@axe-core/playwright';
+import { AxeBuilder } from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
 test('@a11y scaffold home has no serious or critical automated violations', async ({ page }) => {

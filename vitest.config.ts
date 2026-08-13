@@ -32,7 +32,6 @@ export default defineConfig({
         },
       },
       {
-        extends: false,
         test: {
           name: 'domain-unit',
           environment: 'node',
@@ -41,7 +40,6 @@ export default defineConfig({
         },
       },
       {
-        extends: false,
         test: {
           name: 'api-integration',
           environment: 'node',

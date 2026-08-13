@@ -17,12 +17,12 @@
 | Last Accepted Phase | `WP-F03` — Design System & Responsive Foundation |
 | Last Accepted Implementation Commit | `5248560ec3fc2c3e47362446de64112b43a3e7f1` |
 | WP-F03 Acceptance Commit | `efae3f4d607ad05608b8114943af9f2d34d0a7b8` — accepted WP-F03 and opened WP-F04 |
-| Generator Applied | `scripts/wp-f04-fix-emulator-firestore-and-production-target.cjs` — move Firestore emulator to 8180, replace reserved foundation collection, and record nocschedule1/nocmduscheduler production config |
+| Generator Applied | `scripts/wp-f04-fix-firebase-options-exact-optional.cjs` — normalize validated Firebase client config into FirebaseOptions while omitting undefined optional properties |
 | Active Execution Model | Downloadable `.cjs` generator → dependency materialization → format write-stage → commit/push → QA |
 | Next Allowed Phase | `WP-F04` only |
 | Future Phases | `WP-F05` and later remain `LOCKED` |
 | User Validation Pending | Yes — Firebase config, emulator integration, Hosting/Functions smoke, and clean-clone CI |
-| Blocking Issue | Checkpoint `91d1965...`: static/dead-code/E2E/a11y passed in CI; Firebase job reached Auth + Firestore emulators but Admin Firestore round-trip used reserved collection `__foundation__`. Local Firestore port 8080 was also occupied. Repair moves Firestore to 8180 and uses legal `foundationMetadata`; owner production target is recorded as nocschedule1 -> nocmduscheduler. |
+| Blocking Issue | Checkpoint `2081cf9...`: production/emulator target repair pushed; clean CI and local QA stop at web typecheck because Zod optional Firebase fields were represented as present `string | undefined`, incompatible with FirebaseOptions under exactOptionalPropertyTypes. Explicit omission repair prepared. |
 | Local Firebase Project | `demo-nocscheduler` only by default |
 | Runtime Baseline | Node.js 22; Firestore emulator CI uses Java 21 |
 
@@ -36,7 +36,7 @@
 | WP-F01 | ACCEPTED | Web/API/package scaffold and local health runtime |
 | WP-F02 | ACCEPTED | Quality/CI/E2E/accessibility foundation |
 | WP-F03 | ACCEPTED | Design system/responsive foundation |
-| WP-F04 | PUSHED_UNVERIFIED | Static/dead-code/browser gates passed at `91d1965...`; Firebase emulator port/collection repair plus production project/site mapping prepared |
+| WP-F04 | PUSHED_UNVERIFIED | Production/emulator mapping pushed at `2081cf9...`; FirebaseOptions exact-optional normalization repair prepared before emulator gates resume |
 | WP-F05+ | LOCKED | Requires WP-F04 acceptance |
 
 ---

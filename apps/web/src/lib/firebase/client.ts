@@ -1,8 +1,14 @@
-import { getApp, getApps, initializeApp, type FirebaseApp } from 'firebase/app';
+import {
+  getApp,
+  getApps,
+  initializeApp,
+  type FirebaseApp,
+  type FirebaseOptions,
+} from 'firebase/app';
 import { connectAuthEmulator, getAuth, type Auth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore, type Firestore } from 'firebase/firestore';
 
-import { resolveFirebaseClientConfig } from './firebase-config';
+import { resolveFirebaseClientConfig, type ResolvedFirebaseClientConfig } from './firebase-config';
 
 export type FirebaseClientServices = Readonly<{
   app: FirebaseApp;
@@ -17,6 +23,20 @@ type FirebaseGlobalState = typeof globalThis & {
 };
 
 let cachedServices: FirebaseClientServices | undefined;
+
+function toFirebaseOptions(config: ResolvedFirebaseClientConfig['config']): FirebaseOptions {
+  return {
+    apiKey: config.apiKey,
+    appId: config.appId,
+    authDomain: config.authDomain,
+    projectId: config.projectId,
+    ...(config.measurementId === undefined ? {} : { measurementId: config.measurementId }),
+    ...(config.messagingSenderId === undefined
+      ? {}
+      : { messagingSenderId: config.messagingSenderId }),
+    ...(config.storageBucket === undefined ? {} : { storageBucket: config.storageBucket }),
+  };
+}
 
 export function getFirebaseClientServices(): FirebaseClientServices {
   if (cachedServices) {
@@ -36,7 +56,7 @@ export function getFirebaseClientServices(): FirebaseClientServices {
     VITE_FIREBASE_USE_EMULATORS: import.meta.env.VITE_FIREBASE_USE_EMULATORS,
   });
 
-  const app = getApps().length > 0 ? getApp() : initializeApp(resolved.config);
+  const app = getApps().length > 0 ? getApp() : initializeApp(toFirebaseOptions(resolved.config));
   const auth = getAuth(app);
   const firestore = getFirestore(app);
 

@@ -1,6 +1,6 @@
-import { z } from 'zod';
+import type { ZodType } from 'zod';
 
-export async function apiFetchJson<T>(path: string, schema: z.ZodType<T>): Promise<T> {
+export async function apiFetchJson<T>(path: string, schema: ZodType<T>): Promise<T> {
   const response = await fetch(path, {
     headers: {
       Accept: 'application/json',

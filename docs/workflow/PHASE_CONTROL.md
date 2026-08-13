@@ -15,12 +15,12 @@
 | Current Phase | `WP-F02` — Quality, CI & Developer Safety Foundation |
 | Current Status | `PUSHED_UNVERIFIED` |
 | Last Accepted Phase | `WP-F01` — Workspace & Application Scaffold |
-| Last Implementation Commit | `c7b81122da51d6adfc736541df53e2c8908b7370` — API test response validation repair pushed; typecheck/lint/tests/build/smoke passed locally; Knip then reported a CSS module-graph false positive plus one genuinely unused exported type |
-| Generator Applied | `scripts/wp-f02-fix-knip-module-graph.cjs` — restore CSS compiler coverage in Knip graph, remove redundant config patterns, and delete unused HealthResponse export |
+| Last Implementation Commit | `8b69fd5374dd4fc89b3c9868a19029fc6f591d77` — Knip module graph repaired; dead-code gate then identified obsolete root typecheck sentinel as the only unused file |
+| Generator Applied | `scripts/wp-f02-remove-obsolete-typecheck-sentinel.cjs` — remove obsolete F00 root typecheck sentinel after WP-F02 added real root TypeScript inputs |
 | Active Execution Model | Downloadable `.cjs` generator → dependency materialization → format write-stage → commit/push → QA |
 | Next Allowed Phase | `WP-F02` only |
 | Future Phases | `WP-F03` and later remain `LOCKED` |
-| User Validation Pending | Yes — Knip repair must be pushed, then dead-code, E2E, accessibility, and clean-clone CI must pass |
+| User Validation Pending | Yes — sentinel removal must be pushed, then typecheck/dead-code/E2E/accessibility and clean-clone CI must pass |
 | Blocking Issue | None |
 | Package Manager Baseline | npm workspaces + committed `package-lock.json` |
 | Runtime Baseline | Node.js 22 |
@@ -33,7 +33,7 @@
 |---|---|---|
 | WP-F00 | ACCEPTED | Repository/toolchain bootstrap |
 | WP-F01 | ACCEPTED | Web/API/package scaffold and local health runtime |
-| WP-F02 | PUSHED_UNVERIFIED | Knip module-graph/dead-export repair prepared after dead-code gate failure |
+| WP-F02 | PUSHED_UNVERIFIED | Obsolete typecheck sentinel removal prepared after final Knip unused-file finding |
 | WP-F03+ | LOCKED | Requires WP-F02 acceptance |
 
 ---

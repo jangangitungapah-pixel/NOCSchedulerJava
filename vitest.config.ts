@@ -10,10 +10,13 @@ export default defineConfig({
       exclude: [
         '**/*.test.{ts,tsx}',
         '**/*.integration.test.ts',
+        '**/*.firebase.test.ts',
         '**/src/test/**',
         '**/*.d.ts',
         'apps/web/src/main.tsx',
         'apps/api/src/dev.ts',
+        'apps/api/src/index.ts',
+        'apps/api/src/firebase/seed.ts',
       ],
     },
     projects: [
@@ -45,6 +48,15 @@ export default defineConfig({
           environment: 'node',
           include: ['apps/api/src/**/*.integration.test.ts'],
           restoreMocks: true,
+        },
+      },
+      {
+        test: {
+          name: 'firebase-integration',
+          environment: 'node',
+          include: ['apps/api/src/**/*.firebase.test.ts'],
+          restoreMocks: true,
+          fileParallelism: false,
         },
       },
     ],

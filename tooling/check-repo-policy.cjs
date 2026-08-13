@@ -64,6 +64,7 @@ const secretPatterns = [
   /service-account.*\.json$/iu,
   /firebase-adminsdk-.*\.json$/iu,
   /google-application-credentials.*\.json$/iu,
+  /application-default-credentials.*\.json$/iu,
 ];
 
 for (const trackedFile of trackedFiles) {
@@ -86,4 +87,6 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log('[repo-policy] OK — npm workspace, runtime, lockfile, source-extension, and secret policies hold.');
+console.log(
+  '[repo-policy] OK — npm workspace, runtime, lockfile, source-extension, and secret policies hold.',
+);

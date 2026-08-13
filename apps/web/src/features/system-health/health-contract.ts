@@ -11,5 +11,3 @@ export const healthResponseSchema = z.object({
     requestId: z.string().min(1),
   }),
 });
-
-export type HealthResponse = z.infer<typeof healthResponseSchema>;

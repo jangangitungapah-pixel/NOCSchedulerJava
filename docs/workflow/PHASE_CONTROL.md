@@ -15,12 +15,12 @@
 | Current Phase | `WP-F02` — Quality, CI & Developer Safety Foundation |
 | Current Status | `PUSHED_UNVERIFIED` |
 | Last Accepted Phase | `WP-F01` — Workspace & Application Scaffold |
-| Last Implementation Commit | `c686f55b4518cc5c2c60c8a2d295cecec321482e` — quality config typing repair pushed; typecheck passed; lint then rejected unsafe Supertest response.body member access |
-| Generator Applied | `scripts/wp-f02-validate-supertest-response-contracts.cjs` — validate untrusted Supertest response bodies with Zod before assertions |
+| Last Implementation Commit | `c7b81122da51d6adfc736541df53e2c8908b7370` — API test response validation repair pushed; typecheck/lint/tests/build/smoke passed locally; Knip then reported a CSS module-graph false positive plus one genuinely unused exported type |
+| Generator Applied | `scripts/wp-f02-fix-knip-module-graph.cjs` — restore CSS compiler coverage in Knip graph, remove redundant config patterns, and delete unused HealthResponse export |
 | Active Execution Model | Downloadable `.cjs` generator → dependency materialization → format write-stage → commit/push → QA |
 | Next Allowed Phase | `WP-F02` only |
 | Future Phases | `WP-F03` and later remain `LOCKED` |
-| User Validation Pending | Yes — API integration test lint repair must be pushed, then remaining WP-F02 gates and CI rerun |
+| User Validation Pending | Yes — Knip repair must be pushed, then dead-code, E2E, accessibility, and clean-clone CI must pass |
 | Blocking Issue | None |
 | Package Manager Baseline | npm workspaces + committed `package-lock.json` |
 | Runtime Baseline | Node.js 22 |
@@ -33,7 +33,7 @@
 |---|---|---|
 | WP-F00 | ACCEPTED | Repository/toolchain bootstrap |
 | WP-F01 | ACCEPTED | Web/API/package scaffold and local health runtime |
-| WP-F02 | PUSHED_UNVERIFIED | Supertest response contract validation repair prepared after lint failure |
+| WP-F02 | PUSHED_UNVERIFIED | Knip module-graph/dead-export repair prepared after dead-code gate failure |
 | WP-F03+ | LOCKED | Requires WP-F02 acceptance |
 
 ---

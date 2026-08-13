@@ -5,7 +5,7 @@ import { HomePage } from './home-page';
 import { NotFoundPage } from './not-found-page';
 import { RouteErrorBoundary } from './route-error-boundary';
 
-function RouteErrorDiagnostic() {
+function RouteErrorDiagnostic(): null {
   throw new Error('WP-F01 route error boundary diagnostic.');
 }
 

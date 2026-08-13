@@ -16,12 +16,12 @@
 | Current Phase | `WP-F01` — Workspace & Application Scaffold |
 | Current Status | `PUSHED_UNVERIFIED` |
 | Last Accepted Phase | `WP-F00` — Repository & Toolchain Bootstrap |
-| Last Implementation Commit | Pending — resolve latest pushed `main` commit on next assistant audit |
-| Generator Applied | `scripts/wp-f01-scaffold-workspaces.cjs` — temporary file removed before commit |
+| Last Implementation Commit | `15754ab4107ae3afb8ca8cb3993ae20d0090b4a4` — scaffold pushed; QA failed at web TypeScript route diagnostic component; repair pending |
+| Generator Applied | `scripts/wp-f01-fix-route-diagnostic-component-v2.cjs` — TS2322 repair; improved untracked-file guard |
 | Active Execution Model | Downloadable `.cjs` generator → local write → dependency materialization → commit/push → QA |
 | Next Allowed Phase | `WP-F01` only |
 | Future Phases | `WP-F02` and later remain `LOCKED` |
-| User Validation Pending | Yes — static/build gates and local runtime validation required |
+| User Validation Pending | Yes — TS2322 repair must be pushed, then full WP-F01 gates and local runtime validation rerun |
 | Blocking Issue | None |
 | Package Manager Baseline | `npm` + npm workspaces + `package-lock.json` |
 | Runtime Baseline | Node.js 22 |
@@ -51,7 +51,7 @@ NOT_STARTED
 | Phase | Name | Status | Acceptance / Notes |
 |---|---|---|---|
 | WP-F00 | Repository & Toolchain Bootstrap | ACCEPTED | Accepted from passing local runtime/typecheck/lint/format/repo-policy gates |
-| WP-F01 | Workspace & Application Scaffold | PUSHED_UNVERIFIED | Generated source must be pushed before QA; WP-F02 remains locked |
+| WP-F01 | Workspace & Application Scaffold | PUSHED_UNVERIFIED | TS2322 repair prepared; WP-F02 remains locked |
 | WP-F02 | Quality, CI & Developer Safety Foundation | LOCKED | Requires WP-F01 acceptance |
 | WP-F03 | Design System & Responsive Foundation | LOCKED | Requires prior phase acceptance |
 | WP-F04 | Firebase Platform & Emulator Foundation | LOCKED | Requires prior phase acceptance |

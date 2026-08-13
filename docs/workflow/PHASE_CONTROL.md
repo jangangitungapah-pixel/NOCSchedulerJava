@@ -15,12 +15,12 @@
 | Current Phase | `WP-F02` — Quality, CI & Developer Safety Foundation |
 | Current Status | `PUSHED_UNVERIFIED` |
 | Last Accepted Phase | `WP-F01` — Workspace & Application Scaffold |
-| Last Implementation Commit | `8b69fd5374dd4fc89b3c9868a19029fc6f591d77` — Knip module graph repaired; dead-code gate then identified obsolete root typecheck sentinel as the only unused file |
-| Generator Applied | `scripts/wp-f02-remove-obsolete-typecheck-sentinel.cjs` — remove obsolete F00 root typecheck sentinel after WP-F02 added real root TypeScript inputs |
+| Last Implementation Commit | `982b7074c371c0585e863b08cf520646213a3cca` — obsolete typecheck sentinel removed; all requested local WP-F02 gates passed; GitHub Actions clean clone then failed because optional tooling/**/*.ts glob matched no files on Linux |
+| Generator Applied | `scripts/wp-f02-fix-ci-optional-globs.cjs` — make ESLint/Prettier optional globs portable when a source class is temporarily empty |
 | Active Execution Model | Downloadable `.cjs` generator → dependency materialization → format write-stage → commit/push → QA |
 | Next Allowed Phase | `WP-F02` only |
 | Future Phases | `WP-F03` and later remain `LOCKED` |
-| User Validation Pending | Yes — sentinel removal must be pushed, then typecheck/dead-code/E2E/accessibility and clean-clone CI must pass |
+| User Validation Pending | Yes — CI optional-glob repair must be pushed; clean-clone GitHub Actions must pass before WP-F02 acceptance |
 | Blocking Issue | None |
 | Package Manager Baseline | npm workspaces + committed `package-lock.json` |
 | Runtime Baseline | Node.js 22 |
@@ -33,7 +33,7 @@
 |---|---|---|
 | WP-F00 | ACCEPTED | Repository/toolchain bootstrap |
 | WP-F01 | ACCEPTED | Web/API/package scaffold and local health runtime |
-| WP-F02 | PUSHED_UNVERIFIED | Obsolete typecheck sentinel removal prepared after final Knip unused-file finding |
+| WP-F02 | PUSHED_UNVERIFIED | Local gates passed; final blocker is Linux clean-clone optional-glob portability in quality scripts |
 | WP-F03+ | LOCKED | Requires WP-F02 acceptance |
 
 ---

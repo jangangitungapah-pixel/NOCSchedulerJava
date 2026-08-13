@@ -17,12 +17,12 @@
 | Last Accepted Phase | `WP-F03` — Design System & Responsive Foundation |
 | Last Accepted Implementation Commit | `5248560ec3fc2c3e47362446de64112b43a3e7f1` |
 | WP-F03 Acceptance Commit | `efae3f4d607ad05608b8114943af9f2d34d0a7b8` — accepted WP-F03 and opened WP-F04 |
-| Generator Applied | `scripts/wp-f04-fix-prettier-and-vite-env-contract.cjs` — add Prettier JSON parser override for `.firebaserc` and explicit Vite Firebase env typings |
+| Generator Applied | `scripts/wp-f04-fix-knip-firebase-tooling-entries.cjs` — model Firebase emulator shell-invoked tooling as targeted Knip root entries and remove redundant seed entry |
 | Active Execution Model | Downloadable `.cjs` generator → dependency materialization → format write-stage → commit/push → QA |
 | Next Allowed Phase | `WP-F04` only |
 | Future Phases | `WP-F05` and later remain `LOCKED` |
 | User Validation Pending | Yes — Firebase config, emulator integration, Hosting/Functions smoke, and clean-clone CI |
-| Blocking Issue | First WP-F04 checkpoint `778594a...`: local format could not infer `.firebaserc` parser; clean CI typecheck passed but lint rejected untyped Vite Firebase env access — repair prepared |
+| Blocking Issue | Checkpoint `22782bf...`: runtime/typecheck/lint/format/repo/workspace/Firebase config/unit/integration/build/API smoke all passed; Knip could not resolve two tooling files invoked inside quoted `firebase emulators:exec` shell commands — targeted entry repair prepared |
 | Local Firebase Project | `demo-nocscheduler` only by default |
 | Runtime Baseline | Node.js 22; Firestore emulator CI uses Java 21 |
 
@@ -36,7 +36,7 @@
 | WP-F01 | ACCEPTED | Web/API/package scaffold and local health runtime |
 | WP-F02 | ACCEPTED | Quality/CI/E2E/accessibility foundation |
 | WP-F03 | ACCEPTED | Design system/responsive foundation |
-| WP-F04 | PUSHED_UNVERIFIED | Foundation pushed at `778594a...`; Prettier/Vite-env typed-lint repair prepared before Firebase emulator gates continue |
+| WP-F04 | PUSHED_UNVERIFIED | Static/build/API smoke gates passed at `22782bf...`; Firebase tooling module-graph repair prepared before emulator integration gates |
 | WP-F05+ | LOCKED | Requires WP-F04 acceptance |
 
 ---

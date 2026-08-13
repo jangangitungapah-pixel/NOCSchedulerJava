@@ -1,12 +1,15 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "workspaces": {
+    ".": {
+      "entry": ["tooling/firebase/run-tests.cjs", "tooling/firebase/smoke-hosting.cjs"]
+    },
     "apps/web": {
       "entry": ["src/lib/firebase/client.ts"],
       "project": ["src/**/*.{ts,tsx,css}"]
     },
     "apps/api": {
-      "entry": ["src/index.ts", "src/firebase/seed.ts"]
+      "entry": ["src/index.ts"]
     }
   }
 }

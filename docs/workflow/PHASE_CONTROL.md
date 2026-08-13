@@ -16,12 +16,12 @@
 | Current Phase | `WP-F01` — Workspace & Application Scaffold |
 | Current Status | `PUSHED_UNVERIFIED` |
 | Last Accepted Phase | `WP-F00` — Repository & Toolchain Bootstrap |
-| Last Implementation Commit | `4d2587ab11768c4f25cd5e9f9db84dc61fe5cb25` — route diagnostic type repair pushed; typecheck passed; QA then failed at ESLint type-only import in web API client |
-| Generator Applied | `scripts/wp-f01-fix-api-client-type-import.cjs` — ESLint consistent-type-imports repair |
+| Last Implementation Commit | `978d0bb02b8ea63a5a5794c727675c58668e838f` — type-only import repair pushed; static gates/build passed; built API smoke harness failed while normal dev API responded 200 |
+| Generator Applied | `scripts/wp-f01-harden-api-smoke-harness.cjs` — isolate built API smoke port, use node:http, and expose child startup failures |
 | Active Execution Model | Downloadable `.cjs` generator → local write → dependency materialization → commit/push → QA |
 | Next Allowed Phase | `WP-F01` only |
 | Future Phases | `WP-F02` and later remain `LOCKED` |
-| User Validation Pending | Yes — lint repair must be pushed, then full WP-F01 gates and local runtime validation rerun |
+| User Validation Pending | Yes — smoke harness repair must be pushed, then full WP-F01 gates and remaining local runtime validation rerun |
 | Blocking Issue | None |
 | Package Manager Baseline | `npm` + npm workspaces + `package-lock.json` |
 | Runtime Baseline | Node.js 22 |
@@ -51,7 +51,7 @@ NOT_STARTED
 | Phase | Name | Status | Acceptance / Notes |
 |---|---|---|---|
 | WP-F00 | Repository & Toolchain Bootstrap | ACCEPTED | Accepted from passing local runtime/typecheck/lint/format/repo-policy gates |
-| WP-F01 | Workspace & Application Scaffold | PUSHED_UNVERIFIED | ESLint type-import repair prepared; WP-F02 remains locked |
+| WP-F01 | Workspace & Application Scaffold | PUSHED_UNVERIFIED | API smoke harness repair prepared after built-smoke failure; WP-F02 remains locked |
 | WP-F02 | Quality, CI & Developer Safety Foundation | LOCKED | Requires WP-F01 acceptance |
 | WP-F03 | Design System & Responsive Foundation | LOCKED | Requires prior phase acceptance |
 | WP-F04 | Firebase Platform & Emulator Foundation | LOCKED | Requires prior phase acceptance |

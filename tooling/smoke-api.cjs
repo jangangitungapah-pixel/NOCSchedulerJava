@@ -167,12 +167,7 @@ async function main() {
     for (let attempt = 0; attempt < 100; attempt += 1) {
       if (childExit) {
         throw new Error(
-          describeChildFailure(
-            childExit.exitCode,
-            childExit.signalCode,
-            stdout,
-            stderr,
-          ),
+          describeChildFailure(childExit.exitCode, childExit.signalCode, stdout, stderr),
         );
       }
 
@@ -214,8 +209,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error(
-    '[smoke:api] FAILED — ' + (error instanceof Error ? error.message : String(error)),
-  );
+  console.error('[smoke:api] FAILED — ' + (error instanceof Error ? error.message : String(error)));
   process.exitCode = 1;
 });

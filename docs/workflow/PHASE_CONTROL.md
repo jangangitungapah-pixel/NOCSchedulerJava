@@ -17,13 +17,13 @@
 | Last Accepted Phase | `WP-F03` — Design System & Responsive Foundation |
 | Last Accepted Implementation Commit | `5248560ec3fc2c3e47362446de64112b43a3e7f1` |
 | WP-F03 Acceptance Commit | `efae3f4d607ad05608b8114943af9f2d34d0a7b8` |
-| Last WP-F04 Checkpoint | `3a8ee1e424bb11dab57c502b736c4d945064192a` — clean CI run 31706578095 is fully green; Firestore rules/indexes deployed successfully to nocschedule1; live Functions deploy reaches predeploy but the workspace-style build command is not portable in Firebase Functions deployment context |
-| Generator Applied | `scripts/wp-f04-fix-functions-predeploy-resource-dir.cjs` — use Firebase `$RESOURCE_DIR` for the Functions TypeScript predeploy build instead of root npm workspace syntax |
+| Last WP-F04 Checkpoint | `5298f0c8abf33a2f831bf00485257eee62c16abd` — Functions predeploy portability repair pushed; user requested Firebase Web SDK configuration be finalized before any further deployment work |
+| Generator Applied | `scripts/wp-f04-finalize-firebase-web-config.cjs` — verify exact nocschedule1 Web SDK identifiers and add production-only, capability-checked Analytics initialization |
 | Active Execution Model | Downloadable `.cjs` generator → dependency materialization → format write-stage → commit/push → QA → explicit live deploy |
 | Next Allowed Phase | `WP-F04` only |
 | Future Phases | `WP-F05` and later remain `LOCKED` |
 | User Validation Pending | Yes — clean local/CI quality gates plus explicit Firebase CLI project/deploy validation |
-| Blocking Issue | Live Firestore deploy succeeded. Functions deploy fails only in predeploy because `npm run build --workspace @nocscheduler/api` is executed in Firebase resource context on Windows; official `$RESOURCE_DIR`-based predeploy repair prepared. Hosting deploy is coupled to the pinned 2nd-gen function and should be retried after Functions succeeds. |
+| Blocking Issue | No source blocker. Firebase Web config is being finalized first; further Hosting/Functions deployment validation is intentionally deferred until this config checkpoint passes QA. |
 | Firebase Project | `nocschedule1` |
 | Hosting Site | `nocmduscheduler` |
 | Runtime Baseline | Node.js 22 / Cloud Functions 2nd gen |
@@ -38,7 +38,7 @@
 | WP-F01 | ACCEPTED | Web/API/package scaffold |
 | WP-F02 | ACCEPTED | Quality/CI/E2E/accessibility |
 | WP-F03 | ACCEPTED | Design system/responsive foundation |
-| WP-F04 | PUSHED_UNVERIFIED | Clean CI is fully green and Firestore is live; Functions predeploy portability repair prepared before Functions + Hosting live validation |
+| WP-F04 | PUSHED_UNVERIFIED | Firestore is live; exact Firebase Web SDK config + production-safe Analytics initialization prepared before any further deployment validation |
 | WP-F05+ | LOCKED | Requires WP-F04 acceptance |
 
 ---

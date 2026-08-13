@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router/dom';
 
 import { AppProviders } from './app/providers';
+import { initializeFirebaseAnalytics } from './lib/firebase/client';
 import { router } from './routes/router';
 import './styles/index.css';
 
@@ -19,3 +20,7 @@ createRoot(rootElement).render(
     </AppProviders>
   </StrictMode>,
 );
+
+if (import.meta.env.PROD) {
+  void initializeFirebaseAnalytics().catch(() => undefined);
+}

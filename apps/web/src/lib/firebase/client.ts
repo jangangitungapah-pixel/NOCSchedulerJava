@@ -1,3 +1,4 @@
+import { getAnalytics, isSupported, type Analytics } from 'firebase/analytics';
 import {
   getApp,
   getApps,
@@ -18,6 +19,7 @@ export type FirebaseClientServices = Readonly<{
 }>;
 
 let cachedServices: FirebaseClientServices | undefined;
+let cachedAnalytics: Promise<Analytics | null> | undefined;
 
 function toFirebaseOptions(config: ResolvedFirebaseClientConfig['config']): FirebaseOptions {
   return {
@@ -58,4 +60,20 @@ export function getFirebaseClientServices(): FirebaseClientServices {
   };
 
   return cachedServices;
+}
+
+export function initializeFirebaseAnalytics(): Promise<Analytics | null> {
+  if (cachedAnalytics) {
+    return cachedAnalytics;
+  }
+
+  cachedAnalytics = isSupported().then((supported) => {
+    if (!supported) {
+      return null;
+    }
+
+    return getAnalytics(getFirebaseClientServices().app);
+  });
+
+  return cachedAnalytics;
 }

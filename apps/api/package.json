@@ -1,0 +1,28 @@
+{
+  "name": "@nocscheduler/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "dev": "tsx watch src/dev.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/dev.js"
+  },
+  "dependencies": {
+    "compression": "1.8.1",
+    "express": "5.2.1",
+    "helmet": "8.3.0",
+    "pino": "10.3.1",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/compression": "1.8.1",
+    "@types/express": "5.0.6",
+    "@types/node": "26.2.0",
+    "tsx": "4.23.12"
+  }
+}

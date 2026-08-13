@@ -5,8 +5,8 @@ export default tseslint.config(
   {
     ignores: [
       'node_modules/**',
-      'dist/**',
-      'build/**',
+      '**/dist/**',
+      '**/build/**',
       'coverage/**',
       '.firebase/**',
       'playwright-report/**',
@@ -24,6 +24,7 @@ export default tseslint.config(
       },
     },
     rules: {
+      'no-undef': 'off',
       '@typescript-eslint/consistent-type-imports': [
         'error',
         {

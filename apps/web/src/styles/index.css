@@ -1,0 +1,99 @@
+@import 'tailwindcss';
+
+:root {
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --app-background: #f4f6f8;
+  --app-surface: #ffffff;
+  --app-text: #17202a;
+  --app-muted: #667085;
+  --app-border: #d8dee6;
+  --app-accent: #2457d6;
+  --app-success: #16794d;
+  --app-success-soft: #e7f6ee;
+  --app-danger: #b42318;
+}
+
+:root.dark {
+  --app-background: #0f141a;
+  --app-surface: #151c24;
+  --app-text: #edf2f7;
+  --app-muted: #a9b4c0;
+  --app-border: #2c3743;
+  --app-accent: #8caeff;
+  --app-success: #62d39a;
+  --app-success-soft: #153829;
+  --app-danger: #ff8a80;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--app-background);
+  color: var(--app-text);
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+code {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+}
+
+.app-background {
+  background: var(--app-background);
+}
+
+.app-surface {
+  background: var(--app-surface);
+}
+
+.text-app {
+  color: var(--app-text);
+}
+
+.muted-app {
+  color: var(--app-muted);
+}
+
+.accent-app {
+  color: var(--app-accent);
+}
+
+.border-app {
+  border-color: var(--app-border);
+}
+
+.border-success {
+  border-color: var(--app-success);
+}
+
+.border-danger {
+  border-color: var(--app-danger);
+}
+
+.success-chip {
+  background: var(--app-success-soft);
+  color: var(--app-success);
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--app-accent);
+  outline-offset: 3px;
+}

@@ -1,7 +1,6 @@
 {
   "projects": {
-    "default": "demo-nocscheduler",
-    "production": "nocschedule1"
+    "default": "nocschedule1"
   },
   "targets": {
     "nocschedule1": {

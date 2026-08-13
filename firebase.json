@@ -11,9 +11,7 @@
         "firebase-debug.log",
         "firebase-debug.*.log",
         "src/**/*.test.ts",
-        "src/**/*.integration.test.ts",
-        "src/**/*.firebase.test.ts",
-        "src/firebase/seed.ts"
+        "src/**/*.integration.test.ts"
       ]
     }
   ],
@@ -37,29 +35,7 @@
         "source": "**",
         "destination": "/index.html"
       }
-    ]
-  },
-  "emulators": {
-    "auth": {
-      "host": "127.0.0.1",
-      "port": 9099
-    },
-    "firestore": {
-      "host": "127.0.0.1",
-      "port": 8180
-    },
-    "functions": {
-      "host": "127.0.0.1",
-      "port": 5001
-    },
-    "hosting": {
-      "host": "127.0.0.1",
-      "port": 5000
-    },
-    "ui": {
-      "enabled": true,
-      "host": "127.0.0.1",
-      "port": 4000
-    }
+    ],
+    "target": "app"
   }
 }

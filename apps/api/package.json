@@ -10,8 +10,7 @@
     "dev": "tsx watch src/dev.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "build": "tsc -p tsconfig.build.json",
-    "start": "node dist/dev.js",
-    "seed:emulator": "tsx src/firebase/seed.ts"
+    "start": "node dist/dev.js"
   },
   "dependencies": {
     "compression": "1.8.1",
@@ -23,12 +22,10 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@firebase/rules-unit-testing": "5.0.1",
     "@types/compression": "1.8.1",
     "@types/express": "5.0.6",
     "@types/node": "26.2.0",
     "@types/supertest": "7.2.1",
-    "firebase": "12.17.1",
     "supertest": "7.2.2",
     "tsx": "4.23.12"
   },

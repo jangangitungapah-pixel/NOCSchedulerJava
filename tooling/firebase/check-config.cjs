@@ -14,26 +14,27 @@ function addError(message) {
 
 const firebaseRc = readJson('.firebaserc');
 const firebaseJson = readJson('firebase.json');
-const productionFirebaseJson = readJson('firebase.production.json');
 const indexes = readJson('firestore.indexes.json');
 const rules = fs.readFileSync('firestore.rules', 'utf8');
 
-if (firebaseRc.projects?.default !== 'demo-nocscheduler') {
-  addError('.firebaserc default project must remain demo-nocscheduler during WP-F04.');
+if (firebaseRc.projects?.default !== 'nocschedule1') {
+  addError('.firebaserc default project must be nocschedule1.');
 }
 
-if (firebaseRc.projects?.production !== 'nocschedule1') {
-  addError('.firebaserc production alias must resolve to nocschedule1.');
-}
-
-const productionHostingSites = firebaseRc.targets?.nocschedule1?.hosting?.app;
+const hostingSites = firebaseRc.targets?.nocschedule1?.hosting?.app;
 
 if (
-  !Array.isArray(productionHostingSites) ||
-  productionHostingSites.length !== 1 ||
-  productionHostingSites[0] !== 'nocmduscheduler'
+  !Array.isArray(hostingSites) ||
+  hostingSites.length !== 1 ||
+  hostingSites[0] !== 'nocmduscheduler'
 ) {
-  addError('Firebase production Hosting target app must resolve only to nocmduscheduler.');
+  addError('Hosting target app must resolve only to nocmduscheduler.');
+}
+
+if (firebaseJson.emulators !== undefined) {
+  addError(
+    'firebase.json must not contain Emulator Suite configuration after the live rebaseline.',
+  );
 }
 
 const functionConfig = Array.isArray(firebaseJson.functions)
@@ -48,46 +49,25 @@ if (functionConfig?.runtime !== 'nodejs22') {
   addError('Firebase Functions runtime must remain nodejs22.');
 }
 
-const apiRewrite = firebaseJson.hosting?.rewrites?.find((rewrite) => rewrite.source === '/api/**');
-
-if (apiRewrite?.function?.functionId !== 'api') {
-  addError('Firebase Hosting /api/** must rewrite to the api function.');
+if (firebaseJson.hosting?.target !== 'app') {
+  addError('Firebase Hosting target must remain app.');
 }
 
 if (firebaseJson.hosting?.public !== 'apps/web/dist') {
   addError('Firebase Hosting public directory must remain apps/web/dist.');
 }
 
-if (firebaseJson.emulators?.firestore?.port !== 8180) {
-  addError('Firestore emulator must use the WP-F04 conflict-free port 8180.');
-}
+const apiRewrite = firebaseJson.hosting?.rewrites?.find((rewrite) => rewrite.source === '/api/**');
 
-for (const emulatorName of ['auth', 'firestore', 'functions', 'hosting', 'ui']) {
-  const config = firebaseJson.emulators?.[emulatorName];
-
-  if (config?.host !== '127.0.0.1') {
-    addError(`Firebase ${emulatorName} emulator must bind to 127.0.0.1.`);
-  }
-}
-
-if (productionFirebaseJson.hosting?.target !== 'app') {
-  addError('firebase.production.json Hosting target must remain app.');
-}
-
-if (productionFirebaseJson.hosting?.public !== 'apps/web/dist') {
-  addError('Production Hosting public directory must remain apps/web/dist.');
-}
-
-const productionApiRewrite = productionFirebaseJson.hosting?.rewrites?.find(
-  (rewrite) => rewrite.source === '/api/**',
-);
-
-if (productionApiRewrite?.function?.functionId !== 'api') {
-  addError('Production Hosting /api/** must rewrite to the api function.');
+if (
+  apiRewrite?.function?.functionId !== 'api' ||
+  apiRewrite?.function?.region !== 'asia-southeast1'
+) {
+  addError('Firebase Hosting /api/** must rewrite to the api function in asia-southeast1.');
 }
 
 if (!/allow\s+read,\s*write:\s*if\s+false;/u.test(rules)) {
-  addError('Firestore rules must retain a fail-closed read/write baseline in WP-F04.');
+  addError('Firestore rules must retain the fail-closed browser-access baseline during WP-F04.');
 }
 
 if (!Array.isArray(indexes.indexes) || !Array.isArray(indexes.fieldOverrides)) {
@@ -105,5 +85,5 @@ if (errors.length > 0) {
 }
 
 console.log(
-  '[firebase-config] OK — demo-local safety, port 8180, production target mapping, Functions rewrite, and fail-closed rules are safe.',
+  '[firebase-config] OK — live project nocschedule1, Hosting target nocmduscheduler, managed Functions rewrite, and fail-closed Firestore rules are aligned.',
 );

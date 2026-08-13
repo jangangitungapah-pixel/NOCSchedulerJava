@@ -11,8 +11,6 @@ const firebasePublicConfigSchema = z.object({
 });
 
 export type FirebaseClientEnvironment = Readonly<{
-  DEV: boolean;
-  VITE_FIREBASE_ALLOW_LIVE_PROJECT: string | undefined;
   VITE_FIREBASE_API_KEY: string | undefined;
   VITE_FIREBASE_APP_ID: string | undefined;
   VITE_FIREBASE_AUTH_DOMAIN: string | undefined;
@@ -20,20 +18,11 @@ export type FirebaseClientEnvironment = Readonly<{
   VITE_FIREBASE_MESSAGING_SENDER_ID: string | undefined;
   VITE_FIREBASE_PROJECT_ID: string | undefined;
   VITE_FIREBASE_STORAGE_BUCKET: string | undefined;
-  VITE_FIREBASE_USE_EMULATORS: string | undefined;
 }>;
 
 export type ResolvedFirebaseClientConfig = Readonly<{
   config: z.infer<typeof firebasePublicConfigSchema>;
-  useEmulators: boolean;
 }>;
-
-const demoConfig = {
-  apiKey: 'demo-api-key',
-  appId: 'demo-app-id',
-  authDomain: 'demo-nocscheduler.firebaseapp.com',
-  projectId: 'demo-nocscheduler',
-} as const;
 
 const productionConfig = {
   apiKey: 'AIzaSyABilth8ZjgPyPsLStcIL_71VHR06NNpRY',
@@ -48,45 +37,16 @@ const productionConfig = {
 export function resolveFirebaseClientConfig(
   environment: FirebaseClientEnvironment,
 ): ResolvedFirebaseClientConfig {
-  const useEmulators = environment.DEV && environment.VITE_FIREBASE_USE_EMULATORS !== 'false';
-
-  if (useEmulators) {
-    const config = firebasePublicConfigSchema.parse({
-      apiKey: environment.VITE_FIREBASE_API_KEY ?? demoConfig.apiKey,
-      appId: environment.VITE_FIREBASE_APP_ID ?? demoConfig.appId,
-      authDomain: environment.VITE_FIREBASE_AUTH_DOMAIN ?? demoConfig.authDomain,
-      projectId: environment.VITE_FIREBASE_PROJECT_ID ?? demoConfig.projectId,
-    });
-
-    if (!config.projectId.startsWith('demo-')) {
-      throw new Error('Local Firebase emulator mode requires a demo-* project ID.');
-    }
-
-    return {
-      config,
-      useEmulators: true,
-    };
-  }
-
-  if (environment.DEV && environment.VITE_FIREBASE_ALLOW_LIVE_PROJECT !== 'true') {
-    throw new Error(
-      'Live Firebase browser access is disabled during local development. Set VITE_FIREBASE_ALLOW_LIVE_PROJECT=true only when intentionally testing a live project.',
-    );
-  }
-
-  const config = firebasePublicConfigSchema.parse({
-    apiKey: environment.VITE_FIREBASE_API_KEY ?? productionConfig.apiKey,
-    appId: environment.VITE_FIREBASE_APP_ID ?? productionConfig.appId,
-    authDomain: environment.VITE_FIREBASE_AUTH_DOMAIN ?? productionConfig.authDomain,
-    measurementId: environment.VITE_FIREBASE_MEASUREMENT_ID ?? productionConfig.measurementId,
-    messagingSenderId:
-      environment.VITE_FIREBASE_MESSAGING_SENDER_ID ?? productionConfig.messagingSenderId,
-    projectId: environment.VITE_FIREBASE_PROJECT_ID ?? productionConfig.projectId,
-    storageBucket: environment.VITE_FIREBASE_STORAGE_BUCKET ?? productionConfig.storageBucket,
-  });
-
   return {
-    config,
-    useEmulators: false,
+    config: firebasePublicConfigSchema.parse({
+      apiKey: environment.VITE_FIREBASE_API_KEY ?? productionConfig.apiKey,
+      appId: environment.VITE_FIREBASE_APP_ID ?? productionConfig.appId,
+      authDomain: environment.VITE_FIREBASE_AUTH_DOMAIN ?? productionConfig.authDomain,
+      measurementId: environment.VITE_FIREBASE_MEASUREMENT_ID ?? productionConfig.measurementId,
+      messagingSenderId:
+        environment.VITE_FIREBASE_MESSAGING_SENDER_ID ?? productionConfig.messagingSenderId,
+      projectId: environment.VITE_FIREBASE_PROJECT_ID ?? productionConfig.projectId,
+      storageBucket: environment.VITE_FIREBASE_STORAGE_BUCKET ?? productionConfig.storageBucket,
+    }),
   };
 }

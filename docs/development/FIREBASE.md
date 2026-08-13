@@ -1,151 +1,120 @@
-# Firebase Platform & Emulator Foundation
+# Firebase Managed Platform Foundation
 
-WP-F04 establishes Firebase as managed infrastructure without introducing product authentication or business persistence ahead of their phases.
+WP-F04 now uses the real managed Firebase project directly.
+
+## Canonical Firebase target
+
+```text
+Project ID:   nocschedule1
+Hosting site: nocmduscheduler
+Public URL:   https://nocmduscheduler.web.app
+Region:       asia-southeast1
+```
+
+The repository no longer requires Firebase Emulator Suite for normal
+development, QA, or CI.
 
 ## Production topology
 
 ```text
 Browser
-  -> Firebase Hosting
-     -> static Vite build
+  -> Firebase Hosting site nocmduscheduler
+     -> Vite static bundle
      -> /api/** rewrite
-        -> Cloud Functions 2nd gen
+        -> Cloud Functions 2nd gen api
            -> Express /api/v1
               -> Firebase Admin SDK
-                 -> Cloud Firestore
+                 -> Cloud Firestore / Firebase Auth
 ```
 
-The function codebase is `apps/api`, uses Node.js 22, and exports the existing Express application as the HTTPS function `api`.
+## Browser SDK
 
-## Local safety policy
+The Firebase Web SDK connects directly to `nocschedule1`.
 
-The canonical local Firebase project is:
+The Firebase web config is public client configuration. It does not grant
+database authorization. Browser Firestore access is still controlled by
+Firestore Security Rules.
 
-```text
-demo-nocscheduler
-```
-
-The `demo-` prefix is intentional. Normal local workflows must not point to a real Firebase project.
-
-Emulators bind only to `127.0.0.1`:
-
-| Service | Port |
-|---|---:|
-| Emulator UI | 4000 |
-| Hosting | 5000 |
-| Functions | 5001 |
-| Firestore | 8180 |
-| Authentication | 9099 |
-
-The browser Firebase adapter defaults to emulator mode during Vite development.
-
-The Admin SDK adapter refuses live Firebase access outside production unless an explicit live-project override is supplied. Destructive seed/reset logic additionally requires emulator mode plus a `demo-*` project ID.
-
-## Daily hot development
-
-```powershell
-npm run dev:firebase
-```
-
-This runs:
-
-- Auth emulator;
-- Firestore emulator;
-- local Express API with emulator-safe environment variables;
-- Vite web dev server.
-
-Vite continues to proxy `/api` to the local Express API.
-
-## Full Firebase topology
-
-To validate the built application through Firebase Hosting + Functions emulators:
-
-```powershell
-npm run firebase:emulators
-```
-
-The command builds the API and web first.
-
-URLs:
-
-```text
-Web via Hosting: http://127.0.0.1:5000
-Emulator UI:     http://127.0.0.1:4000
-```
-
-## Deterministic reset/seed
-
-With Auth and Firestore emulators already running:
-
-```powershell
-npm run firebase:seed
-```
-
-The seed command refuses non-demo/live targets, clears Auth emulator users, recursively clears Firestore emulator collections, then writes one deterministic `foundationMetadata/seed` marker.
-
-No production business seed data is introduced in WP-F04.
-
-## Firebase tests
-
-```powershell
-npm run check:firebase
-npm run test:firebase
-npm run smoke:firebase
-```
-
-`test:firebase` proves:
-
-- Admin SDK Firestore read/write works against the emulator;
-- Admin SDK Authentication works against the emulator;
-- direct unauthenticated Firestore browser read/write remains denied.
-
-`smoke:firebase` proves:
-
-- Firebase Hosting serves the Vite build;
-- `/api/v1/health` is rewritten to the Functions v2 `api` function;
-- the existing Express contract survives the managed-runtime wrapper.
-
-## Firestore rules baseline
-
-WP-F04 is intentionally fail-closed:
+WP-F04 keeps browser Firestore access fail-closed:
 
 ```text
 allow read, write: if false;
 ```
 
-Later phases may open narrowly scoped direct browser reads only when there is a concrete UX/performance reason and emulator rule tests accompany the rule.
+Later authentication/authorization phases will open only the client access that
+is intentionally required.
 
-Business-critical writes remain server-authoritative.
+## Server SDK
 
-## Credentials
+Cloud Functions uses the Firebase Admin SDK.
 
-Never commit:
+In the deployed Google/Firebase runtime, Admin SDK credentials are supplied by
+the managed environment.
 
-- service-account JSON;
-- Firebase Admin private keys;
-- Application Default Credential files;
-- production secrets.
+If a developer later needs to run API code locally against the real project,
+Google Application Default Credentials must be configured on that developer
+machine. Credential files must never be committed.
 
-Production Admin SDK authentication uses managed Firebase/Google Cloud credentials/IAM.
+## CI policy
 
-Firebase Web SDK configuration values are public identifiers, but they still do not belong in server credential files and never replace authorization.
+CI does not create Firebase Auth users or write Firestore documents in the real
+project.
 
+CI validates:
 
-## Production Firebase target
+- exact project/site configuration;
+- fail-closed rules source;
+- TypeScript/lint/format;
+- unit/API integration;
+- production builds;
+- API smoke;
+- dead code;
+- browser E2E/accessibility.
 
-WP-F04 now records the owner-provided live Firebase topology without making it
-the default local project:
+Live Firebase deployment is an explicit operator action.
 
-- Firebase project alias: `production` -> `nocschedule1`;
-- Hosting site ID: `nocmduscheduler`;
-- expected Hosting URL: `https://nocmduscheduler.web.app`;
-- production Hosting config: `firebase.production.json`;
-- Hosting target name: `app`.
+## Firebase CLI
 
-The normal/default Firebase project remains `demo-nocscheduler`. Production
-deployment is intentionally not executed during WP-F04; launch/deployment
-remains controlled by the later production phases.
+Authenticate once:
 
-The Firebase Web SDK public configuration supplied by the owner is represented
-in the client Firebase configuration boundary. Analytics is not initialized in
-WP-F04.
+```powershell
+firebase login
+```
+
+Select/check the project:
+
+```powershell
+npm run firebase:project
+```
+
+Deploy everything owned by the current foundation:
+
+```powershell
+npm run firebase:deploy
+```
+
+Hosting only:
+
+```powershell
+npm run firebase:deploy:hosting
+```
+
+Functions + Firestore rules/indexes:
+
+```powershell
+npm run firebase:deploy:backend
+```
+
+A Hosting deploy target named `app` maps to the site ID
+`nocmduscheduler`.
+
+## Important production requirement
+
+Deploying Cloud Functions requires the Firebase project to use the Blaze
+pricing plan.
+
+## Analytics
+
+The supplied Web SDK configuration contains a Measurement ID, but Analytics is
+not initialized in WP-F04. Analytics can be introduced later when product
+telemetry requirements are defined.

@@ -7,10 +7,5 @@
     "sourceMap": true,
     "declaration": false
   },
-  "exclude": [
-    "src/**/*.test.ts",
-    "src/**/*.integration.test.ts",
-    "src/**/*.firebase.test.ts",
-    "src/firebase/seed.ts"
-  ]
+  "exclude": ["src/**/*.test.ts", "src/**/*.integration.test.ts"]
 }

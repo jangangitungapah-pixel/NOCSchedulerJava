@@ -50,15 +50,6 @@ export default defineConfig({
           restoreMocks: true,
         },
       },
-      {
-        test: {
-          name: 'firebase-integration',
-          environment: 'node',
-          include: ['apps/api/src/**/*.firebase.test.ts'],
-          restoreMocks: true,
-          fileParallelism: false,
-        },
-      },
     ],
   },
 });

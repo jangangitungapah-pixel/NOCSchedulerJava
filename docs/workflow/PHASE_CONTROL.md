@@ -15,13 +15,13 @@
 | Current Phase | `WP-F03` — Design System & Responsive Foundation |
 | Current Status | `PUSHED_UNVERIFIED` |
 | Last Accepted Phase | `WP-F02` — Quality, CI & Developer Safety Foundation |
-| Last Implementation Commit | `a86b28c3f97675a958948a0b9bf4cfc4e428c082` — WP-F03 foundation pushed; first local typecheck failed because navigation `as const` inferred a union where placeholder items had no `href` property |
-| Generator Applied | `scripts/wp-f03-fix-navigation-item-contract.cjs` — make navigation href an explicit optional contract without changing runtime behavior |
+| Last Implementation Commit | `8bcaf507b07ee659b967ef4bd769b413d02d9236` — navigation typing repair pushed; static/build/dead-code and clean-clone design-system E2E passed, while local design-system E2E attached to a reusable stale server and CI accessibility found insufficient Light-theme tertiary-text contrast |
+| Generator Applied | `scripts/wp-f03-fix-e2e-isolation-and-contrast.cjs` — force fresh Playwright web/API servers and raise Light tertiary-text contrast through a foundation token |
 | Active Execution Model | Downloadable `.cjs` generator → dependency materialization → format write-stage → commit/push → QA |
 | Next Allowed Phase | `WP-F03` only |
 | Future Phases | `WP-F04` and later remain `LOCKED` |
-| User Validation Pending | Yes — navigation typing repair must be pushed, then remaining WP-F03 automated + desktop/mobile + Light/Dark QA must pass |
-| Blocking Issue | TypeScript navigation item union contract — repair prepared |
+| User Validation Pending | Yes — deterministic E2E/contrast repair must be pushed, then WP-F03 E2E, accessibility, CI, and visual QA must pass |
+| Blocking Issue | Local Playwright server reuse + WCAG AA Light-theme tertiary-text contrast — repair prepared |
 | Package Manager Baseline | npm workspaces + committed `package-lock.json` |
 | Runtime Baseline | Node.js 22 |
 
@@ -34,7 +34,7 @@
 | WP-F00 | ACCEPTED | Repository/toolchain bootstrap |
 | WP-F01 | ACCEPTED | Web/API/package scaffold and local health runtime |
 | WP-F02 | ACCEPTED | Full clean-clone quality, E2E, accessibility pipeline passed |
-| WP-F03 | PUSHED_UNVERIFIED | Navigation item typing repair prepared after first WP-F03 typecheck failure |
+| WP-F03 | PUSHED_UNVERIFIED | Clean-clone design-system E2E passed; deterministic local harness and Light-theme contrast repair prepared |
 | WP-F04+ | LOCKED | Requires WP-F03 acceptance |
 
 ---

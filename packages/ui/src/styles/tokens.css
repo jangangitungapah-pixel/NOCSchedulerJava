@@ -9,6 +9,7 @@
   --ui-neutral-300: #c7d0da;
   --ui-neutral-400: #98a5b3;
   --ui-neutral-500: #697586;
+  --ui-neutral-550: #626e7e;
   --ui-neutral-600: #4b5565;
   --ui-neutral-700: #364152;
   --ui-neutral-800: #202939;
@@ -43,7 +44,7 @@
 
   --ui-text-primary: var(--ui-neutral-900);
   --ui-text-secondary: var(--ui-neutral-700);
-  --ui-text-tertiary: var(--ui-neutral-500);
+  --ui-text-tertiary: var(--ui-neutral-550);
   --ui-text-disabled: var(--ui-neutral-400);
   --ui-text-inverse: #ffffff;
 

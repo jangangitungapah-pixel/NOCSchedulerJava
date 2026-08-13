@@ -12,16 +12,17 @@
 
 | Field | Value |
 |---|---|
-| Current Phase | `WP-F03` — Design System & Responsive Foundation |
-| Current Status | `PUSHED_UNVERIFIED` |
-| Last Accepted Phase | `WP-F02` — Quality, CI & Developer Safety Foundation |
-| Last Implementation Commit | `8bcaf507b07ee659b967ef4bd769b413d02d9236` — navigation typing repair pushed; static/build/dead-code and clean-clone design-system E2E passed, while local design-system E2E attached to a reusable stale server and CI accessibility found insufficient Light-theme tertiary-text contrast |
-| Generator Applied | `scripts/wp-f03-fix-e2e-isolation-and-contrast.cjs` — force fresh Playwright web/API servers and raise Light tertiary-text contrast through a foundation token |
+| Current Phase | `WP-F04` — Firebase Platform & Emulator Foundation |
+| Current Status | `GENERATOR_READY` |
+| Last Accepted Phase | `WP-F03` — Design System & Responsive Foundation |
+| Last Implementation Commit | `5248560ec3fc2c3e47362446de64112b43a3e7f1` — deterministic E2E server isolation + Light-theme contrast repair |
+| Acceptance Evidence | User reported local WP-F03 validation passed and explicitly requested continuation; GitHub Actions Quality run `31688594969` completed `success` on exact commit `5248560e...` |
+| Active Generator | `scripts/wp-f04-firebase-emulator-foundation.cjs` |
 | Active Execution Model | Downloadable `.cjs` generator → dependency materialization → format write-stage → commit/push → QA |
-| Next Allowed Phase | `WP-F03` only |
-| Future Phases | `WP-F04` and later remain `LOCKED` |
-| User Validation Pending | Yes — deterministic E2E/contrast repair must be pushed, then WP-F03 E2E, accessibility, CI, and visual QA must pass |
-| Blocking Issue | Local Playwright server reuse + WCAG AA Light-theme tertiary-text contrast — repair prepared |
+| Next Allowed Phase | `WP-F04` only |
+| Future Phases | `WP-F05` and later remain `LOCKED` |
+| User Validation Pending | No until WP-F04 generator is applied |
+| Blocking Issue | None |
 | Package Manager Baseline | npm workspaces + committed `package-lock.json` |
 | Runtime Baseline | Node.js 22 |
 
@@ -34,87 +35,63 @@
 | WP-F00 | ACCEPTED | Repository/toolchain bootstrap |
 | WP-F01 | ACCEPTED | Web/API/package scaffold and local health runtime |
 | WP-F02 | ACCEPTED | Full clean-clone quality, E2E, accessibility pipeline passed |
-| WP-F03 | PUSHED_UNVERIFIED | Clean-clone design-system E2E passed; deterministic local harness and Light-theme contrast repair prepared |
-| WP-F04+ | LOCKED | Requires WP-F03 acceptance |
+| WP-F03 | ACCEPTED | Semantic design system, responsive shell, deterministic browser QA, and accessibility contrast repair passed |
+| WP-F04 | GENERATOR_READY | Firebase platform and local Emulator Suite foundation is the only active phase |
+| WP-F05+ | LOCKED | Requires WP-F04 acceptance |
 
 ---
 
-# 3. WP-F03 Generated Foundation
+# 3. WP-F03 Acceptance Record
 
-PRD focus:
-
-- PRD-10 — UI/UX, User Flow & Interaction Design;
-- PRD-11 — Design System & Component Specification;
-- PRD-12 — Responsive & Mobile Experience;
-- PRD-13 — UI Polish & Visual Quality Standard.
-
-Generated foundation includes:
+WP-F03 established:
 
 - foundation + semantic CSS token architecture;
 - Light default and Dark parity;
 - typography, spacing, radius, elevation, motion and layer tokens;
 - safe-area and reduced-motion utilities;
-- shared UI package with reusable React primitives;
-- Radix-backed accessible select/choice/overlay/tab primitives;
-- desktop/tablet/mobile application shell;
-- compact mobile header + five-slot bottom navigation model;
-- desktop compact rail and expanded sidebar behavior;
-- theme switcher using shared IconButton/Tooltip grammar;
-- shared page/surface/header/toolbar/table/pagination/state primitives;
-- development-only `/__design-system` showcase;
-- Playwright keyboard/theme/dialog/mobile touch-target regression.
+- shared `@nocscheduler/ui` primitives;
+- accessible Radix-backed select/choice/overlay/tab primitives;
+- responsive mobile/tablet/desktop application shell;
+- compact mobile bottom navigation and desktop navigation rail/sidebar;
+- development-only `/__design-system` QA surface;
+- deterministic Playwright web/API server isolation;
+- WCAG AA-compatible Light-theme tertiary text contrast;
+- design-system E2E and accessibility regression coverage.
 
-No Firebase, authentication, scheduling, payroll, or workforce business feature is introduced in WP-F03.
+Acceptance evidence:
 
----
-
-# 4. WP-F03 Exit Gate
-
-Required before acceptance:
-
-```text
-npm run typecheck
-npm run lint
-npm run format:check
-npm run check:repo
-npm run check:workspaces
-npm test
-npm run test:integration
-npm run build
-npm run smoke:api
-npm run check:deadcode
-npm run test:design-system
-npm run test:e2e
-npm run test:a11y
-```
-
-Manual visual QA:
-
-- desktop Light;
-- desktop Dark;
-- compact/tablet shell;
-- mobile Light;
-- mobile Dark;
-- no page-level horizontal overflow;
-- mobile touch targets;
-- keyboard focus and overlay dismissal;
-- alignment/density review of showcase.
-
-WP-F04 remains locked until WP-F03 is accepted.
+- exact accepted implementation commit: `5248560ec3fc2c3e47362446de64112b43a3e7f1`;
+- GitHub Actions Quality run: `31688594969` — `success`;
+- user reported local validation passed and directed continuation.
 
 ---
 
-# 5. Design-System Contract
+# 4. WP-F04 Intent
 
-The implementation follows:
+WP-F04 owns Firebase platform and emulator infrastructure only.
+
+Expected foundation includes, subject to the canonical workplan/PRDs:
+
+- Firebase project/config structure;
+- local Emulator Suite wiring;
+- web Firebase SDK initialization boundary;
+- API Firebase Admin SDK initialization boundary;
+- Firestore/security-rule/index baseline;
+- emulator-safe environment handling;
+- local integration/smoke workflow;
+- no product authentication/business-domain behavior ahead of later phases.
+
+---
+
+# 5. Design-System Contract Retained
+
+The accepted implementation follows:
 
 > **One component, two skins.**
 
 Theme differences live in semantic tokens rather than duplicate component trees.
 
-Page-specific raw palettes are not allowed as a shortcut when a semantic token exists.
-
-Desktop density and mobile one-hand ergonomics are separate acceptance targets.
+Desktop density and mobile one-hand ergonomics remain separate acceptance targets in later feature phases.
 
 ---
 
@@ -122,4 +99,6 @@ Desktop density and mobile one-hand ergonomics are separate acceptance targets.
 
 Generator writes are formatted before commit. The resulting exact checkpoint is pushed before QA so a failing state can be audited and repaired from GitHub.
 
-Formatting is hygiene; runtime/type/test/build/accessibility and responsive behavior remain the acceptance-critical gates.
+Formatting is hygiene; runtime/type/test/build/security/emulator behavior remain acceptance-critical gates.
+
+WP-F05 remains locked until WP-F04 is explicitly accepted.

@@ -13,15 +13,15 @@
 
 | Field | Value |
 |---|---|
-| Current Phase | `WP-F01` — Workspace & Application Scaffold |
-| Current Status | `PUSHED_UNVERIFIED` |
-| Last Accepted Phase | `WP-F00` — Repository & Toolchain Bootstrap |
-| Last Implementation Commit | `978d0bb02b8ea63a5a5794c727675c58668e838f` — type-only import repair pushed; static gates/build passed; built API smoke harness failed while normal dev API responded 200 |
-| Generator Applied | `scripts/wp-f01-harden-api-smoke-harness.cjs` — isolate built API smoke port, use node:http, and expose child startup failures |
-| Active Execution Model | Downloadable `.cjs` generator → local write → dependency materialization → commit/push → QA |
-| Next Allowed Phase | `WP-F01` only |
-| Future Phases | `WP-F02` and later remain `LOCKED` |
-| User Validation Pending | Yes — smoke harness repair must be pushed, then full WP-F01 gates and remaining local runtime validation rerun |
+| Current Phase | `WP-F02` — Quality, CI & Developer Safety Foundation |
+| Current Status | `GENERATOR_READY` |
+| Last Accepted Phase | `WP-F01` — Workspace & Application Scaffold |
+| Last Implementation Commit | `c9b6d2a0826359dd536dd34f15d470c6df9b74ac` — final WP-F01 formatting checkpoint |
+| Active Generator | `scripts/wp-f02-quality-ci-foundation.cjs` |
+| Active Execution Model | Downloadable `.cjs` generator → local write → dependency materialization → format write-stage → commit/push → QA |
+| Next Allowed Phase | `WP-F02` only |
+| Future Phases | `WP-F03` and later remain `LOCKED` |
+| User Validation Pending | No for WP-F01; WP-F02 has not been executed yet |
 | Blocking Issue | None |
 | Package Manager Baseline | `npm` + npm workspaces + `package-lock.json` |
 | Runtime Baseline | Node.js 22 |
@@ -44,16 +44,18 @@ NOT_STARTED
                  → next phase may begin
 ```
 
+Formatting remains a deterministic hygiene gate, but generator workflows should run `npm run format` during the write stage before commit so formatting-only failures do not create unnecessary repair loops.
+
 ---
 
 # 3. Phase Ledger
 
 | Phase | Name | Status | Acceptance / Notes |
 |---|---|---|---|
-| WP-F00 | Repository & Toolchain Bootstrap | ACCEPTED | Accepted from passing local runtime/typecheck/lint/format/repo-policy gates |
-| WP-F01 | Workspace & Application Scaffold | PUSHED_UNVERIFIED | API smoke harness repair prepared after built-smoke failure; WP-F02 remains locked |
-| WP-F02 | Quality, CI & Developer Safety Foundation | LOCKED | Requires WP-F01 acceptance |
-| WP-F03 | Design System & Responsive Foundation | LOCKED | Requires prior phase acceptance |
+| WP-F00 | Repository & Toolchain Bootstrap | ACCEPTED | Node/npm/toolchain baseline accepted |
+| WP-F01 | Workspace & Application Scaffold | ACCEPTED | Web + API dev runtime observed; `/api/v1/health` returned 200; workspace/build gates reached; final checkpoint only formatted smoke harness |
+| WP-F02 | Quality, CI & Developer Safety Foundation | GENERATOR_READY | Next implementation phase; generator prepared from latest accepted main |
+| WP-F03 | Design System & Responsive Foundation | LOCKED | Requires WP-F02 acceptance |
 | WP-F04 | Firebase Platform & Emulator Foundation | LOCKED | Requires prior phase acceptance |
 | WP-F05 | Shared Contracts & Domain Kernel | LOCKED | Requires prior phase acceptance |
 | WP-F06 | Authentication, Identity & Authorization | LOCKED | Requires prior phase acceptance |
@@ -80,32 +82,47 @@ NOT_STARTED
 
 ---
 
-# 4. WP-F01 Generated Scope
+# 4. WP-F01 Acceptance Record
 
-Generated workspaces:
+WP-F01 exit requirements from the master workplan are satisfied by the observed local evidence and pushed repository state:
 
-```text
-apps/web
-apps/api
-packages/domain
-packages/contracts
-packages/ui
-```
+- Vite dev server started on `127.0.0.1:5173`;
+- Express API started on `127.0.0.1:8787`;
+- browser/application health request reached `/api/v1/health` and returned HTTP 200;
+- workspace/circular-boundary gate ran before the later smoke-stage failure;
+- production build ran before the later smoke-stage failure;
+- final `c9b6d2a...` checkpoint only applies deterministic Prettier formatting to the smoke harness and does not alter application logic.
 
-Web foundation includes React/Vite/TSX, current Tailwind Vite integration, React Router route
-boundary, TanStack Query provider, light-default theme skeleton, app shell placeholder, and
-same-origin API health consumption.
+The built API smoke harness is retained as a useful runtime regression signal and becomes part of the stronger WP-F02 quality foundation rather than reopening accepted WP-F01 application scaffolding.
 
-API foundation includes TypeScript ESM Express, `/api/v1`, health/readiness, request IDs,
-structured Pino logs, Zod environment validation, security/compression/body middleware, and
-canonical JSON errors.
-
-Package scaffolds establish boundaries only. WP-F03 owns production UI primitives/design tokens;
-WP-F04 owns Firebase wiring; WP-F05 owns real shared contracts/domain logic.
+User explicitly instructed the assistant to check the repository and continue immediately if the phase could advance.
 
 ---
 
-# 5. Required Post-Push QA
+# 5. WP-F02 Scope Lock
+
+WP-F02 implements the quality foundation before feature development grows:
+
+- Vitest baseline;
+- React Testing Library + jest-dom setup;
+- MSW Node test infrastructure;
+- API integration test baseline;
+- Playwright baseline;
+- axe accessibility smoke baseline;
+- deterministic fixture convention;
+- V8 coverage command and policy without artificial repository-wide percentage chasing;
+- Knip dead-code/dependency gate;
+- lint-staged developer-safety configuration;
+- GitHub Actions quality workflow;
+- required quality command set.
+
+WP-F02 must not introduce Firebase platform wiring, production design-system primitives, authentication, or business/domain features from later phases.
+
+---
+
+# 6. WP-F02 Exit Gate
+
+Required local/post-push quality direction:
 
 ```text
 npm run check:runtime
@@ -114,35 +131,21 @@ npm run lint
 npm run format:check
 npm run check:repo
 npm run check:workspaces
+npm test
+npm run test:integration
 npm run build
 npm run smoke:api
+npm run check:deadcode
+npm run test:e2e
+npm run test:a11y
 ```
 
-If any gate fails, remain in WP-F01 and repair from the exact pushed GitHub state.
-
----
-
-# 6. Manual Runtime Acceptance
-
-After automated gates pass:
-
-```text
-npm run dev
-```
-
-User must validate:
-
-- `http://127.0.0.1:5173` loads;
-- scaffold reports **API connected** through the Vite `/api` proxy;
-- Light/Dark switch works;
-- unknown route renders the 404 surface;
-- development diagnostic `/__diagnostics/route-error` renders the route error boundary.
-
-WP-F01 remains unaccepted until user reports this runtime validation as PASS.
+Playwright browser materialization is an environment prerequisite, not application source generation. Chromium baseline is sufficient for WP-F02; broader cross-browser release coverage remains required by PRD-19 later.
 
 ---
 
 # 7. Current Next Action
 
-Commit/push the generated dependency-materialized source, run static/build QA, then perform the
-local runtime validation above. WP-F02 remains locked.
+Execute `scripts/wp-f02-quality-ci-foundation.cjs`, materialize its npm dependencies and Playwright Chromium browser as instructed, commit/push the exact generated state, then run WP-F02 gates.
+
+WP-F03 remains locked until WP-F02 passes and is accepted.

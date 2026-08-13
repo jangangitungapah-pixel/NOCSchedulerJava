@@ -13,12 +13,18 @@ import { Link, Outlet, useLocation } from 'react-router';
 
 import { ThemeToggle } from '../components/theme-toggle';
 
-const navigation = [
+type NavigationItem = Readonly<{
+  label: string;
+  icon: typeof HomeIcon;
+  href?: string;
+}>;
+
+const navigation: readonly NavigationItem[] = [
   { label: 'Home', icon: HomeIcon, href: '/' },
   { label: 'Schedule', icon: CalendarDaysIcon },
   { label: 'Team', icon: UsersIcon },
   { label: 'Payroll', icon: WalletCardsIcon },
-] as const;
+];
 
 function Brand({ compact = false }: Readonly<{ compact?: boolean }>) {
   return (

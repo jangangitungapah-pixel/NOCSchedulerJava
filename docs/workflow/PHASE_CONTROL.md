@@ -15,13 +15,13 @@
 | Current Phase | `WP-F03` — Design System & Responsive Foundation |
 | Current Status | `PUSHED_UNVERIFIED` |
 | Last Accepted Phase | `WP-F02` — Quality, CI & Developer Safety Foundation |
-| Last Implementation Commit | `aa49ebb803818602adbd9674c82323e7f836e0e7` — WP-F02 accepted after GitHub Actions Quality run `31669570082` completed successfully |
-| Generator Applied | `scripts/wp-f03-design-system-responsive-foundation.cjs` — temporary file removed before commit |
+| Last Implementation Commit | `a86b28c3f97675a958948a0b9bf4cfc4e428c082` — WP-F03 foundation pushed; first local typecheck failed because navigation `as const` inferred a union where placeholder items had no `href` property |
+| Generator Applied | `scripts/wp-f03-fix-navigation-item-contract.cjs` — make navigation href an explicit optional contract without changing runtime behavior |
 | Active Execution Model | Downloadable `.cjs` generator → dependency materialization → format write-stage → commit/push → QA |
 | Next Allowed Phase | `WP-F03` only |
 | Future Phases | `WP-F04` and later remain `LOCKED` |
-| User Validation Pending | Yes — WP-F03 automated + desktop/mobile + Light/Dark QA |
-| Blocking Issue | None |
+| User Validation Pending | Yes — navigation typing repair must be pushed, then remaining WP-F03 automated + desktop/mobile + Light/Dark QA must pass |
+| Blocking Issue | TypeScript navigation item union contract — repair prepared |
 | Package Manager Baseline | npm workspaces + committed `package-lock.json` |
 | Runtime Baseline | Node.js 22 |
 
@@ -34,7 +34,7 @@
 | WP-F00 | ACCEPTED | Repository/toolchain bootstrap |
 | WP-F01 | ACCEPTED | Web/API/package scaffold and local health runtime |
 | WP-F02 | ACCEPTED | Full clean-clone quality, E2E, accessibility pipeline passed |
-| WP-F03 | PUSHED_UNVERIFIED | Design-system/responsive implementation generated; QA required |
+| WP-F03 | PUSHED_UNVERIFIED | Navigation item typing repair prepared after first WP-F03 typecheck failure |
 | WP-F04+ | LOCKED | Requires WP-F03 acceptance |
 
 ---

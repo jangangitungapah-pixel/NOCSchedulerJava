@@ -1,17 +1,23 @@
+import { Card, PageHeader, PageShell } from '@nocscheduler/ui';
 import { Link } from 'react-router';
 
 export function NotFoundPage() {
   return (
-    <section className="app-surface border-app mx-auto max-w-xl rounded-xl border p-6">
-      <p className="accent-app text-xs font-semibold uppercase tracking-[0.16em]">404</p>
-      <h1 className="mt-2 text-xl font-semibold">Page not found</h1>
-      <p className="muted-app mt-2 text-sm">The requested scaffold route does not exist.</p>
-      <Link
-        className="focus-ring accent-app mt-4 inline-block rounded-md text-sm font-semibold"
-        to="/"
-      >
-        Return to scaffold home
-      </Link>
-    </section>
+    <PageShell width="narrow">
+      <Card elevation="raised">
+        <PageHeader
+          description="The requested route does not exist in the current NOCScheduler phase."
+          eyebrow="404"
+          title="Page not found"
+        />
+        <Link
+          className="ui-button ui-button--secondary ui-button--md"
+          style={{ marginTop: '1rem' }}
+          to="/"
+        >
+          Return home
+        </Link>
+      </Card>
+    </PageShell>
   );
 }

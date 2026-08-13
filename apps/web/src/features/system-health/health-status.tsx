@@ -1,3 +1,4 @@
+import { Badge, Card, ErrorState, LoadingState } from '@nocscheduler/ui';
 import { useQuery } from '@tanstack/react-query';
 
 import { fetchSystemHealth, healthQueryKeys } from './health-query';
@@ -10,40 +11,53 @@ export function HealthStatus() {
 
   if (healthQuery.isPending) {
     return (
-      <section className="app-surface border-app rounded-xl border p-4" aria-live="polite">
-        <p className="text-sm font-medium">API connection</p>
-        <p className="muted-app mt-1 text-sm">Checking local API health…</p>
-      </section>
+      <LoadingState
+        description="Checking the local API health endpoint through the same-origin proxy."
+        title="Checking API connection"
+      />
     );
   }
 
   if (healthQuery.isError) {
-    return (
-      <section className="app-surface border-danger rounded-xl border p-4" role="alert">
-        <p className="text-sm font-semibold">API unavailable</p>
-        <p className="muted-app mt-1 text-sm">{healthQuery.error.message}</p>
-        <p className="muted-app mt-2 text-xs">
-          Run the root <code>npm run dev</code> command so Vite can proxy /api to the local Express
-          server.
-        </p>
-      </section>
-    );
+    return <ErrorState description={healthQuery.error.message} title="API unavailable" />;
   }
 
   return (
-    <section className="app-surface border-success rounded-xl border p-4" aria-live="polite">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <Card aria-live="polite" elevation="raised">
+      <div
+        style={{
+          alignItems: 'center',
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '0.75rem',
+          justifyContent: 'space-between',
+        }}
+      >
         <div>
-          <p className="text-sm font-semibold">API connected</p>
-          <p className="muted-app mt-1 text-sm">
+          <p style={{ fontSize: 'var(--ui-text-label)', fontWeight: 650, margin: 0 }}>
+            API connected
+          </p>
+          <p
+            style={{
+              color: 'var(--ui-text-secondary)',
+              fontSize: 'var(--ui-text-caption)',
+              margin: '0.25rem 0 0',
+            }}
+          >
             {healthQuery.data.data.service} · {healthQuery.data.data.status}
           </p>
         </div>
-        <span className="success-chip rounded-full px-2.5 py-1 text-xs font-semibold">Healthy</span>
+        <Badge variant="success">Healthy</Badge>
       </div>
-      <p className="muted-app mt-3 text-xs">
+      <p
+        style={{
+          color: 'var(--ui-text-tertiary)',
+          fontSize: 'var(--ui-text-caption)',
+          margin: '0.75rem 0 0',
+        }}
+      >
         Request ID: <code>{healthQuery.data.meta.requestId}</code>
       </p>
-    </section>
+    </Card>
   );
 }

@@ -13,14 +13,14 @@
 | Field | Value |
 |---|---|
 | Current Phase | `WP-F03` — Design System & Responsive Foundation |
-| Current Status | `GENERATOR_READY` |
+| Current Status | `PUSHED_UNVERIFIED` |
 | Last Accepted Phase | `WP-F02` — Quality, CI & Developer Safety Foundation |
-| Last Implementation Commit | `aa49ebb803818602adbd9674c82323e7f836e0e7` — final WP-F02 CI-portability repair; GitHub Actions Quality run `31669570082` completed with both static/test/build and Chromium E2E/accessibility jobs successful |
-| Generator Applied | Pending — `scripts/wp-f03-design-system-responsive-foundation.cjs` |
+| Last Implementation Commit | `aa49ebb803818602adbd9674c82323e7f836e0e7` — WP-F02 accepted after GitHub Actions Quality run `31669570082` completed successfully |
+| Generator Applied | `scripts/wp-f03-design-system-responsive-foundation.cjs` — temporary file removed before commit |
 | Active Execution Model | Downloadable `.cjs` generator → dependency materialization → format write-stage → commit/push → QA |
 | Next Allowed Phase | `WP-F03` only |
 | Future Phases | `WP-F04` and later remain `LOCKED` |
-| User Validation Pending | No — WP-F03 generator not yet applied |
+| User Validation Pending | Yes — WP-F03 automated + desktop/mobile + Light/Dark QA |
 | Blocking Issue | None |
 | Package Manager Baseline | npm workspaces + committed `package-lock.json` |
 | Runtime Baseline | Node.js 22 |
@@ -33,35 +33,13 @@
 |---|---|---|
 | WP-F00 | ACCEPTED | Repository/toolchain bootstrap |
 | WP-F01 | ACCEPTED | Web/API/package scaffold and local health runtime |
-| WP-F02 | ACCEPTED | Typecheck/lint/format/repo/workspace/unit/integration/build/smoke/dead-code + Chromium E2E + accessibility all passed in clean-clone GitHub Actions |
-| WP-F03 | GENERATOR_READY | Design system & responsive foundation next |
+| WP-F02 | ACCEPTED | Full clean-clone quality, E2E, accessibility pipeline passed |
+| WP-F03 | PUSHED_UNVERIFIED | Design-system/responsive implementation generated; QA required |
 | WP-F04+ | LOCKED | Requires WP-F03 acceptance |
 
 ---
 
-# 3. WP-F02 Acceptance Evidence
-
-Accepted implementation head:
-
-```text
-aa49ebb803818602adbd9674c82323e7f836e0e7
-fix(wp-f02): make quality globs CI portable
-```
-
-Clean-clone GitHub Actions evidence:
-
-```text
-Workflow: Quality
-Run ID: 31669570082
-Static, unit, integration, build: SUCCESS
-Chromium E2E and accessibility: SUCCESS
-```
-
-The successful workflow includes runtime policy, TypeScript, ESLint, formatting, repository policy, workspace boundaries, unit tests, API integration tests, production builds, built API smoke, Knip/dependency analysis, Chromium installation, browser E2E, and axe accessibility smoke.
-
----
-
-# 4. WP-F03 Scope
+# 3. WP-F03 Generated Foundation
 
 PRD focus:
 
@@ -70,73 +48,78 @@ PRD focus:
 - PRD-12 — Responsive & Mobile Experience;
 - PRD-13 — UI Polish & Visual Quality Standard.
 
-WP-F03 establishes the shared visual grammar before feature pages expand.
+Generated foundation includes:
 
-Foundation requirements:
+- foundation + semantic CSS token architecture;
+- Light default and Dark parity;
+- typography, spacing, radius, elevation, motion and layer tokens;
+- safe-area and reduced-motion utilities;
+- shared UI package with reusable React primitives;
+- Radix-backed accessible select/choice/overlay/tab primitives;
+- desktop/tablet/mobile application shell;
+- compact mobile header + five-slot bottom navigation model;
+- desktop compact rail and expanded sidebar behavior;
+- theme switcher using shared IconButton/Tooltip grammar;
+- shared page/surface/header/toolbar/table/pagination/state primitives;
+- development-only `/__design-system` showcase;
+- Playwright keyboard/theme/dialog/mobile touch-target regression.
 
-- semantic color tokens;
-- Light default theme + Dark parity;
-- typography, spacing, radius, borders and elevation;
-- focus ring and interaction state tokens;
-- motion and reduced-motion behavior;
-- layer/z-index model;
-- responsive breakpoint policy;
-- safe-area utilities;
-- density/content-width rules.
-
-Core primitives target:
-
-- Button / IconButton;
-- Input / Textarea;
-- Select/Combobox;
-- Checkbox / Radio / Switch;
-- FormField;
-- Badge/Status;
-- Tooltip / Dropdown Menu / Popover;
-- Dialog / Sheet/Drawer;
-- Tabs;
-- Toast;
-- Skeleton;
-- Empty/Error/Loading states;
-- table primitives and pagination;
-- date control baseline;
-- Page/Section Header;
-- Toolbar;
-- Card/Surface.
-
-App shell target:
-
-- desktop sidebar/navigation;
-- compact/tablet behavior;
-- mobile navigation model;
-- top utility/account entry;
-- page shell and density rules;
-- theme switcher.
+No Firebase, authentication, scheduling, payroll, or workforce business feature is introduced in WP-F03.
 
 ---
 
-# 5. WP-F03 Exit Gate
+# 4. WP-F03 Exit Gate
 
-WP-F03 cannot be accepted until:
+Required before acceptance:
 
 ```text
-primitive showcase/story page available
-Light + Dark parity visible across primitives
-keyboard/focus baseline passes
-mobile touch-target baseline passes
-responsive desktop/tablet/mobile shell works
-reduced-motion behavior is respected
-no raw page-specific palette shortcuts
-TypeScript/lint/test/build/dead-code gates remain green
-browser E2E + accessibility baseline remain green
+npm run typecheck
+npm run lint
+npm run format:check
+npm run check:repo
+npm run check:workspaces
+npm test
+npm run test:integration
+npm run build
+npm run smoke:api
+npm run check:deadcode
+npm run test:design-system
+npm run test:e2e
+npm run test:a11y
 ```
 
-WP-F04 remains locked until these conditions are met.
+Manual visual QA:
+
+- desktop Light;
+- desktop Dark;
+- compact/tablet shell;
+- mobile Light;
+- mobile Dark;
+- no page-level horizontal overflow;
+- mobile touch targets;
+- keyboard focus and overlay dismissal;
+- alignment/density review of showcase.
+
+WP-F04 remains locked until WP-F03 is accepted.
 
 ---
 
-# 6. Formatting / Push-Before-QA Rule
+# 5. Design-System Contract
 
-Formatting remains a deterministic hygiene gate and is auto-written during the generator write stage before commit.
+The implementation follows:
 
-No pre-commit hook is introduced because the canonical workflow intentionally allows an exact pushed checkpoint to be audited and repaired when QA fails.
+> **One component, two skins.**
+
+Theme differences live in semantic tokens rather than duplicate component trees.
+
+Page-specific raw palettes are not allowed as a shortcut when a semantic token exists.
+
+Desktop density and mobile one-hand ergonomics are separate acceptance targets.
+
+---
+
+# 6. Push-Before-QA / Formatting Rule
+
+Generator writes are formatted before commit. The resulting exact checkpoint is pushed before QA so a failing state can be audited and repaired from GitHub.
+
+Formatting is hygiene; runtime/type/test/build/accessibility and responsive behavior remain the acceptance-critical gates.

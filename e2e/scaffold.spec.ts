@@ -5,7 +5,7 @@ test('web scaffold reaches the API through the Vite proxy', async ({ page }) => 
 
   await expect(
     page.getByRole('heading', {
-      name: 'NOCScheduler application foundation',
+      name: 'NOCScheduler design system foundation',
     }),
   ).toBeVisible();
 

@@ -1,0 +1,284 @@
+:root {
+  color-scheme: light;
+
+  --ui-neutral-0: #ffffff;
+  --ui-neutral-25: #fbfcfd;
+  --ui-neutral-50: #f6f8fa;
+  --ui-neutral-100: #eef2f6;
+  --ui-neutral-200: #dde3ea;
+  --ui-neutral-300: #c7d0da;
+  --ui-neutral-400: #98a5b3;
+  --ui-neutral-500: #697586;
+  --ui-neutral-600: #4b5565;
+  --ui-neutral-700: #364152;
+  --ui-neutral-800: #202939;
+  --ui-neutral-900: #121926;
+  --ui-neutral-950: #0b0f17;
+
+  --ui-blue-50: #eef5ff;
+  --ui-blue-100: #d9e8ff;
+  --ui-blue-500: #356ae6;
+  --ui-blue-600: #2757cb;
+  --ui-blue-700: #2149aa;
+
+  --ui-green-50: #edf9f2;
+  --ui-green-500: #238b5b;
+  --ui-green-700: #17623f;
+  --ui-amber-50: #fff8e7;
+  --ui-amber-500: #b7791f;
+  --ui-amber-700: #8b5b16;
+  --ui-red-50: #fff0ef;
+  --ui-red-500: #d1433f;
+  --ui-red-700: #a32d2a;
+  --ui-cyan-50: #eaf9fb;
+  --ui-cyan-600: #117c8b;
+
+  --ui-surface-canvas: var(--ui-neutral-50);
+  --ui-surface-base: var(--ui-neutral-0);
+  --ui-surface-subtle: var(--ui-neutral-25);
+  --ui-surface-raised: var(--ui-neutral-0);
+  --ui-surface-sunken: var(--ui-neutral-100);
+  --ui-surface-overlay: var(--ui-neutral-0);
+  --ui-surface-selected: var(--ui-blue-50);
+
+  --ui-text-primary: var(--ui-neutral-900);
+  --ui-text-secondary: var(--ui-neutral-700);
+  --ui-text-tertiary: var(--ui-neutral-500);
+  --ui-text-disabled: var(--ui-neutral-400);
+  --ui-text-inverse: #ffffff;
+
+  --ui-border-subtle: #e6ebf0;
+  --ui-border-default: var(--ui-neutral-200);
+  --ui-border-strong: var(--ui-neutral-300);
+  --ui-border-focus: var(--ui-blue-500);
+
+  --ui-action-primary-bg: var(--ui-blue-600);
+  --ui-action-primary-hover: var(--ui-blue-700);
+  --ui-action-primary-fg: #ffffff;
+  --ui-action-secondary-bg: var(--ui-surface-base);
+  --ui-action-secondary-hover: var(--ui-neutral-100);
+  --ui-action-ghost-hover: var(--ui-neutral-100);
+  --ui-action-destructive-bg: var(--ui-red-500);
+  --ui-action-destructive-hover: var(--ui-red-700);
+
+  --ui-status-info: var(--ui-cyan-600);
+  --ui-status-info-soft: var(--ui-cyan-50);
+  --ui-status-success: var(--ui-green-700);
+  --ui-status-success-soft: var(--ui-green-50);
+  --ui-status-warning: var(--ui-amber-700);
+  --ui-status-warning-soft: var(--ui-amber-50);
+  --ui-status-danger: var(--ui-red-700);
+  --ui-status-danger-soft: var(--ui-red-50);
+  --ui-status-neutral: var(--ui-neutral-600);
+  --ui-status-neutral-soft: var(--ui-neutral-100);
+
+  --ui-shift-s1: #3156d3;
+  --ui-shift-s2: #168a7b;
+  --ui-shift-s3: #7b57c6;
+  --ui-shift-off: #697586;
+  --ui-shift-leave: #b7791f;
+  --ui-shift-exception: #d1433f;
+
+  --ui-font-sans:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ui-font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+
+  --ui-text-display: clamp(1.75rem, 2.5vw, 2rem);
+  --ui-text-page-title: clamp(1.375rem, 2vw, 1.625rem);
+  --ui-text-section-title: 1.125rem;
+  --ui-text-subsection: 1rem;
+  --ui-text-body: 0.875rem;
+  --ui-text-label: 0.8125rem;
+  --ui-text-caption: 0.75rem;
+  --ui-text-micro: 0.6875rem;
+
+  --ui-space-0: 0;
+  --ui-space-0-5: 0.125rem;
+  --ui-space-1: 0.25rem;
+  --ui-space-1-5: 0.375rem;
+  --ui-space-2: 0.5rem;
+  --ui-space-3: 0.75rem;
+  --ui-space-4: 1rem;
+  --ui-space-5: 1.25rem;
+  --ui-space-6: 1.5rem;
+  --ui-space-8: 2rem;
+  --ui-space-10: 2.5rem;
+  --ui-space-12: 3rem;
+  --ui-space-16: 4rem;
+
+  --ui-radius-sm: 0.5rem;
+  --ui-radius-md: 0.625rem;
+  --ui-radius-lg: 0.875rem;
+  --ui-radius-xl: 1rem;
+  --ui-radius-pill: 999px;
+
+  --ui-shadow-e1: 0 1px 2px rgb(15 23 42 / 0.04);
+  --ui-shadow-e2: 0 8px 22px rgb(15 23 42 / 0.08);
+  --ui-shadow-e3: 0 18px 44px rgb(15 23 42 / 0.14);
+  --ui-shadow-e4: 0 24px 64px rgb(15 23 42 / 0.2);
+
+  --ui-duration-fast: 120ms;
+  --ui-duration-normal: 180ms;
+  --ui-duration-slow: 240ms;
+  --ui-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ui-ease-emphasized: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --ui-layer-base: 0;
+  --ui-layer-sticky: 20;
+  --ui-layer-navigation: 30;
+  --ui-layer-popover: 50;
+  --ui-layer-dialog: 70;
+  --ui-layer-toast: 90;
+
+  --ui-control-height-sm: 2rem;
+  --ui-control-height-md: 2.375rem;
+  --ui-control-height-lg: 2.75rem;
+  --ui-touch-target: 2.75rem;
+  --ui-sidebar-width: 15.5rem;
+  --ui-sidebar-compact-width: 4.75rem;
+  --ui-bottom-nav-height: 3.75rem;
+  --ui-content-max: 96rem;
+}
+
+:root.dark {
+  color-scheme: dark;
+
+  --ui-surface-canvas: #0d1219;
+  --ui-surface-base: #131a23;
+  --ui-surface-subtle: #101720;
+  --ui-surface-raised: #18212c;
+  --ui-surface-sunken: #0a1017;
+  --ui-surface-overlay: #19232e;
+  --ui-surface-selected: #1b2b4f;
+
+  --ui-text-primary: #f2f5f8;
+  --ui-text-secondary: #c5ced8;
+  --ui-text-tertiary: #8f9ba9;
+  --ui-text-disabled: #667281;
+  --ui-text-inverse: #10151d;
+
+  --ui-border-subtle: #202b37;
+  --ui-border-default: #2b3744;
+  --ui-border-strong: #3b4856;
+  --ui-border-focus: #8aabff;
+
+  --ui-action-primary-bg: #6f95f5;
+  --ui-action-primary-hover: #84a5fb;
+  --ui-action-primary-fg: #0b1220;
+  --ui-action-secondary-bg: #18212c;
+  --ui-action-secondary-hover: #222e3b;
+  --ui-action-ghost-hover: #202a35;
+  --ui-action-destructive-bg: #db625d;
+  --ui-action-destructive-hover: #eb7772;
+
+  --ui-status-info: #65c7d4;
+  --ui-status-info-soft: #12323a;
+  --ui-status-success: #69d39b;
+  --ui-status-success-soft: #173829;
+  --ui-status-warning: #f0c36a;
+  --ui-status-warning-soft: #3a2d12;
+  --ui-status-danger: #f28b86;
+  --ui-status-danger-soft: #421f20;
+  --ui-status-neutral: #aeb8c3;
+  --ui-status-neutral-soft: #252f3a;
+
+  --ui-shift-s1: #8ba7ff;
+  --ui-shift-s2: #69d5c8;
+  --ui-shift-s3: #c4a7ff;
+  --ui-shift-off: #a0aab6;
+  --ui-shift-leave: #f0c36a;
+  --ui-shift-exception: #f28b86;
+
+  --ui-shadow-e1: 0 1px 2px rgb(0 0 0 / 0.25);
+  --ui-shadow-e2: 0 10px 24px rgb(0 0 0 / 0.28);
+  --ui-shadow-e3: 0 20px 50px rgb(0 0 0 / 0.38);
+  --ui-shadow-e4: 0 28px 72px rgb(0 0 0 / 0.48);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--ui-surface-canvas);
+  color: var(--ui-text-primary);
+  font-family: var(--ui-font-sans);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--ui-surface-canvas);
+  color: var(--ui-text-primary);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button,
+a,
+[role='button'] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+code,
+kbd,
+pre {
+  font-family: var(--ui-font-mono);
+}
+
+::selection {
+  background: var(--ui-surface-selected);
+  color: var(--ui-text-primary);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ui-border-focus);
+  outline-offset: 2px;
+}
+
+.ui-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-safe-bottom {
+  padding-bottom: max(var(--ui-space-3), env(safe-area-inset-bottom));
+}
+
+.ui-safe-top {
+  padding-top: max(var(--ui-space-3), env(safe-area-inset-top));
+}
+
+.ui-safe-inline {
+  padding-inline: max(var(--ui-space-4), env(safe-area-inset-left))
+    max(var(--ui-space-4), env(safe-area-inset-right));
+}
+
+.ui-visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}

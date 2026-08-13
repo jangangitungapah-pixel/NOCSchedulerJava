@@ -21,8 +21,8 @@
     "typecheck:root": "tsc -p tsconfig.json --noEmit",
     "typecheck": "npm run typecheck:root && npm run typecheck --workspaces --if-present",
     "lint": "eslint --no-error-on-unmatched-pattern \"tooling/**/*.ts\" \"apps/**/*.{ts,tsx}\" \"packages/**/*.{ts,tsx}\" \"vitest.config.ts\" \"playwright.config.ts\" \"e2e/**/*.ts\" --max-warnings=0",
-    "format": "prettier --no-error-on-unmatched-pattern --write \"tooling/**/*.ts\" \"tooling/check-workspace-boundaries.cjs\" \"tooling/smoke-api.cjs\" \"apps/**/*.{ts,tsx,css,html,json}\" \"packages/**/*.{ts,tsx,json}\" \"e2e/**/*.ts\" \"vitest.config.ts\" \"playwright.config.ts\" \"lint-staged.config.mjs\" \"knip.json\" \".github/workflows/*.yml\" \"package.json\" \"tsconfig*.json\" \"eslint.config.mjs\" \".prettierrc.json\"",
-    "format:check": "prettier --no-error-on-unmatched-pattern --check \"tooling/**/*.ts\" \"tooling/check-workspace-boundaries.cjs\" \"tooling/smoke-api.cjs\" \"apps/**/*.{ts,tsx,css,html,json}\" \"packages/**/*.{ts,tsx,json}\" \"e2e/**/*.ts\" \"vitest.config.ts\" \"playwright.config.ts\" \"lint-staged.config.mjs\" \"knip.json\" \".github/workflows/*.yml\" \"package.json\" \"tsconfig*.json\" \"eslint.config.mjs\" \".prettierrc.json\"",
+    "format": "prettier --no-error-on-unmatched-pattern --write \"tooling/**/*.ts\" \"tooling/check-workspace-boundaries.cjs\" \"tooling/smoke-api.cjs\" \"apps/**/*.{ts,tsx,css,html,json}\" \"packages/**/*.{ts,tsx,css,json}\" \"e2e/**/*.ts\" \"vitest.config.ts\" \"playwright.config.ts\" \"lint-staged.config.mjs\" \"knip.json\" \".github/workflows/*.yml\" \"package.json\" \"tsconfig*.json\" \"eslint.config.mjs\" \".prettierrc.json\"",
+    "format:check": "prettier --no-error-on-unmatched-pattern --check \"tooling/**/*.ts\" \"tooling/check-workspace-boundaries.cjs\" \"tooling/smoke-api.cjs\" \"apps/**/*.{ts,tsx,css,html,json}\" \"packages/**/*.{ts,tsx,css,json}\" \"e2e/**/*.ts\" \"vitest.config.ts\" \"playwright.config.ts\" \"lint-staged.config.mjs\" \"knip.json\" \".github/workflows/*.yml\" \"package.json\" \"tsconfig*.json\" \"eslint.config.mjs\" \".prettierrc.json\"",
     "check:repo": "node tooling/check-repo-policy.cjs",
     "check:workspaces": "node tooling/check-workspace-boundaries.cjs",
     "build:api": "npm run build --workspace @nocscheduler/api",
@@ -35,11 +35,12 @@
     "test:integration": "vitest run --project api-integration",
     "test:coverage": "vitest run --coverage --project web-unit --project domain-unit --project api-integration --passWithNoTests",
     "test:e2e": "playwright test",
-    "test:e2e:ci": "playwright test e2e/scaffold.spec.ts --project=chromium",
+    "test:e2e:ci": "playwright test e2e/scaffold.spec.ts e2e/design-system.spec.ts --project=chromium",
     "test:a11y": "playwright test e2e/accessibility.spec.ts --project=chromium",
     "check:deadcode": "knip",
     "check:staged": "lint-staged",
-    "verify:ci": "npm run check:runtime && npm run typecheck && npm run lint && npm run format:check && npm run check:repo && npm run check:workspaces && npm test && npm run test:integration && npm run build && npm run smoke:api && npm run check:deadcode"
+    "verify:ci": "npm run check:runtime && npm run typecheck && npm run lint && npm run format:check && npm run check:repo && npm run check:workspaces && npm test && npm run test:integration && npm run build && npm run smoke:api && npm run check:deadcode",
+    "test:design-system": "playwright test e2e/design-system.spec.ts --project=chromium --project=mobile-chromium"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

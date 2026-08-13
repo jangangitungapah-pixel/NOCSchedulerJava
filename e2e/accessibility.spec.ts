@@ -1,14 +1,30 @@
 import { AxeBuilder } from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
-test('@a11y scaffold home has no serious or critical automated violations', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.getByText('API connected')).toBeVisible();
+const routes = [
+  { name: 'home', path: '/' },
+  { name: 'design system', path: '/__design-system' },
+] as const;
 
-  const results = await new AxeBuilder({ page }).analyze();
-  const blockingViolations = results.violations.filter(
-    (violation) => violation.impact === 'serious' || violation.impact === 'critical',
-  );
+for (const route of routes) {
+  test(`@a11y ${route.name} has no serious or critical automated violations`, async ({ page }) => {
+    await page.goto(route.path);
 
-  expect(blockingViolations).toEqual([]);
-});
+    if (route.path === '/') {
+      await expect(page.getByText('API connected')).toBeVisible();
+    } else {
+      await expect(
+        page.getByRole('heading', {
+          name: 'Primitive showcase',
+        }),
+      ).toBeVisible();
+    }
+
+    const results = await new AxeBuilder({ page }).analyze();
+    const blockingViolations = results.violations.filter(
+      (violation) => violation.impact === 'serious' || violation.impact === 'critical',
+    );
+
+    expect(blockingViolations).toEqual([]);
+  });
+}

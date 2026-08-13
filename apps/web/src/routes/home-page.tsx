@@ -1,43 +1,70 @@
+import { Badge, Card, PageHeader, PageShell, SectionHeader } from '@nocscheduler/ui';
+import { Link } from 'react-router';
+
 import { HealthStatus } from '../features/system-health/health-status';
 
-const scaffoldItems = [
-  'React + Vite + TypeScript',
-  'React Router data router',
-  'TanStack Query provider',
-  'Tailwind CSS Vite integration',
-  'Light/Dark theme skeleton',
-  'Same-origin /api development proxy',
+const foundationItems = [
+  ['Semantic tokens', 'Light/Dark theme values drive shared component styling.'],
+  ['Responsive shell', 'Mobile bottom navigation, tablet rail, desktop sidebar.'],
+  ['Accessible primitives', 'Focus-visible, keyboard-capable overlays and form controls.'],
+  ['Controlled density', 'Compact operational geometry without cramped touch targets.'],
 ] as const;
 
 export function HomePage() {
   return (
-    <div className="space-y-5">
-      <div>
-        <p className="accent-app text-xs font-semibold uppercase tracking-[0.16em]">
-          WP-F01 scaffold
-        </p>
-        <h1 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
-          NOCScheduler application foundation
-        </h1>
-        <p className="muted-app mt-2 max-w-3xl text-sm leading-6 sm:text-base">
-          This surface only proves the web/API workspace composition. Product features, Firebase,
-          authentication, and the production design system are intentionally deferred to their
-          dedicated phases.
-        </p>
-      </div>
+    <PageShell>
+      <PageHeader
+        description="The shared visual grammar is now established before scheduling, workforce, payroll, and Firebase-backed feature surfaces begin."
+        eyebrow="WP-F03 foundation"
+        title="NOCScheduler design system foundation"
+        actions={
+          import.meta.env.DEV ? (
+            <Link className="ui-button ui-button--secondary ui-button--md" to="/__design-system">
+              Open QA showcase
+            </Link>
+          ) : undefined
+        }
+      />
 
       <HealthStatus />
 
-      <section className="app-surface border-app rounded-xl border p-4">
-        <h2 className="text-sm font-semibold">Scaffold boundaries</h2>
-        <ul className="muted-app mt-3 grid gap-2 text-sm sm:grid-cols-2">
-          {scaffoldItems.map((item) => (
-            <li className="border-app rounded-lg border px-3 py-2" key={item}>
-              {item}
-            </li>
+      <section style={{ display: 'grid', gap: '0.75rem' }}>
+        <SectionHeader
+          description="System-level primitives replace page-specific visual shortcuts."
+          title="Foundation boundaries"
+        />
+        <div
+          style={{
+            display: 'grid',
+            gap: '0.75rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 16rem), 1fr))',
+          }}
+        >
+          {foundationItems.map(([title, description]) => (
+            <Card key={title}>
+              <Badge variant="info">Ready</Badge>
+              <h3
+                style={{
+                  fontSize: 'var(--ui-text-subsection)',
+                  margin: '0.75rem 0 0',
+                }}
+              >
+                {title}
+              </h3>
+              <p
+                style={{
+                  color: 'var(--ui-text-secondary)',
+                  fontSize: 'var(--ui-text-body)',
+                  lineHeight: 1.5,
+                  margin: '0.35rem 0 0',
+                }}
+              >
+                {description}
+              </p>
+            </Card>
           ))}
-        </ul>
+        </div>
       </section>
-    </div>
+    </PageShell>
   );
 }

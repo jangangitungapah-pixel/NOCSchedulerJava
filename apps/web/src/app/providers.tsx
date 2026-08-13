@@ -1,6 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 
+import { Toaster } from '@nocscheduler/ui';
+
 import { ThemeProvider } from './theme-provider';
 
 const queryClient = new QueryClient({
@@ -20,7 +22,10 @@ type AppProvidersProps = Readonly<{
 export function AppProviders({ children }: AppProvidersProps) {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>{children}</ThemeProvider>
+      <ThemeProvider>
+        {children}
+        <Toaster />
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

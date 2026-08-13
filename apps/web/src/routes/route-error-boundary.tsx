@@ -1,3 +1,4 @@
+import { Card, PageHeader, PageShell } from '@nocscheduler/ui';
 import { isRouteErrorResponse, Link, useRouteError } from 'react-router';
 
 export function RouteErrorBoundary() {
@@ -14,16 +15,25 @@ export function RouteErrorBoundary() {
   }
 
   return (
-    <section className="app-surface border-danger mx-auto mt-8 max-w-xl rounded-xl border p-6">
-      <p className="text-xs font-semibold uppercase tracking-[0.16em]">Route boundary</p>
-      <h1 className="mt-2 text-xl font-semibold">{title}</h1>
-      <p className="muted-app mt-2 text-sm">{message}</p>
-      <Link
-        className="focus-ring accent-app mt-4 inline-block rounded-md text-sm font-semibold"
-        to="/"
-      >
-        Return home
-      </Link>
-    </section>
+    <div
+      style={{
+        background: 'var(--ui-surface-canvas)',
+        minHeight: '100dvh',
+        padding: '2rem 1rem',
+      }}
+    >
+      <PageShell width="narrow">
+        <Card elevation="raised">
+          <PageHeader description={message} eyebrow="Route boundary" title={title} />
+          <Link
+            className="ui-button ui-button--secondary ui-button--md"
+            style={{ marginTop: '1rem' }}
+            to="/"
+          >
+            Return home
+          </Link>
+        </Card>
+      </PageShell>
+    </div>
   );
 }

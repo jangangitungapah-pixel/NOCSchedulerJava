@@ -1,5 +1,13 @@
 {
   "projects": {
-    "default": "demo-nocscheduler"
+    "default": "demo-nocscheduler",
+    "production": "nocschedule1"
+  },
+  "targets": {
+    "nocschedule1": {
+      "hosting": {
+        "app": ["nocmduscheduler"]
+      }
+    }
   }
 }

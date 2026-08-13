@@ -34,7 +34,7 @@ Emulators bind only to `127.0.0.1`:
 | Emulator UI | 4000 |
 | Hosting | 5000 |
 | Functions | 5001 |
-| Firestore | 8080 |
+| Firestore | 8180 |
 | Authentication | 9099 |
 
 The browser Firebase adapter defaults to emulator mode during Vite development.
@@ -81,7 +81,7 @@ With Auth and Firestore emulators already running:
 npm run firebase:seed
 ```
 
-The seed command refuses non-demo/live targets, clears Auth emulator users, recursively clears Firestore emulator collections, then writes one deterministic `__foundation__/seed` marker.
+The seed command refuses non-demo/live targets, clears Auth emulator users, recursively clears Firestore emulator collections, then writes one deterministic `foundationMetadata/seed` marker.
 
 No production business seed data is introduced in WP-F04.
 
@@ -129,3 +129,23 @@ Never commit:
 Production Admin SDK authentication uses managed Firebase/Google Cloud credentials/IAM.
 
 Firebase Web SDK configuration values are public identifiers, but they still do not belong in server credential files and never replace authorization.
+
+
+## Production Firebase target
+
+WP-F04 now records the owner-provided live Firebase topology without making it
+the default local project:
+
+- Firebase project alias: `production` -> `nocschedule1`;
+- Hosting site ID: `nocmduscheduler`;
+- expected Hosting URL: `https://nocmduscheduler.web.app`;
+- production Hosting config: `firebase.production.json`;
+- Hosting target name: `app`.
+
+The normal/default Firebase project remains `demo-nocscheduler`. Production
+deployment is intentionally not executed during WP-F04; launch/deployment
+remains controlled by the later production phases.
+
+The Firebase Web SDK public configuration supplied by the owner is represented
+in the client Firebase configuration boundary. Analytics is not initialized in
+WP-F04.

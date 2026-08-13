@@ -14,11 +14,26 @@ function addError(message) {
 
 const firebaseRc = readJson('.firebaserc');
 const firebaseJson = readJson('firebase.json');
+const productionFirebaseJson = readJson('firebase.production.json');
 const indexes = readJson('firestore.indexes.json');
 const rules = fs.readFileSync('firestore.rules', 'utf8');
 
 if (firebaseRc.projects?.default !== 'demo-nocscheduler') {
   addError('.firebaserc default project must remain demo-nocscheduler during WP-F04.');
+}
+
+if (firebaseRc.projects?.production !== 'nocschedule1') {
+  addError('.firebaserc production alias must resolve to nocschedule1.');
+}
+
+const productionHostingSites = firebaseRc.targets?.nocschedule1?.hosting?.app;
+
+if (
+  !Array.isArray(productionHostingSites) ||
+  productionHostingSites.length !== 1 ||
+  productionHostingSites[0] !== 'nocmduscheduler'
+) {
+  addError('Firebase production Hosting target app must resolve only to nocmduscheduler.');
 }
 
 const functionConfig = Array.isArray(firebaseJson.functions)
@@ -43,12 +58,32 @@ if (firebaseJson.hosting?.public !== 'apps/web/dist') {
   addError('Firebase Hosting public directory must remain apps/web/dist.');
 }
 
+if (firebaseJson.emulators?.firestore?.port !== 8180) {
+  addError('Firestore emulator must use the WP-F04 conflict-free port 8180.');
+}
+
 for (const emulatorName of ['auth', 'firestore', 'functions', 'hosting', 'ui']) {
   const config = firebaseJson.emulators?.[emulatorName];
 
   if (config?.host !== '127.0.0.1') {
     addError(`Firebase ${emulatorName} emulator must bind to 127.0.0.1.`);
   }
+}
+
+if (productionFirebaseJson.hosting?.target !== 'app') {
+  addError('firebase.production.json Hosting target must remain app.');
+}
+
+if (productionFirebaseJson.hosting?.public !== 'apps/web/dist') {
+  addError('Production Hosting public directory must remain apps/web/dist.');
+}
+
+const productionApiRewrite = productionFirebaseJson.hosting?.rewrites?.find(
+  (rewrite) => rewrite.source === '/api/**',
+);
+
+if (productionApiRewrite?.function?.functionId !== 'api') {
+  addError('Production Hosting /api/** must rewrite to the api function.');
 }
 
 if (!/allow\s+read,\s*write:\s*if\s+false;/u.test(rules)) {
@@ -70,5 +105,5 @@ if (errors.length > 0) {
 }
 
 console.log(
-  '[firebase-config] OK — demo project, local-only emulators, Functions runtime, Hosting rewrite, and fail-closed rules are safe.',
+  '[firebase-config] OK — demo-local safety, port 8180, production target mapping, Functions rewrite, and fail-closed rules are safe.',
 );

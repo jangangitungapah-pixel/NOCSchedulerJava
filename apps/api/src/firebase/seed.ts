@@ -28,7 +28,7 @@ async function resetFirestore() {
     await firestore.recursiveDelete(collection);
   }
 
-  await firestore.doc('__foundation__/seed').set({
+  await firestore.doc('foundationMetadata/seed').set({
     schemaVersion: 1,
     seededBy: 'WP-F04',
     timezone: 'Asia/Jakarta',

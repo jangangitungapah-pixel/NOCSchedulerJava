@@ -67,7 +67,7 @@ describe('WP-F04 Firebase emulator foundation', () => {
 
     expect(emulatorMode).toBe(true);
 
-    const reference = firestore.doc('__foundation__/admin-roundtrip');
+    const reference = firestore.doc('foundationMetadata/admin-roundtrip');
 
     await reference.set({
       source: 'admin-sdk',

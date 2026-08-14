@@ -22,7 +22,7 @@
 | Active Execution Model | WP-F05 kernel generator applied → dependency materialization → format write-stage → commit/push → QA against exact pushed checkpoint |
 | Next Allowed Phase | `WP-F05` only |
 | Future Phases | `WP-F06` and later remain `LOCKED` |
-| User Validation Pending | Yes — commit `bfa619b27ef4924e6ad5cb29e973e7efb1890f1a` / CI run `31761031559` failed only at Typecheck because raw timestamp literals bypassed the branded `IsoTimestamp` validation boundary; targeted test-fixture repair prepared, WP-F06 remains locked |
+| User Validation Pending | Yes — commit `b3770f5a685320fb5b28d6c633786aaf1abb76fa` / CI run `31790545595` now passes Typecheck and stops only at Lint: unused entity schema label plus unsafe unary-minus lint on branded IDR; targeted lint-safe repair prepared, WP-F06 remains locked |
 | Firebase Project | `nocschedule1` |
 | Hosting Site | `nocmduscheduler` |
 | Billing Baseline | Spark-friendly; no application Cloud Functions dependency |

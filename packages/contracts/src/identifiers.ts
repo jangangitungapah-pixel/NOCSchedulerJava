@@ -21,8 +21,10 @@ export const stableIdentifierSchema = z
     'Identifier must start with an alphanumeric character and contain only A-Z, a-z, 0-9, dot, underscore, colon, or hyphen.',
   );
 
-export function entityIdSchema<Entity extends string>(_entity: Entity) {
-  return stableIdentifierSchema.transform((value) => value as EntityId<Entity>);
+export function entityIdSchema<Entity extends string>(entity: Entity) {
+  return stableIdentifierSchema
+    .describe(`${entity} identifier`)
+    .transform((value) => value as EntityId<Entity>);
 }
 
 export const operationKeySchema = z

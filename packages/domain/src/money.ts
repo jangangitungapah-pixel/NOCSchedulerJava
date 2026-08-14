@@ -27,5 +27,5 @@ export function subtractIdr(left: IdrAmount, right: IdrAmount): IdrAmount {
 }
 
 export function negateIdr(value: IdrAmount): IdrAmount {
-  return checkedIdr(-value, 'negation');
+  return checkedIdr(0 - value, 'negation');
 }

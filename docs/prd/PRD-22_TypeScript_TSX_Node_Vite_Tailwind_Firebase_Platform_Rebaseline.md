@@ -1,11 +1,11 @@
 # PRD-22 — TypeScript, TSX, Node.js, Vite, Tailwind & Firebase Managed Platform Rebaseline
 
-> **Canonical Technology Baseline:** TypeScript strict mode + TSX + React + Vite + Tailwind CSS + Node.js/TypeScript API + Firebase managed platform. For any platform-specific conflict, PRD-22 is authoritative.
+> **Historical Platform Baseline:** PRD-22 introduced the TypeScript/React/Vite direction. **PRD-23 now supersedes PRD-22 for backend runtime, Firebase topology, data-access, billing posture, and Emulator Suite decisions. PRD-23 wins on conflict.**
 
 > **Product:** NOCScheduler  
 > **Document Type:** Canonical Platform Architecture Rebaseline  
 > **Document ID:** PRD-22  
-> **Status:** Approved — Highest-Precedence Platform Source of Truth  
+> **Status:** Partially Superseded by PRD-23  
 > **Decision Date:** 2026-08-13  
 > **Repository:** `jangangitungapah-pixel/NOCSchedulerJava`  
 > **Default Locale:** Indonesia  

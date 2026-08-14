@@ -2,11 +2,8 @@
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "workspaces": {
     "apps/web": {
-      "entry": ["src/lib/firebase/client.ts"],
+      "entry": ["src/main.tsx"],
       "project": ["src/**/*.{ts,tsx,css}"]
-    },
-    "apps/api": {
-      "entry": ["src/index.ts"]
     }
   }
 }

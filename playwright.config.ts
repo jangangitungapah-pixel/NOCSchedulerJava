@@ -26,22 +26,12 @@ export default defineConfig({
       },
     },
   ],
-  webServer: [
-    {
-      command: 'npm run dev:api',
-      url: 'http://127.0.0.1:8787/api/v1/health',
-      reuseExistingServer: false,
-      timeout: 120_000,
-      stdout: 'pipe',
-      stderr: 'pipe',
-    },
-    {
-      command: 'npm run dev:web',
-      url: 'http://127.0.0.1:5173',
-      reuseExistingServer: false,
-      timeout: 120_000,
-      stdout: 'pipe',
-      stderr: 'pipe',
-    },
-  ],
+  webServer: {
+    command: 'npm run dev:web',
+    url: 'http://127.0.0.1:5173',
+    reuseExistingServer: false,
+    timeout: 120_000,
+    stdout: 'pipe',
+    stderr: 'pipe',
+  },
 });

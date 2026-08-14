@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   static-and-tests:
-    name: Static, unit, integration, build
+    name: Static, unit, build
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -46,20 +46,14 @@ jobs:
       - name: Workspace boundaries
         run: npm run check:workspaces
 
-      - name: Firebase live configuration safety
+      - name: Firebase Spark architecture safety
         run: npm run check:firebase
 
       - name: Unit tests
         run: npm test
 
-      - name: API integration tests
-        run: npm run test:integration
-
       - name: Build
         run: npm run build
-
-      - name: Built API smoke
-        run: npm run smoke:api
 
       - name: Dead code and dependency sanity
         run: npm run check:deadcode

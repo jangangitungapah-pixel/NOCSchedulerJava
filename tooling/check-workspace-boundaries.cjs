@@ -8,14 +8,12 @@ const errors = [];
 
 const expectedWorkspaces = [
   ['apps/web', '@nocscheduler/web'],
-  ['apps/api', '@nocscheduler/api'],
   ['packages/domain', '@nocscheduler/domain'],
   ['packages/contracts', '@nocscheduler/contracts'],
   ['packages/ui', '@nocscheduler/ui'],
 ];
 
 const packageByName = new Map();
-const pathByName = new Map();
 
 function readJson(relativePath) {
   return JSON.parse(fs.readFileSync(path.join(root, relativePath), 'utf8'));
@@ -23,6 +21,10 @@ function readJson(relativePath) {
 
 function addError(message) {
   errors.push(message);
+}
+
+if (fs.existsSync(path.join(root, 'apps/api'))) {
+  addError('apps/api must not exist in the Firebase Spark client-first baseline');
 }
 
 for (const [workspacePath, expectedName] of expectedWorkspaces) {
@@ -49,7 +51,6 @@ for (const [workspacePath, expectedName] of expectedWorkspaces) {
   }
 
   packageByName.set(expectedName, manifest);
-  pathByName.set(expectedName, workspacePath);
 }
 
 const internalNames = new Set(packageByName.keys());
@@ -109,13 +110,9 @@ for (const packageName of graph.keys()) {
 }
 
 const forbiddenInternalDependencies = new Map([
-  ['@nocscheduler/domain', new Set(['@nocscheduler/web', '@nocscheduler/api', '@nocscheduler/ui'])],
-  [
-    '@nocscheduler/contracts',
-    new Set(['@nocscheduler/web', '@nocscheduler/api', '@nocscheduler/ui']),
-  ],
-  ['@nocscheduler/ui', new Set(['@nocscheduler/web', '@nocscheduler/api'])],
-  ['@nocscheduler/api', new Set(['@nocscheduler/web', '@nocscheduler/ui'])],
+  ['@nocscheduler/domain', new Set(['@nocscheduler/web', '@nocscheduler/ui'])],
+  ['@nocscheduler/contracts', new Set(['@nocscheduler/web', '@nocscheduler/ui'])],
+  ['@nocscheduler/ui', new Set(['@nocscheduler/web'])],
 ]);
 
 for (const [packageName, forbiddenDependencies] of forbiddenInternalDependencies.entries()) {
@@ -132,6 +129,7 @@ const forbiddenDomainDependencies = new Set([
   'tailwindcss',
   '@tailwindcss/vite',
   'vite',
+  'firebase',
 ]);
 
 for (const packageName of ['@nocscheduler/domain', '@nocscheduler/contracts']) {
@@ -150,7 +148,7 @@ for (const packageName of ['@nocscheduler/domain', '@nocscheduler/contracts']) {
   for (const forbiddenDependency of forbiddenDomainDependencies) {
     if (dependencyNames.has(forbiddenDependency)) {
       addError(
-        `${packageName} must remain browser/UI-framework independent: ${forbiddenDependency}`,
+        `${packageName} must remain browser/UI/Firebase independent: ${forbiddenDependency}`,
       );
     }
   }
@@ -165,5 +163,5 @@ if (errors.length > 0) {
 }
 
 console.log(
-  '[workspace-boundaries] OK — canonical workspaces exist, dependency graph is acyclic, and package direction rules hold.',
+  '[workspace-boundaries] OK — web/domain/contracts/ui workspaces are acyclic and the removed API runtime has not returned.',
 );

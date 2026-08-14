@@ -1,120 +1,83 @@
-# Firebase Managed Platform Foundation
+# Firebase Spark Client Platform
 
-WP-F04 now uses the real managed Firebase project directly.
+WP-F04 uses the real Firebase project directly without Cloud Functions or the Emulator Suite.
 
-## Canonical Firebase target
+## Canonical target
 
 ```text
 Project ID:   nocschedule1
 Hosting site: nocmduscheduler
 Public URL:   https://nocmduscheduler.web.app
-Region:       asia-southeast1
 ```
 
-The repository no longer requires Firebase Emulator Suite for normal
-development, QA, or CI.
-
-## Production topology
+## Runtime topology
 
 ```text
 Browser
-  -> Firebase Hosting site nocmduscheduler
-     -> Vite static bundle
-     -> /api/** rewrite
-        -> Cloud Functions 2nd gen api
-           -> Express /api/v1
-              -> Firebase Admin SDK
-                 -> Cloud Firestore / Firebase Auth
+  -> Firebase Hosting
+     -> Vite SPA
+  -> Firebase Web SDK
+     -> Firebase Authentication
+     -> Cloud Firestore
+     -> Analytics (production only)
 ```
 
-## Browser SDK
+There is no `/api/**` rewrite, Express server, Firebase Admin SDK runtime, Cloud Functions,
+Cloud Run, Cloud Build application pipeline, or Artifact Registry application dependency in the
+canonical baseline.
 
-The Firebase Web SDK connects directly to `nocschedule1`.
+## Security model
 
-The Firebase web config is public client configuration. It does not grant
-database authorization. Browser Firestore access is still controlled by
-Firestore Security Rules.
+The browser is untrusted.
 
-WP-F04 keeps browser Firestore access fail-closed:
+- Firebase Authentication establishes user identity.
+- Firestore Security Rules authorize every direct document read/write.
+- UI visibility is never an authorization boundary.
+- `packages/domain` owns deterministic business rules but cannot grant database access.
+- Firestore transactions/batches are used where atomic client-safe mutations are required.
+- service-account/private-key material is forbidden from source control.
+- privileged behavior that cannot be made safe with Auth + Rules is out of the current baseline
+  until an explicit architecture reapproval.
+
+WP-F04 remains fail-closed:
 
 ```text
 allow read, write: if false;
 ```
 
-Later authentication/authorization phases will open only the client access that
-is intentionally required.
+WP-F06 will replace that baseline with authenticated, role/capability-scoped rules.
 
-## Server SDK
+## Firebase Web config
 
-Cloud Functions uses the Firebase Admin SDK.
+Canonical public Web SDK identifiers:
 
-In the deployed Google/Firebase runtime, Admin SDK credentials are supplied by
-the managed environment.
+```text
+projectId:         nocschedule1
+authDomain:        nocschedule1.firebaseapp.com
+storageBucket:     nocschedule1.firebasestorage.app
+messagingSenderId: 757713432444
+appId:             1:757713432444:web:c8557af004720fab67fef9
+measurementId:     G-YSETL08XS6
+```
 
-If a developer later needs to run API code locally against the real project,
-Google Application Default Credentials must be configured on that developer
-machine. Credential files must never be committed.
+The API key is public Firebase client configuration, not an Admin credential.
 
-## CI policy
-
-CI does not create Firebase Auth users or write Firestore documents in the real
-project.
-
-CI validates:
-
-- exact project/site configuration;
-- fail-closed rules source;
-- TypeScript/lint/format;
-- unit/API integration;
-- production builds;
-- API smoke;
-- dead code;
-- browser E2E/accessibility.
-
-Live Firebase deployment is an explicit operator action.
-
-## Firebase CLI
-
-Authenticate once:
+## CLI
 
 ```powershell
 firebase login
-```
-
-Select/check the project:
-
-```powershell
 npm run firebase:project
-```
-
-Deploy everything owned by the current foundation:
-
-```powershell
+npm run firebase:deploy:hosting
+npm run firebase:deploy:firestore
 npm run firebase:deploy
 ```
 
-Hosting only:
+`firebase deploy --only hosting` must never attempt to deploy a Function under this architecture.
 
-```powershell
-npm run firebase:deploy:hosting
-```
+## Billing posture
 
-Functions + Firestore rules/indexes:
+The baseline is intentionally compatible with the Firebase Spark feature set used by this
+application: Hosting, Authentication, Firestore within Spark quotas, and the Firebase Web SDK.
 
-```powershell
-npm run firebase:deploy:backend
-```
-
-A Hosting deploy target named `app` maps to the site ID
-`nocmduscheduler`.
-
-## Important production requirement
-
-Deploying Cloud Functions requires the Firebase project to use the Blaze
-pricing plan.
-
-## Analytics
-
-The supplied Web SDK configuration contains a Measurement ID, but Analytics is
-not initialized in WP-F04. Analytics can be introduced later when product
-telemetry requirements are defined.
+If a future requirement genuinely needs a trusted backend, that must be handled as a new explicit
+architecture decision rather than silently reintroducing Functions.

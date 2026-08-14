@@ -1,16 +1,17 @@
 import { expect, test } from '@playwright/test';
 
-test('web scaffold reaches the API through the Vite proxy', async ({ page }) => {
+test('web scaffold initializes the Firebase client foundation', async ({ page }) => {
   await page.goto('/');
 
   await expect(
     page.getByRole('heading', {
-      name: 'NOCScheduler design system foundation',
+      name: 'NOCScheduler Firebase client foundation',
     }),
   ).toBeVisible();
 
-  await expect(page.getByText('API connected')).toBeVisible();
-  await expect(page.getByText('Healthy')).toBeVisible();
+  await expect(page.getByText('Firebase client foundation', { exact: true })).toBeVisible();
+  await expect(page.getByText(/Project nocschedule1 is configured/)).toBeVisible();
+  await expect(page.getByText('Spark-friendly')).toBeVisible();
 });
 
 test('unknown routes render the scaffold 404 surface', async ({ page }) => {

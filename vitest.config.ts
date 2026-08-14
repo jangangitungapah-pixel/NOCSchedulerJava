@@ -6,18 +6,8 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json-summary', 'html'],
       reportsDirectory: 'coverage',
-      include: ['apps/web/src/**/*.{ts,tsx}', 'apps/api/src/**/*.ts', 'packages/**/*.ts'],
-      exclude: [
-        '**/*.test.{ts,tsx}',
-        '**/*.integration.test.ts',
-        '**/*.firebase.test.ts',
-        '**/src/test/**',
-        '**/*.d.ts',
-        'apps/web/src/main.tsx',
-        'apps/api/src/dev.ts',
-        'apps/api/src/index.ts',
-        'apps/api/src/firebase/seed.ts',
-      ],
+      include: ['apps/web/src/**/*.{ts,tsx}', 'packages/**/*.ts'],
+      exclude: ['**/*.test.{ts,tsx}', '**/src/test/**', '**/*.d.ts', 'apps/web/src/main.tsx'],
     },
     projects: [
       {
@@ -39,14 +29,6 @@ export default defineConfig({
           name: 'domain-unit',
           environment: 'node',
           include: ['packages/**/*.test.ts'],
-          restoreMocks: true,
-        },
-      },
-      {
-        test: {
-          name: 'api-integration',
-          environment: 'node',
-          include: ['apps/api/src/**/*.integration.test.ts'],
           restoreMocks: true,
         },
       },

@@ -5,8 +5,8 @@
 > **Status:** Approved Execution Baseline  
 > **Repository:** `jangangitungapah-pixel/NOCSchedulerJava`  
 > **Created:** 2026-08-13  
-> **Product PRD Set:** PRD-01 through PRD-22  
-> **Canonical Platform Source:** PRD-22 — TypeScript, TSX, Node.js, Vite, Tailwind & Firebase Managed Platform Rebaseline  
+> **Product PRD Set:** PRD-01 through PRD-23  
+> **Canonical Platform Source:** PRD-23 — Firebase Spark Client-First Architecture Rebaseline  
 > **Default Locale:** Indonesia  
 > **Default Timezone:** Asia/Jakarta  
 > **Default Theme:** Light  
@@ -23,7 +23,7 @@ Workplan ini menjawab:
 
 > **“Apa urutan kerja yang harus dilakukan, dependency antarphase apa, kapan sebuah phase dianggap selesai, dan gate apa yang harus dilewati sebelum masuk production?”**
 
-Workplan tidak menggantikan detail requirement pada PRD. Jika ada konflik requirement produk/business, PRD terkait tetap menjadi source of truth. Untuk konflik platform/stack, **PRD-22 selalu menang**.
+Workplan tidak menggantikan detail requirement pada PRD. Jika ada konflik requirement produk/business, PRD terkait tetap menjadi source of truth. Untuk konflik platform/stack, **PRD-23 selalu menang**. PRD-22 tetap berlaku hanya untuk keputusan yang tidak disupersede PRD-23.
 
 Workplan ini sengaja disusun berdasarkan **dependency dan risiko domain**, bukan sekadar urutan halaman.
 
@@ -31,54 +31,50 @@ Workplan ini sengaja disusun berdasarkan **dependency dan risiko domain**, bukan
 
 # 2. Canonical Technology Baseline
 
-Seluruh implementation phase menggunakan baseline berikut:
+Seluruh implementation phase menggunakan PRD-23 sebagai platform source of truth tertinggi.
 
 ```text
 Frontend
-  TypeScript / TSX — strict mode
+  TypeScript / TSX strict mode
   React
   Vite
   React Router
   Tailwind CSS
-  semantic CSS design tokens
-  TanStack Query
-  TanStack Table
-  TanStack Virtual
-  React Hook Form
-  Zod
-  accessible headless UI primitives
-  Motion
-  dnd-kit
+  semantic design tokens
+  TanStack Query/Table/Virtual as needed
+  React Hook Form + Zod as needed
 
-Backend
-  TypeScript — strict mode
-  Node.js
+Shared boundaries
+  packages/domain     -> deterministic business logic
+  packages/contracts  -> runtime-agnostic schemas/contracts
+  packages/ui         -> shared UI primitives/tokens
+
+Managed platform
+  Firebase Hosting
+  Firebase Authentication Web SDK
+  Cloud Firestore Web SDK
+  Firestore Security Rules
+  Firebase Analytics in production
+
+Explicitly not part of the canonical V1 runtime
+  apps/api
   Express
   /api/v1
-  Firebase managed Node runtime
-
-Managed Platform
-  Firebase Hosting
-  Firebase Authentication
-  Firebase Admin SDK
-  Cloud Firestore
-  Firebase Local Emulator Suite
-
-Quality
-  TypeScript typecheck
-  ESLint
-  Vitest
-  Testing Library
-  MSW
-  Firebase Emulator integration tests
-  Playwright
-  axe-based accessibility checks
-  visual regression
+  Cloud Functions
+  Cloud Run application backend
+  Firebase Admin SDK runtime
+  Emulator Suite mandatory workflow
 ```
 
-First-party React source menggunakan `.tsx`. First-party non-React source menggunakan `.ts`. CSS tetap digunakan untuk global style, Tailwind entry, design token, theme mapping, dan kebutuhan stylesheet yang memang tepat berada di CSS.
+The browser is untrusted. Firestore Security Rules are the persistence authorization boundary.
+Domain code improves correctness but never replaces Rules.
 
----
+**Interpretation rule for every later phase:** any older workplan wording that asks for an HTTP
+API, server route, Cloud Function, Admin SDK repository, or server-authoritative command is
+superseded by PRD-23. Implement the business requirement through domain/contracts + Firebase Web
+SDK + Security Rules/transactions when it can be made safe. If it cannot be made safe, stop that
+specific requirement and create an explicit architecture decision instead of silently restoring
+a backend.
 
 # 3. Delivery Principles
 
@@ -136,7 +132,7 @@ Sebuah implementation task hanya dapat ditandai **Done** jika seluruh hal yang r
 - TypeScript typecheck bersih;
 - lint bersih;
 - unit/domain tests relevan lulus;
-- API/integration/emulator tests relevan lulus;
+- Firestore rules/data-access integration tests relevan lulus bila phase terkait sudah memilikinya;
 - build sukses;
 - tidak memperkenalkan `any` sembarangan pada domain kritis;
 - tidak menduplikasi business rule di UI;
@@ -188,7 +184,7 @@ Tidak semua suite harus dijalankan setiap save lokal, tetapi release/production 
 | WP-F01 | Workspace & Application Scaffold | Monorepo web/api/packages hidup |
 | WP-F02 | Quality, CI & Developer Safety Foundation | Typecheck/lint/test/build otomatis |
 | WP-F03 | Design System & Responsive Foundation | UI grammar, theme, shell primitives siap |
-| WP-F04 | Firebase Platform & Emulator Foundation | Auth/Firestore/API managed platform siap |
+| WP-F04 | Firebase Spark Client Platform Foundation | Hosting/Auth/Firestore client foundation siap |
 | WP-F05 | Shared Contracts & Domain Kernel | Type-safe contract/domain core siap |
 | WP-F06 | Authentication, Identity & Authorization | Login dan access enforcement aman |
 | WP-F07 | Employee, Team & Core Settings | Master operational data siap |
@@ -262,14 +258,13 @@ Mengubah repo dokumentasi menjadi repository development yang reproducible.
 
 ## Goal
 
-Membentuk struktur application canonical PRD-22.
+Membentuk struktur aplikasi canonical yang sekarang dipertahankan oleh PRD-23.
 
 ## Target Structure
 
 ```text
 apps/
   web/
-  api/
 packages/
   domain/
   contracts/
@@ -291,32 +286,21 @@ docs/
 - theme provider;
 - basic app shell placeholder.
 
-## API Scaffold
-
-- Node.js + TypeScript;
-- Express application;
-- `/api/v1` root;
-- health/readiness endpoint;
-- canonical error response shell;
-- request/correlation ID middleware;
-- structured logging shell;
-- environment validation shell.
-
 ## Package Scaffold
 
-- `packages/domain` tidak boleh bergantung React/Tailwind;
-- `packages/contracts` untuk shared schemas/types;
+- `packages/domain` tidak boleh bergantung React/Tailwind/Firebase;
+- `packages/contracts` untuk shared schemas/data contracts;
 - `packages/ui` untuk primitives/patterns/token helpers.
+
+The historical `apps/api` scaffold from early WP-F01 is removed by the WP-F04 PRD-23 rebaseline
+and is not part of the canonical structure.
 
 ## Exit Gate
 
 - web dev server berjalan;
-- API local server/function berjalan;
-- web dapat memanggil API health endpoint;
+- Firebase client bootstrap dapat diinisialisasi tanpa privileged credential;
 - production Vite build sukses;
 - package boundary tidak circular.
-
----
 
 # 9. WP-F02 — Quality, CI & Developer Safety Foundation
 
@@ -328,38 +312,38 @@ Membuat quality gates sebelum feature code bertambah besar.
 
 - Vitest config;
 - Testing Library config;
-- MSW test infrastructure;
 - Playwright baseline;
 - axe integration baseline;
 - dead-code/dependency check;
 - CI workflow;
 - required quality command set;
-- test fixture convention;
+- fixture convention;
 - coverage strategy tanpa mengejar angka palsu.
 
 ## CI Baseline
-
-Minimum merge gate:
 
 ```text
 typecheck
 lint
 format check
-unit tests
-build
+repository/workspace policy
+Firebase architecture safety
+unit/domain tests
+web build
+dead-code check
+browser E2E
+accessibility smoke
 ```
 
-Setelah emulator/E2E tersedia, CI diperluas dengan integration dan smoke E2E.
+Tidak ada API integration/smoke server dalam baseline PRD-23.
 
 ## Exit Gate
 
 - intentionally broken type fails CI;
 - intentionally broken lint fails CI;
 - failing unit test fails CI;
-- broken Vite/API build fails CI;
+- broken Vite/shared-package build fails CI;
 - Playwright minimal smoke dapat berjalan pada CI-capable environment.
-
----
 
 # 10. WP-F03 — Design System & Responsive Foundation
 
@@ -437,45 +421,52 @@ Minimal:
 
 ---
 
-# 11. WP-F04 — Firebase Platform & Emulator Foundation
+# 11. WP-F04 — Firebase Spark Client Platform Foundation
 
 ## Goal
 
-Menyiapkan managed infrastructure sebelum feature persistence bergantung padanya.
+Menetapkan Firebase client platform yang dapat digunakan tanpa Cloud Functions/backend runtime.
 
 ## Deliverables
 
-- Firebase project config structure;
-- Firebase Hosting config;
-- Cloud Functions 2nd gen/managed Node API config;
-- Firestore config;
-- Firestore rules baseline fail-closed;
-- Firestore indexes file;
-- Auth Emulator;
-- Firestore Emulator;
-- Emulator UI;
-- local demo project convention;
-- Admin SDK initialization;
-- client Firebase initialization;
-- emulator-safe environment separation;
-- deterministic emulator reset/seed mechanism.
+- Firebase project mapping `nocschedule1`;
+- Hosting target `nocmduscheduler`;
+- static SPA Hosting config;
+- Firestore config/rules/indexes;
+- fail-closed Firestore baseline;
+- exact Firebase Web SDK configuration;
+- Firebase Auth + Firestore client initialization;
+- production-only Analytics initialization;
+- architecture gates that forbid Functions/API runtime from returning.
 
 ## Security Baseline
 
-- server credentials tidak pernah masuk browser;
-- service account JSON tidak committed;
-- production identity menggunakan managed credential/IAM;
-- direct client writes ke business-critical collections ditolak baseline.
+- browser dianggap tidak tepercaya;
+- service-account/private-key tidak pernah masuk browser/repo;
+- Firestore Rules adalah persistence authorization boundary;
+- direct browser access tetap fail-closed sampai WP-F06;
+- domain packages tetap Firebase-independent.
+
+## Explicitly Removed
+
+- `apps/api`;
+- Express/`/api/v1`;
+- Cloud Functions;
+- Firebase Admin SDK runtime;
+- Hosting function rewrites;
+- Vite API proxy;
+- API integration/smoke gates;
+- Emulator Suite mandatory workflow.
 
 ## Exit Gate
 
-- web login SDK dapat terhubung emulator;
-- API dapat menggunakan Admin SDK emulator;
-- Firestore read/write integration test berjalan;
-- fail-closed rules test berjalan;
-- accidental production write dari default local config dibuat sulit.
-
----
+- exact Web SDK config resolves to `nocschedule1`;
+- `firebase.json` contains only Firestore + static Hosting concerns;
+- `npm run check:firebase` rejects Functions/API topology;
+- clean-clone CI fully green;
+- Firestore rules/indexes compile/deploy;
+- Hosting deploy succeeds on the selected project without attempting Functions;
+- `nocmduscheduler.web.app` serves the SPA.
 
 # 12. WP-F05 — Shared Contracts & Domain Kernel
 
@@ -486,16 +477,16 @@ Membentuk language business yang type-safe sebelum domain feature besar dibangun
 ## Deliverables
 
 - stable identifier types;
-- business date contract;
-- timestamp contract;
-- money/IDR contract;
-- common API envelope;
-- error-code taxonomy;
+- BusinessDate;
+- timestamp;
+- integer IDR money;
+- common operation-result/error taxonomy;
 - pagination/filter contracts;
-- optimistic version contract;
-- idempotency contract;
+- optimistic version/revision contract;
+- idempotency intent/operation-key contract where client-safe;
 - audit metadata contract;
-- timezone helper/Temporal abstraction.
+- timezone helper/Temporal abstraction;
+- Firestore serialization boundary types without importing Firebase into domain/contracts.
 
 ## Domain Kernel
 
@@ -513,9 +504,7 @@ Membentuk language business yang type-safe sebelum domain feature besar dibangun
 - money helper tests;
 - serialization round-trip tests;
 - invalid external payload ditolak Zod;
-- no business-domain dependency on React/Express/Firebase SDK.
-
----
+- no business-domain dependency on React or Firebase SDK.
 
 # 13. WP-F06 — Authentication, Identity & Authorization
 

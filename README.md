@@ -1,87 +1,71 @@
 # NOCScheduler
 
 NOCScheduler is an internal operational scheduling, workforce, attendance, and payroll platform.
-The implementation follows the PRDs under `docs/prd`, the production workplan under
-`docs/workplan`, and the canonical generator workflow under `docs/workflow`.
+
+## Current architecture
+
+The active production baseline is **Firebase Spark-friendly and client-first**:
+
+```text
+React / Vite / TypeScript
+  -> Firebase Hosting (nocmduscheduler.web.app)
+  -> Firebase Web SDK
+       -> Firebase Authentication
+       -> Cloud Firestore
+       -> Analytics in production
+```
+
+There is no Cloud Functions, Cloud Run, Express, Admin SDK runtime, self-managed server, or normal
+Emulator Suite requirement in the active baseline.
+
+The browser is always treated as untrusted. Firestore Security Rules are the authorization/data
+access boundary, while deterministic business rules remain isolated in `packages/domain`.
 
 ## Current implementation phase
 
-WP-F00 (repository/toolchain bootstrap) is accepted. WP-F01 scaffolds the canonical application
-workspaces without implementing product business features.
+WP-F00 through WP-F03 are accepted. WP-F04 is rebaselining the Firebase platform to the Spark
+client-first architecture before WP-F05 may begin.
 
-Generated workspace direction:
+## Workspace topology
 
 ```text
 apps/
   web/
-  api/
 packages/
   domain/
   contracts/
   ui/
 ```
 
-Firebase managed-platform wiring remains WP-F04. Authentication remains WP-F06. Real shared
-domain/contracts start in WP-F05, and the production design system starts in WP-F03.
-
 ## Required local runtime
 
 - Node.js 22.x
 - npm 10 or newer
 - Git
-- Java 21+ before Firebase Emulator work begins
+- Firebase CLI for explicit Hosting/Firestore deployment
 
-The accepted WP-F00 environment used Node.js 22.23.2 and npm 10.9.8.
+Java, Docker, a VPS, and a local API server are not normal prerequisites.
 
 ## Install
 
 ```powershell
 nvm use 22
-node --version
-npm --version
 npm install
 ```
 
-The canonical package manager is npm. Do not add pnpm/yarn lockfiles.
-
 ## Development
-
-Start the local Express API and Vite web application together:
 
 ```powershell
 npm run dev
 ```
 
-Local endpoints:
+Local web URL:
 
 ```text
-Web:       http://127.0.0.1:5173
-API root:  http://127.0.0.1:8787/api/v1
-Health:    http://127.0.0.1:8787/api/v1/health
-Readiness: http://127.0.0.1:8787/api/v1/readiness
+http://127.0.0.1:5173
 ```
 
-The Vite dev server proxies same-origin browser requests under `/api/**` to the local Express
-server. Production Firebase Hosting rewrites are intentionally deferred to WP-F04.
-
-The scaffold home page calls `/api/v1/health` through that proxy. A successful local runtime
-shows **API connected**.
-
-## WP-F01 manual runtime validation
-
-After static/build gates pass:
-
-1. run `npm run dev`;
-2. open `http://127.0.0.1:5173`;
-3. confirm the page shows **API connected**;
-4. toggle Light/Dark mode and confirm the theme changes;
-5. open `http://127.0.0.1:5173/does-not-exist` and confirm the 404 scaffold surface;
-6. in development only, open `http://127.0.0.1:5173/__diagnostics/route-error` and confirm the
-   route error boundary renders.
-
-Stop the dev command with Ctrl+C after validation.
-
-## Quality gates available after WP-F01
+## Quality gates
 
 ```powershell
 npm run check:runtime
@@ -90,52 +74,53 @@ npm run lint
 npm run format:check
 npm run check:repo
 npm run check:workspaces
+npm run check:firebase
+npm test
 npm run build
-npm run smoke:api
+npm run check:deadcode
+npm run test:e2e
+npm run test:a11y
 ```
 
-`npm run smoke:api` starts the built API on a dedicated smoke port and verifies health +
-readiness responses.
+## Firebase
 
-## Workspace responsibilities
+Canonical target:
 
-### `apps/web`
+```text
+Project ID:   nocschedule1
+Hosting site: nocmduscheduler
+URL:          https://nocmduscheduler.web.app
+```
 
-React + Vite + TSX SPA shell. React Router owns routing, TanStack Query owns server state, and
-Tailwind powers layout/styling. Theme support is only a scaffold in WP-F01; WP-F03 owns the full
-semantic design system.
+Deploy Hosting only:
 
-### `apps/api`
+```powershell
+npm run firebase:deploy:hosting
+```
 
-TypeScript ESM Express application with `/api/v1`, correlation IDs, structured Pino logs,
-environment validation, health/readiness endpoints, security headers, compression, JSON body
-limits, and canonical JSON error shells.
+Deploy Firestore rules/indexes only:
 
-It is only a local Node server in WP-F01. Firebase Functions 2nd gen integration belongs to WP-F04.
+```powershell
+npm run firebase:deploy:firestore
+```
 
-### `packages/domain`
+Deploy the current Firebase-owned surface:
 
-Framework-independent deterministic business logic boundary. No React/Tailwind dependency is
-allowed.
+```powershell
+npm run firebase:deploy
+```
 
-### `packages/contracts`
+The active baseline intentionally avoids Cloud Functions so it does not require Blaze merely for
+an application backend.
 
-Shared API/schema/type boundary. Real reusable contracts and Zod schemas begin in WP-F05.
+## Source boundaries
 
-### `packages/ui`
-
-Future shared primitives/patterns/token helpers. Production components/tokens begin in WP-F03.
-
-## Source standard
-
-- React source: `.tsx`
-- Non-React first-party application source: `.ts`
-- Strict TypeScript is mandatory.
-- `.js`/`.jsx` are not canonical first-party application source.
-- Tooling/config files may use JavaScript-family extensions where appropriate.
+- `apps/web`: React/Vite application and Firebase client data-access adapters.
+- `packages/domain`: deterministic scheduling/payroll/workforce rules; no React/Firebase.
+- `packages/contracts`: runtime-agnostic schemas and data contracts.
+- `packages/ui`: shared visual primitives and tokens.
 
 ## Secrets
 
-Never commit Firebase service-account JSON, private keys, real `.env` files, or production
-credentials. Vite-exposed variables are public browser configuration and must never contain
-secrets.
+Firebase Web SDK configuration is public client configuration. Never place service-account JSON,
+private keys, or privileged server credentials in this repository.

@@ -4,6 +4,14 @@
     "apps/web": {
       "entry": ["src/main.tsx"],
       "project": ["src/**/*.{ts,tsx,css}"]
+    },
+    "packages/contracts": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts"]
+    },
+    "packages/domain": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts"]
     }
   }
 }

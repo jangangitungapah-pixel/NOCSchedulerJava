@@ -14,15 +14,15 @@
 | Field | Value |
 |---|---|
 | Current Phase | `WP-F05` — Shared Contracts & Domain Kernel |
-| Current Status | `GENERATOR_READY` |
+| Current Status | `PUSHED_UNVERIFIED` |
 | Last Accepted Phase | `WP-F04` — Firebase Spark Client Platform Foundation |
 | Last Accepted Implementation Commit | `ae572cf29e470985a0483444e3c7bad841d61ce8` |
 | WP-F04 Acceptance Evidence | GitHub Actions Quality run `31759165051` completed successfully; Firebase project `nocschedule1` and Hosting site `nocmduscheduler` operator deployment completed successfully without Cloud Functions/Blaze backend dependency |
 | Architecture Baseline | PRD-23 Firebase Spark client-first: Hosting + Auth Web SDK + Firestore Web SDK + Analytics; no Cloud Functions/API runtime |
-| Active Execution Model | Downloadable `.cjs` generator → dependency materialization if needed → format write-stage → commit/push → QA against exact pushed checkpoint |
+| Active Execution Model | WP-F05 kernel generator applied → dependency materialization → format write-stage → commit/push → QA against exact pushed checkpoint |
 | Next Allowed Phase | `WP-F05` only |
 | Future Phases | `WP-F06` and later remain `LOCKED` |
-| User Validation Pending | No for WP-F04; WP-F05 implementation/QA is next |
+| User Validation Pending | Yes — WP-F05 local quality gates and clean GitHub Actions must pass |
 | Firebase Project | `nocschedule1` |
 | Hosting Site | `nocmduscheduler` |
 | Billing Baseline | Spark-friendly; no application Cloud Functions dependency |
@@ -38,7 +38,7 @@
 | WP-F02 | ACCEPTED | Quality/CI/E2E/accessibility foundation |
 | WP-F03 | ACCEPTED | Design system/responsive foundation |
 | WP-F04 | ACCEPTED | Spark client-first Firebase foundation; clean CI; Firestore deployed; Hosting deployed successfully without Functions |
-| WP-F05 | GENERATOR_READY | Shared contracts/domain kernel implementation may begin |
+| WP-F05 | PUSHED_UNVERIFIED | Shared contracts/domain kernel implementation prepared; exact pushed commit + QA pending |
 | WP-F06+ | LOCKED | Requires WP-F05 acceptance |
 
 ---

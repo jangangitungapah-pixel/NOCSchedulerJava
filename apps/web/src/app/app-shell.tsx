@@ -111,9 +111,7 @@ export function AppShell() {
   const session = useAuthenticatedSession();
   const { signOutCurrentUser } = useAuth();
   const accountName =
-    session.user.displayName ??
-    session.user.email ??
-    session.principal.employeeId;
+    session.user.displayName ?? session.user.email ?? session.principal.employeeId;
 
   return (
     <div className="app-shell">

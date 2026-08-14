@@ -1,10 +1,4 @@
-import {
-  Button,
-  Card,
-  FormField,
-  Input,
-  LoadingState,
-} from '@nocscheduler/ui';
+import { Button, Card, FormField, Input, LoadingState } from '@nocscheduler/ui';
 import { useState, type FormEvent } from 'react';
 import { Navigate, useLocation } from 'react-router';
 
@@ -35,7 +29,10 @@ export function LoginPage() {
   if (state.status === 'loading') {
     return (
       <div className="auth-layout">
-        <LoadingState label="Memeriksa sesi…" />
+        <LoadingState
+          description="Menyiapkan identitas dan status akses internal."
+          title="Memeriksa sesi…"
+        />
       </div>
     );
   }

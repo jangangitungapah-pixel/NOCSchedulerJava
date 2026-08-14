@@ -14,15 +14,15 @@
 | Field | Value |
 |---|---|
 | Current Phase | `WP-F06` — Authentication, Identity & Authorization |
-| Current Status | `GENERATOR_READY` |
+| Current Status | `PUSHED_UNVERIFIED` |
 | Last Accepted Phase | `WP-F05` — Shared Contracts & Domain Kernel |
 | Last Accepted Implementation Commit | `b5fc38d8205cb47068d4c2e5de8224689b17b16e` |
 | WP-F05 Acceptance Evidence | GitHub Actions Quality run `31790868577` completed successfully: typecheck, lint, format, repository/workspace/Firebase safety, unit/domain tests, build, dead-code, Chromium E2E, and accessibility all passed |
 | Architecture Baseline | PRD-23 Firebase Spark client-first: Hosting + Auth Web SDK + Firestore Web SDK + Security Rules; no Cloud Functions/API runtime |
-| Active Execution Model | WP-F06 generator → dependency materialization if needed → format write-stage → commit/push → QA against exact pushed checkpoint → explicit Firestore/Auth operator validation where required |
+| Active Execution Model | WP-F06 Auth/access implementation committed → completion repair → format write-stage → manual commit/push → QA against exact pushed checkpoint → Firestore rules deploy + operator-created Auth/access manual acceptance |
 | Next Allowed Phase | `WP-F06` only |
 | Future Phases | `WP-F07` and later remain `LOCKED` |
-| User Validation Pending | No for WP-F05; WP-F06 implementation/QA is next |
+| User Validation Pending | Yes — partial WP-F06 implementation commit `86d045d18cec951c960dc1a95746739cc5931ae4` is being completed; repository/CI QA, Firestore rules deployment, and operator-created Auth/access validation must pass |
 | Firebase Project | `nocschedule1` |
 | Hosting Site | `nocmduscheduler` |
 | Billing Baseline | Spark-friendly; no application Cloud Functions dependency |
@@ -39,7 +39,7 @@
 | WP-F03 | ACCEPTED | Design system/responsive foundation |
 | WP-F04 | ACCEPTED | Spark client-first Firebase foundation; clean CI; Firestore deployed; Hosting deployed successfully without Functions |
 | WP-F05 | ACCEPTED | Shared contracts/domain kernel; branded identifiers/timestamps, BusinessDate/Asia-Jakarta, integer IDR, operation/error contracts, serialization boundary, deterministic clock; Quality run `31790868577` SUCCESS |
-| WP-F06 | GENERATOR_READY | Firebase Authentication + Firestore Security Rules authorization foundation may begin |
+| WP-F06 | PUSHED_UNVERIFIED | Auth UI/session + role/access contracts + deny-by-default Firestore authorization are implemented; completion repair and QA/live validation pending |
 | WP-F07+ | LOCKED | Requires WP-F06 acceptance |
 
 ---

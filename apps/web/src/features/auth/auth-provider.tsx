@@ -1,6 +1,4 @@
-import {
-  can,
-} from '@nocscheduler/domain';
+import { can } from '@nocscheduler/domain';
 import type {
   AuthorizationPrincipal,
   PermissionCode,

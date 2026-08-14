@@ -10,15 +10,16 @@ export function RequireAuthenticated() {
   if (state.status === 'loading') {
     return (
       <div className="auth-layout">
-        <LoadingState label="Memeriksa akses…" />
+        <LoadingState
+          description="Memastikan akun dan role masih aktif."
+          title="Memeriksa akses…"
+        />
       </div>
     );
   }
 
   if (state.status === 'signed-out') {
-    const next = encodeURIComponent(
-      `${location.pathname}${location.search}${location.hash}`,
-    );
+    const next = encodeURIComponent(`${location.pathname}${location.search}${location.hash}`);
 
     return <Navigate replace to={`/login?next=${next}`} />;
   }

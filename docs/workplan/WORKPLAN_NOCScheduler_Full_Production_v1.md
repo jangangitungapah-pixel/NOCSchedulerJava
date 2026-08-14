@@ -89,8 +89,8 @@ Setelah foundation stabil, fitur dikerjakan sebagai vertical slice:
 ```text
 contract
 → domain rule
-→ repository
-→ API
+→ Firestore repository/data adapter
+→ Security Rules / transaction contract
 → frontend query/form
 → UI state
 → automated test
@@ -156,7 +156,6 @@ npm run typecheck
 npm run lint
 npm run format:check
 npm test
-npm run test:integration
 npm run test:e2e
 npm run build
 npm run check:deadcode
@@ -181,7 +180,7 @@ Tidak semua suite harus dijalankan setiap save lokal, tetapi release/production 
 | Phase | Name | Primary Outcome |
 |---|---|---|
 | WP-F00 | Repository & Toolchain Bootstrap | Repo siap development modern |
-| WP-F01 | Workspace & Application Scaffold | Monorepo web/api/packages hidup |
+| WP-F01 | Workspace & Application Scaffold | Monorepo web/shared packages hidup |
 | WP-F02 | Quality, CI & Developer Safety Foundation | Typecheck/lint/test/build otomatis |
 | WP-F03 | Design System & Responsive Foundation | UI grammar, theme, shell primitives siap |
 | WP-F04 | Firebase Spark Client Platform Foundation | Hosting/Auth/Firestore client foundation siap |
@@ -510,41 +509,66 @@ Membentuk language business yang type-safe sebelum domain feature besar dibangun
 
 ## PRD Focus
 
-PRD-07, PRD-16, PRD-22.
+PRD-07, PRD-16, PRD-23.
 
 ## Goal
 
-User dapat login, tetapi mutation hanya dapat dilakukan sesuai capability dan scope.
+User dapat login melalui Firebase Authentication, tetapi application access dan seluruh future
+Firestore mutation hanya boleh berjalan sesuai account status, capability, scope, dan Security
+Rules.
 
 ## Deliverables
 
-- login;
+- Firebase email/password login;
 - logout;
-- session/token refresh awareness;
-- Firebase ID token verification middleware;
-- active/inactive account enforcement;
-- user ↔ employee linkage;
-- application role/capability model;
-- authorization service;
-- route/action guards;
-- last-administrator protection;
-- account disable flow;
-- authorization audit events.
+- browser-session persistence;
+- `onIdTokenChanged` session/token refresh awareness;
+- active/inactive/suspended application-account enforcement;
+- Firebase UID ↔ stable employeeId linkage;
+- canonical `access/{uid}` record;
+- role/capability/scope contract;
+- deterministic `can()` / `requirePermission()` domain service;
+- protected-route and permission-aware UI helpers;
+- first authenticated Firestore Security Rules boundary;
+- deny-by-default business collections;
+- operator-managed role/access bootstrap under Spark;
+- generic login failure messaging;
+- no public self-registration.
+
+## Spark Security Boundary
+
+- UI and domain helpers are not authorization boundaries;
+- Firestore Security Rules are authoritative for browser database access;
+- `access/**` and `roles/**` are never client-writable in this phase;
+- self-escalation is impossible through the app client because privilege documents reject writes;
+- last-administrator and Firebase Auth account administration remain operator responsibilities
+  while no trusted backend/Admin SDK runtime is approved;
+- future in-app privileged account administration requires an explicit architecture decision
+  rather than silently reintroducing Cloud Functions.
 
 ## Required Tests
 
-- valid login;
-- invalid login;
-- expired/missing token;
-- disabled user;
-- direct API request tanpa permission;
-- user mencoba actor/resource ID milik user lain;
-- permission UI hidden tetapi API tetap authoritative;
-- role/access mutation audit.
+- auth/access contract validation;
+- generic/non-enumerating login error mapping;
+- missing/inactive access denied;
+- role inactive denied;
+- ungranted capability denied by default;
+- scope ordering SELF < TEAM < ALL;
+- protected route redirects signed-out users;
+- login surface accessibility;
+- Firebase architecture checker asserts access/role writes remain denied;
+- clean CI does not create Auth users or write production Firestore data.
 
 ## Exit Gate
 
-Authentication dan authorization test lulus dari UI dan adversarial HTTP path.
+- repository quality gates green;
+- clean GitHub Actions green;
+- Firestore rules deploy successfully;
+- valid operator-created Firebase user + ACTIVE access/role record can login;
+- missing/inactive access is denied;
+- logout works;
+- browser client cannot mutate `access/**` or `roles/**`;
+- no Cloud Functions/Admin SDK runtime introduced.
 
 ---
 

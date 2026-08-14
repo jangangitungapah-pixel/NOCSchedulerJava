@@ -59,11 +59,7 @@ export async function resolveAccessForUid(
 
   const roleResult = roleRecordSchema.safeParse(roleSnapshot.data());
 
-  if (
-    !roleResult.success ||
-    roleResult.data.roleId !== access.roleId ||
-    !roleResult.data.active
-  ) {
+  if (!roleResult.success || roleResult.data.roleId !== access.roleId || !roleResult.data.active) {
     return {
       status: 'denied',
       reason: 'INVALID_ROLE',

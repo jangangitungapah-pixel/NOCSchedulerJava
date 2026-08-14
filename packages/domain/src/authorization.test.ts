@@ -8,9 +8,7 @@ import { describe, expect, it } from 'vitest';
 
 import { can, requirePermission } from './authorization';
 
-function principal(
-  overrides: Partial<AuthorizationPrincipal> = {},
-): AuthorizationPrincipal {
+function principal(overrides: Partial<AuthorizationPrincipal> = {}): AuthorizationPrincipal {
   return {
     uid: entityIdSchema('user').parse('firebase-user-001'),
     employeeId: entityIdSchema('employee').parse('employee-001'),

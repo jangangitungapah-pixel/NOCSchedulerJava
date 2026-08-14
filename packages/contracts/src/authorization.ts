@@ -76,11 +76,7 @@ export type PermissionScope = z.infer<typeof permissionScopeSchema>;
 export const accountStatusSchema = z.enum(['ACTIVE', 'INACTIVE', 'SUSPENDED']);
 export type AccountStatus = z.infer<typeof accountStatusSchema>;
 
-export const BASELINE_ROLE_IDS = [
-  'NOC_MEMBER',
-  'SCHEDULER_SUPERVISOR',
-  'ADMINISTRATOR',
-] as const;
+export const BASELINE_ROLE_IDS = ['NOC_MEMBER', 'SCHEDULER_SUPERVISOR', 'ADMINISTRATOR'] as const;
 
 export const baselineRoleIdSchema = z.enum(BASELINE_ROLE_IDS);
 export type BaselineRoleId = z.infer<typeof baselineRoleIdSchema>;
@@ -120,9 +116,7 @@ export function makePermissionGrantCode(
   return permissionGrantCodeSchema.parse(`${permission}:${scope}`);
 }
 
-export function parsePermissionGrantCode(
-  value: PermissionGrantCode,
-): Readonly<{
+export function parsePermissionGrantCode(value: PermissionGrantCode): Readonly<{
   permission: PermissionCode;
   scope: PermissionScope;
 }> {

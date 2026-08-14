@@ -1,3 +1,4 @@
+import { isoTimestampSchema } from '@nocscheduler/contracts';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -34,14 +35,18 @@ describe('BusinessDate and Asia/Jakarta kernel', () => {
   });
 
   it('converts instants at the Jakarta date boundary', () => {
-    expect(businessDateForInstant('2026-08-13T16:59:59.999Z')).toBe('2026-08-13');
-    expect(businessDateForInstant('2026-08-13T17:00:00.000Z')).toBe('2026-08-14');
+    const beforeJakartaMidnight = isoTimestampSchema.parse('2026-08-13T16:59:59.999Z');
+    const atJakartaMidnight = isoTimestampSchema.parse('2026-08-13T17:00:00.000Z');
+
+    expect(businessDateForInstant(beforeJakartaMidnight)).toBe('2026-08-13');
+    expect(businessDateForInstant(atJakartaMidnight)).toBe('2026-08-14');
   });
 
   it('provides a deterministic test clock', () => {
-    const clock = new FixedClock('2026-08-14T01:02:03.000Z');
+    const timestamp = isoTimestampSchema.parse('2026-08-14T01:02:03.000Z');
+    const clock = new FixedClock(timestamp);
 
-    expect(timestampFromClock(clock)).toBe('2026-08-14T01:02:03.000Z');
+    expect(timestampFromClock(clock)).toBe(timestamp);
   });
 });
 

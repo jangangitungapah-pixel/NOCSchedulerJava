@@ -5,7 +5,7 @@
 > **Workflow:** `docs/workflow/WORKFLOW_Generator_CJS_GitHub_Sync_v2.md`  
 > **Workplan:** `docs/workplan/WORKPLAN_NOCScheduler_Full_Production_v1.md`  
 > **Platform Source:** `docs/prd/PRD-23_Firebase_Spark_Client_First_Rebaseline.md`  
-> **Last Updated:** 2026-08-13
+> **Last Updated:** 2026-08-14
 
 ---
 
@@ -13,17 +13,16 @@
 
 | Field | Value |
 |---|---|
-| Current Phase | `WP-F04` — Firebase Spark Client Platform Foundation |
-| Current Status | `PUSHED_UNVERIFIED` |
-| Last Accepted Phase | `WP-F03` — Design System & Responsive Foundation |
-| Last Accepted Implementation Commit | `5248560ec3fc2c3e47362446de64112b43a3e7f1` |
-| WP-F03 Acceptance Commit | `efae3f4d607ad05608b8114943af9f2d34d0a7b8` |
-| Last WP-F04 Checkpoint | `21a0dd1c7cc2726a9194106a5dfa80dad0d9544f` — Spark client-first rebaseline pushed; CI run 31758294388 proves static/unit/build/dead-code gates green while browser QA exposes only stale API readiness text, one strict locator ambiguity, and mobile table keyboard-scroll accessibility |
-| Architecture Decision | User explicitly decided Cloud Functions are not required; WP-F04 must be fully cleaned before WP-F05 |
-| Generator Applied | `scripts/wp-f04-repair-spark-browser-gates.cjs` — align Playwright with the new Firebase client foundation and make TableWrap keyboard reachable for horizontal mobile scrolling |
-| Next Allowed Phase | `WP-F04` only |
-| Future Phases | `WP-F05` and later remain `LOCKED` |
-| User Validation Pending | Yes — browser/E2E repair must pass locally and in clean CI, then Hosting deployment must complete without attempting Functions |
+| Current Phase | `WP-F05` — Shared Contracts & Domain Kernel |
+| Current Status | `GENERATOR_READY` |
+| Last Accepted Phase | `WP-F04` — Firebase Spark Client Platform Foundation |
+| Last Accepted Implementation Commit | `ae572cf29e470985a0483444e3c7bad841d61ce8` |
+| WP-F04 Acceptance Evidence | GitHub Actions Quality run `31759165051` completed successfully; Firebase project `nocschedule1` and Hosting site `nocmduscheduler` operator deployment completed successfully without Cloud Functions/Blaze backend dependency |
+| Architecture Baseline | PRD-23 Firebase Spark client-first: Hosting + Auth Web SDK + Firestore Web SDK + Analytics; no Cloud Functions/API runtime |
+| Active Execution Model | Downloadable `.cjs` generator → dependency materialization if needed → format write-stage → commit/push → QA against exact pushed checkpoint |
+| Next Allowed Phase | `WP-F05` only |
+| Future Phases | `WP-F06` and later remain `LOCKED` |
+| User Validation Pending | No for WP-F04; WP-F05 implementation/QA is next |
 | Firebase Project | `nocschedule1` |
 | Hosting Site | `nocmduscheduler` |
 | Billing Baseline | Spark-friendly; no application Cloud Functions dependency |
@@ -38,12 +37,13 @@
 | WP-F01 | ACCEPTED | Historical scaffold accepted; API portion later superseded/removed by PRD-23 |
 | WP-F02 | ACCEPTED | Quality/CI/E2E/accessibility foundation |
 | WP-F03 | ACCEPTED | Design system/responsive foundation |
-| WP-F04 | PUSHED_UNVERIFIED | Spark client-first rebaseline pending final QA + Hosting live validation |
-| WP-F05+ | LOCKED | Requires WP-F04 acceptance |
+| WP-F04 | ACCEPTED | Spark client-first Firebase foundation; clean CI; Firestore deployed; Hosting deployed successfully without Functions |
+| WP-F05 | GENERATOR_READY | Shared contracts/domain kernel implementation may begin |
+| WP-F06+ | LOCKED | Requires WP-F05 acceptance |
 
 ---
 
-# 3. Canonical WP-F04 Topology
+# 3. Accepted WP-F04 Topology
 
 ```text
 Browser
@@ -67,56 +67,62 @@ Vite /api proxy
 mandatory Emulator Suite
 ```
 
----
-
-# 4. Security Contract
-
-- the browser is untrusted;
-- Firestore Security Rules authorize persistence access;
-- UI route/button visibility never grants permission;
-- WP-F04 remains fail-closed until WP-F06;
-- deterministic business rules stay in `packages/domain`;
-- domain/contracts must not import Firebase;
-- no service-account/private-key material is committed;
-- requirements that cannot be safely implemented client-first require a new explicit architecture decision.
-
----
-
-# 5. WP-F04 Exit Gate
-
-Required automated gates:
+WP-F04 acceptance evidence:
 
 ```text
-npm run check:runtime
-npm run typecheck
-npm run lint
-npm run format:check
-npm run check:repo
-npm run check:workspaces
-npm run check:firebase
-npm test
-npm run build
-npm run check:deadcode
-npm run test:e2e
-npm run test:a11y
+Implementation commit: ae572cf29e470985a0483444e3c7bad841d61ce8
+Quality workflow run: 31759165051 -> SUCCESS
+Firebase project: nocschedule1
+Hosting site: nocmduscheduler
+Firestore deployment: SUCCESS during WP-F04
+Hosting deployment: SUCCESS by operator after Spark rebaseline
+Cloud Functions deployment required: NO
+Blaze backend dependency: NO
 ```
 
-Clean-clone GitHub Actions must pass.
+---
 
-Then operator validation:
+# 4. WP-F05 Contract
+
+Goal: establish type-safe shared business language before feature domains expand.
+
+Required deliverables:
+
+- stable identifier types;
+- `BusinessDate`;
+- timestamp contract;
+- integer IDR money;
+- common operation-result/error taxonomy;
+- pagination/filter contracts;
+- optimistic version/revision contract;
+- client-safe idempotency intent/operation-key contract;
+- audit metadata contract;
+- Asia/Jakarta timezone helpers / Temporal-compatible abstraction;
+- Firestore serialization boundary types without Firebase imports in domain/contracts;
+- deterministic clock/test clock where needed.
+
+Boundary rules:
+
+- `packages/domain` must not depend on React, Vite, Tailwind, or Firebase SDK;
+- `packages/contracts` must remain runtime-agnostic and Firebase-independent;
+- Firebase-specific conversion/adapters belong to `apps/web`, not shared business packages;
+- no business logic duplication in UI components.
+
+---
+
+# 5. WP-F05 Exit Gate
+
+Required evidence:
 
 ```text
-npm run firebase:project
-npm run firebase:deploy:hosting
+cross-midnight BusinessDate/timezone helper tests
+integer-IDR money helper tests
+serialization round-trip tests
+invalid external payload rejected by Zod
+operation/result/error contract tests where relevant
+no React/Firebase SDK dependency in domain/contracts
+repository quality gates green
+clean GitHub Actions green
 ```
 
-Expected result:
-
-- Hosting deploy does not prepare/list/deploy Functions;
-- no Blaze requirement is triggered by application backend infrastructure;
-- `https://nocmduscheduler.web.app` serves the SPA.
-
-Firestore rules/indexes have already been deployed successfully during WP-F04 and may be
-revalidated with `npm run firebase:deploy:firestore` if required.
-
-WP-F05 remains locked until this exit gate is complete.
+WP-F06 remains locked until WP-F05 is accepted.

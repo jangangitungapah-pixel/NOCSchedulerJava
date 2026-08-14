@@ -18,12 +18,12 @@
 | Last Accepted Phase | `WP-F03` — Design System & Responsive Foundation |
 | Last Accepted Implementation Commit | `5248560ec3fc2c3e47362446de64112b43a3e7f1` |
 | WP-F03 Acceptance Commit | `efae3f4d607ad05608b8114943af9f2d34d0a7b8` |
-| Last WP-F04 Checkpoint | `3356a528e058c7b6f931012ef4ed7f3b84380085` — Firebase Web config finalized and CI run 31708549040 passed; Hosting deploy exposed that the pinned Cloud Function unnecessarily forced Blaze |
+| Last WP-F04 Checkpoint | `21a0dd1c7cc2726a9194106a5dfa80dad0d9544f` — Spark client-first rebaseline pushed; CI run 31758294388 proves static/unit/build/dead-code gates green while browser QA exposes only stale API readiness text, one strict locator ambiguity, and mobile table keyboard-scroll accessibility |
 | Architecture Decision | User explicitly decided Cloud Functions are not required; WP-F04 must be fully cleaned before WP-F05 |
-| Generator Applied | `scripts/wp-f04-rebaseline-firebase-spark-client-first.cjs` — remove API/Functions runtime and make PRD-23 Spark client-first architecture canonical |
+| Generator Applied | `scripts/wp-f04-repair-spark-browser-gates.cjs` — align Playwright with the new Firebase client foundation and make TableWrap keyboard reachable for horizontal mobile scrolling |
 | Next Allowed Phase | `WP-F04` only |
 | Future Phases | `WP-F05` and later remain `LOCKED` |
-| User Validation Pending | Yes — clean local/CI gates plus Hosting deployment that does not attempt Functions |
+| User Validation Pending | Yes — browser/E2E repair must pass locally and in clean CI, then Hosting deployment must complete without attempting Functions |
 | Firebase Project | `nocschedule1` |
 | Hosting Site | `nocmduscheduler` |
 | Billing Baseline | Spark-friendly; no application Cloud Functions dependency |

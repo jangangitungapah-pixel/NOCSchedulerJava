@@ -263,7 +263,7 @@ export function DesignSystemPage() {
                 value: 'table',
                 content: (
                   <div style={{ display: 'grid', gap: '0.75rem' }}>
-                    <TableWrap>
+                    <TableWrap aria-label="Schedule preview table">
                       <Table>
                         <TableHead>
                           <TableRow>

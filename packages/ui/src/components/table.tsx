@@ -8,8 +8,8 @@ import {
 
 import { cn } from '../lib/cn';
 
-export function TableWrap({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div {...props} className={cn('ui-table-wrap', className)} />;
+export function TableWrap({ className, tabIndex = 0, ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div {...props} className={cn('ui-table-wrap', className)} tabIndex={tabIndex} />;
 }
 
 export const Table = forwardRef<HTMLTableElement, TableHTMLAttributes<HTMLTableElement>>(

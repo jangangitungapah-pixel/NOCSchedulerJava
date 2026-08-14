@@ -11,7 +11,7 @@ test('web scaffold initializes the Firebase client foundation', async ({ page })
 
   await expect(page.getByText('Firebase client foundation', { exact: true })).toBeVisible();
   await expect(page.getByText(/Project nocschedule1 is configured/)).toBeVisible();
-  await expect(page.getByText('Spark-friendly')).toBeVisible();
+  await expect(page.getByText('Spark-friendly', { exact: true })).toBeVisible();
 });
 
 test('unknown routes render the scaffold 404 surface', async ({ page }) => {

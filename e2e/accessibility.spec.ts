@@ -11,7 +11,11 @@ for (const route of routes) {
     await page.goto(route.path);
 
     if (route.path === '/') {
-      await expect(page.getByText('API connected')).toBeVisible();
+      await expect(
+        page.getByRole('heading', {
+          name: 'NOCScheduler Firebase client foundation',
+        }),
+      ).toBeVisible();
     } else {
       await expect(
         page.getByRole('heading', {

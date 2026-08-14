@@ -2,10 +2,68 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // WP-F04 baseline is intentionally fail-closed.
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function currentAccess() {
+      return get(/databases/$(database)/documents/access/$(request.auth.uid)).data;
+    }
+
+    function activeAccount() {
+      return signedIn() &&
+        currentAccess().uid == request.auth.uid &&
+        currentAccess().status == 'ACTIVE';
+    }
+
+    function currentRole() {
+      return get(
+        /databases/$(database)/documents/roles/$(currentAccess().roleId)
+      ).data;
+    }
+
+    function activeRole() {
+      return activeAccount() &&
+        currentRole().roleId == currentAccess().roleId &&
+        currentRole().active == true;
+    }
+
+    function hasGrant(permission, scope) {
+      return activeRole() &&
+        currentRole().grants.hasAny([permission + ':' + scope]);
+    }
+
+    function hasAnyScope(permission) {
+      return activeRole() &&
+        currentRole().grants.hasAny([
+          permission + ':SELF',
+          permission + ':TEAM',
+          permission + ':ALL'
+        ]);
+    }
+
+    // Application access identity. A signed-in user may read only their own
+    // access record unless their active role explicitly has access.view.
     //
-    // Business collections stay inaccessible to browser clients until a later
-    // feature phase introduces a narrowly scoped rule plus emulator tests.
+    // Client writes are intentionally denied in the Spark baseline. Creating,
+    // disabling, or changing roles/accounts remains an operator action until a
+    // trusted privileged runtime is explicitly approved.
+    match /access/{uid} {
+      allow get: if signedIn() &&
+        (request.auth.uid == uid || hasAnyScope('access.view'));
+      allow list: if hasAnyScope('access.view');
+      allow create, update, delete: if false;
+    }
+
+    // Role bundles are readable by active application accounts so the client
+    // can render permission-aware UX. They are never client-writable.
+    match /roles/{roleId} {
+      allow get, list: if activeAccount();
+      allow create, update, delete: if false;
+    }
+
+    // All product/business collections remain fail-closed until their owning
+    // feature phase adds narrowly-scoped rules.
     match /{document=**} {
       allow read, write: if false;
     }

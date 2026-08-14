@@ -2,6 +2,7 @@
 @import '@nocscheduler/ui/tokens.css';
 @import '@nocscheduler/ui/styles.css';
 @import './shell.css';
+@import './auth.css';
 
 html,
 body,

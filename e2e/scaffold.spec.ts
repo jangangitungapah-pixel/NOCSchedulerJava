@@ -1,25 +1,25 @@
 import { expect, test } from '@playwright/test';
 
-test('web scaffold initializes the Firebase client foundation', async ({ page }) => {
+test('unauthenticated users are routed to the internal login surface', async ({ page }) => {
   await page.goto('/');
 
   await expect(
     page.getByRole('heading', {
-      name: 'NOCScheduler Firebase client foundation',
+      name: 'Masuk ke NOCScheduler',
     }),
   ).toBeVisible();
 
-  await expect(page.getByText('Firebase client foundation', { exact: true })).toBeVisible();
-  await expect(page.getByText(/Project nocschedule1 is configured/)).toBeVisible();
-  await expect(page.getByText('Spark-friendly', { exact: true })).toBeVisible();
+  await expect(page.getByLabel('Email')).toBeVisible();
+  await expect(page.getByLabel('Password')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Masuk' })).toBeVisible();
 });
 
-test('unknown routes render the scaffold 404 surface', async ({ page }) => {
+test('unknown protected routes do not bypass authentication', async ({ page }) => {
   await page.goto('/does-not-exist');
 
   await expect(
     page.getByRole('heading', {
-      name: 'Page not found',
+      name: 'Masuk ke NOCScheduler',
     }),
   ).toBeVisible();
 });

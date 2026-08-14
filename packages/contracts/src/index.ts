@@ -1,4 +1,5 @@
 export * from './audit';
+export * from './authorization';
 export * from './date-time';
 export * from './identifiers';
 export * from './money';

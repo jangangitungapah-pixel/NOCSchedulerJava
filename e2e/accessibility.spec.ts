@@ -2,7 +2,7 @@ import { AxeBuilder } from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
 const routes = [
-  { name: 'home', path: '/' },
+  { name: 'login', path: '/login' },
   { name: 'design system', path: '/__design-system' },
 ] as const;
 
@@ -10,10 +10,10 @@ for (const route of routes) {
   test(`@a11y ${route.name} has no serious or critical automated violations`, async ({ page }) => {
     await page.goto(route.path);
 
-    if (route.path === '/') {
+    if (route.path === '/login') {
       await expect(
         page.getByRole('heading', {
-          name: 'NOCScheduler Firebase client foundation',
+          name: 'Masuk ke NOCScheduler',
         }),
       ).toBeVisible();
     } else {

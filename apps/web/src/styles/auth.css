@@ -1,0 +1,106 @@
+.auth-layout {
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  background:
+    radial-gradient(
+      circle at top,
+      color-mix(in srgb, var(--ui-action-primary-bg) 8%, transparent),
+      transparent 32rem
+    ),
+    var(--ui-surface-sunken);
+  padding: var(--ui-space-4);
+}
+
+.auth-card {
+  display: grid;
+  width: min(100%, 28rem);
+  gap: var(--ui-space-4);
+  padding: clamp(var(--ui-space-4), 4vw, var(--ui-space-6));
+}
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+}
+
+.auth-brand__mark {
+  display: inline-grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-action-primary-bg);
+  color: var(--ui-action-primary-fg);
+  font-size: var(--ui-text-label);
+  font-weight: 800;
+  box-shadow: var(--ui-shadow-e2);
+}
+
+.auth-brand__eyebrow {
+  margin: 0 0 var(--ui-space-1);
+  color: var(--ui-text-tertiary);
+  font-size: var(--ui-text-caption);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.auth-title {
+  margin: 0;
+  color: var(--ui-text-primary);
+  font-size: var(--ui-text-section-title);
+  line-height: 1.2;
+}
+
+.auth-description,
+.auth-footnote,
+.auth-error {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.auth-description {
+  color: var(--ui-text-secondary);
+  font-size: var(--ui-text-body);
+}
+
+.auth-footnote {
+  color: var(--ui-text-tertiary);
+  font-size: var(--ui-text-caption);
+}
+
+.auth-error {
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-status-danger-soft);
+  color: var(--ui-status-danger);
+  padding: var(--ui-space-2) var(--ui-space-3);
+  font-size: var(--ui-text-caption);
+}
+
+.auth-form {
+  display: grid;
+  gap: var(--ui-space-3);
+}
+
+.auth-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+}
+
+@media (max-width: 40rem) {
+  .auth-layout {
+    align-items: stretch;
+    padding:
+      max(var(--ui-space-3), env(safe-area-inset-top))
+      var(--ui-space-3)
+      max(var(--ui-space-3), env(safe-area-inset-bottom));
+  }
+
+  .auth-card {
+    align-self: center;
+  }
+}

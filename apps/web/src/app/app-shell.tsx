@@ -1,5 +1,6 @@
 import {
   BellIcon,
+  Button,
   CalendarDaysIcon,
   HomeIcon,
   IconButton,
@@ -12,6 +13,7 @@ import {
 import { Link, Outlet, useLocation } from 'react-router';
 
 import { ThemeToggle } from '../components/theme-toggle';
+import { useAuthenticatedSession, useAuth } from '../features/auth/auth-provider';
 
 type NavigationItem = Readonly<{
   label: string;
@@ -106,6 +108,12 @@ function MoreNavigation() {
 
 export function AppShell() {
   const location = useLocation();
+  const session = useAuthenticatedSession();
+  const { signOutCurrentUser } = useAuth();
+  const accountName =
+    session.user.displayName ??
+    session.user.email ??
+    session.principal.employeeId;
 
   return (
     <div className="app-shell">
@@ -131,10 +139,19 @@ export function AppShell() {
             <div className="app-shell__account">
               <UserRoundIcon aria-hidden="true" size={18} />
               <div className="app-shell__account-copy">
-                <span className="app-shell__account-name">Foundation QA</span>
-                <span className="app-shell__account-role">Local environment</span>
+                <span className="app-shell__account-name">{accountName}</span>
+                <span className="app-shell__account-role">{session.principal.roleId}</span>
               </div>
             </div>
+            <Button
+              onClick={() => {
+                void signOutCurrentUser();
+              }}
+              size="sm"
+              variant="ghost"
+            >
+              Keluar
+            </Button>
           </div>
         </header>
 

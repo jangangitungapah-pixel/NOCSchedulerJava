@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 
 import { Toaster } from '@nocscheduler/ui';
 
+import { AuthProvider } from '../features/auth/auth-provider';
 import { ThemeProvider } from './theme-provider';
 
 const queryClient = new QueryClient({
@@ -22,10 +23,12 @@ type AppProvidersProps = Readonly<{
 export function AppProviders({ children }: AppProvidersProps) {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        {children}
-        <Toaster />
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          {children}
+          <Toaster />
+        </ThemeProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

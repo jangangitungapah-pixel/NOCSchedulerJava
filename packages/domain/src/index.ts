@@ -1,3 +1,4 @@
+export * from './authorization';
 export * from './business-date';
 export * from './clock';
 export * from './invariant';

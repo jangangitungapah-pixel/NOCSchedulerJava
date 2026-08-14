@@ -89,8 +89,33 @@ for (const forbidden of [
   }
 }
 
-if (!/allow\s+read,\s*write:\s*if\s+false;/u.test(rules)) {
-  addError('Firestore rules must retain the fail-closed browser-access baseline until WP-F06.');
+const requiredRulePatterns = [
+  [/function\s+activeAccount\s*\(/u, 'activeAccount rule helper'],
+  [/function\s+hasGrant\s*\(/u, 'hasGrant rule helper'],
+  [/match\s+\/access\/\{uid\}/u, 'access document rules'],
+  [/match\s+\/roles\/\{roleId\}/u, 'role document rules'],
+  [
+    /match\s+\/access\/\{uid\}[\s\S]*?allow\s+create,\s*update,\s*delete:\s*if\s+false;/u,
+    'client-denied access writes',
+  ],
+  [
+    /match\s+\/roles\/\{roleId\}[\s\S]*?allow\s+create,\s*update,\s*delete:\s*if\s+false;/u,
+    'client-denied role writes',
+  ],
+  [
+    /match\s+\/\{document=\*\*\}[\s\S]*?allow\s+read,\s*write:\s*if\s+false;/u,
+    'deny-by-default fallback',
+  ],
+];
+
+for (const [pattern, label] of requiredRulePatterns) {
+  if (!pattern.test(rules)) {
+    addError(`Firestore rules missing WP-F06 contract: ${label}`);
+  }
+}
+
+if (/allow\s+read,\s*write:\s*if\s+request\.auth\s*!=\s*null/u.test(rules)) {
+  addError('Firestore rules must not grant blanket authenticated read/write access.');
 }
 
 if (!Array.isArray(indexes.indexes) || !Array.isArray(indexes.fieldOverrides)) {
@@ -108,5 +133,5 @@ if (errors.length > 0) {
 }
 
 console.log(
-  '[firebase-config] OK — nocschedule1 is Spark-friendly: Hosting + Auth/Web SDK + Firestore, with no Functions, Cloud Run, API proxy, or emulator runtime.',
+  '[firebase-config] OK — Spark architecture preserved and WP-F06 Auth/access rules remain deny-by-default with operator-only privilege mutation.',
 );
